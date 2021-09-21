@@ -25,4 +25,15 @@ class FileSpecification extends Specification {
         where:
         token << ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     }
+
+    def "should not allow wrong token #token"() {
+        when:
+        new File(token)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        where:
+        token << ['w', 'O', '?', ' ', 'aa', 'AA']
+    }
 }
