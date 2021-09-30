@@ -12,7 +12,7 @@ class Game {
         gameInProgress = false
     }
 
-    fun move(): Boolean {
+    fun move(piece: Piece, from: Field, to: Field): Boolean {
         if (!gameInProgress)
             throw IllegalStateException("Game hasn't been started.")
         return true

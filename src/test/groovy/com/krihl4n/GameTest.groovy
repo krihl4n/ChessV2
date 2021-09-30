@@ -5,14 +5,17 @@ import spock.lang.Specification
 class GameTest extends Specification {
 
     def game
-
+    def piece = new Piece(Color.WHITE, Type.PAWN)
+    def from  = new Field("a2")
+    def to = new Field("a3")
+    
     void setup() {
         game = new Game()
     }
 
     def "can't perform move if game not started"() {
         when:
-        game.move()
+        game.move(piece, from, to)
 
         then:
         thrown(IllegalStateException)
@@ -23,7 +26,7 @@ class GameTest extends Specification {
         game.start()
 
         when:
-        def result = game.move()
+        def result = game.move(piece, from, to)
 
         then:
         result == true
@@ -35,15 +38,9 @@ class GameTest extends Specification {
         game.finish()
 
         when:
-        game.move()
+        game.move(piece, from, to)
 
         then:
         thrown(IllegalStateException)
     }
-
-//    def "when piece moved to a position, it can later be retrieved by the position"() {
-//        given:
-//
-//
-//    }
 }
