@@ -10,7 +10,7 @@ class PositionTrackerTest extends Specification {
         positionTracker = new PositionTracker()
     }
 
-    def "should return null when there is no piece at position" () {
+    def "should return null when there is no piece at position"() {
         when:
         def retrievedPiece = positionTracker.getPieceAt(new Field("a1"))
 
@@ -29,5 +29,39 @@ class PositionTrackerTest extends Specification {
 
         then:
         retrievedPiece == piece
+    }
+
+    def "when move is performed, piece is moved from one field to another"() {
+        given:
+        Piece piece = new Piece(Color.WHITE, Type.PAWN)
+        Field start = new Field("a2")
+        Field destination = new Field("a3")
+        positionTracker.set(piece, start)
+
+        when:
+        positionTracker.move(start, destination)
+
+        then:
+        positionTracker.getPieceAt(start) == null
+        positionTracker.getPieceAt(destination) == piece
+    }
+
+    def "throw exception if no piece at start field"() {
+        when:
+        positionTracker.move(new Field("a1"), new Field("a2"))
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "throw exception if start and destination fields are the same"() {
+        given:
+        positionTracker.set(new Piece(Color.WHITE, Type.PAWN), new Field("a1"))
+
+        when:
+        positionTracker.move(new Field("a1"), new Field("a1"))
+
+        then:
+        thrown(IllegalArgumentException)
     }
 }
