@@ -40,4 +40,10 @@ class GameTest extends Specification {
         then:
         thrown(IllegalStateException)
     }
+
+//    def "when piece moved to a position, it can later be retrieved by the position"() {
+//        given:
+//
+//
+//    }
 }

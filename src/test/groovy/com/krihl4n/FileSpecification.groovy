@@ -20,7 +20,7 @@ class FileSpecification extends Specification {
         def file = new File(token)
 
         then:
-        file.getToken() == token.toLowerCase()
+        file.token == token.toLowerCase()
 
         where:
         token << ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']

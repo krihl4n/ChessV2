@@ -9,7 +9,7 @@ class RankSpecification extends Specification {
         def rank = new Rank(token)
 
         then:
-        rank.getToken() == token
+        rank.token == token
 
         where:
         token << ['1', '2', '3', '4', '5', '6', '7', '8']
