@@ -1,6 +1,6 @@
 package com.krihl4n.model
 
-class Piece (val color: Color, val type: Type)
+data class Piece (val color: Color, val type: Type)
 
 enum class Color {
     WHITE, BLACK
