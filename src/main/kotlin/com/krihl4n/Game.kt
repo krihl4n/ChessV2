@@ -16,7 +16,13 @@ class Game(val positionTracker: PositionTracker) {
         if (!gameInProgress)
             throw IllegalStateException("Game hasn't been started.")
 
-        positionTracker.movePiece(from, to)
+        try {
+            positionTracker.movePiece(from, to)
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+            return false
+        }
+
         return true
     }
 }

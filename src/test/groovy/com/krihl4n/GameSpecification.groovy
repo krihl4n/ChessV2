@@ -64,6 +64,12 @@ class GameSpecification extends Specification {
     def "should return false if move couldn't be performed" () {
         given:
         game.start()
+        positionTracker.removePieceFromField(from)
 
+        when:
+        def result = game.performMove(from, to)
+
+        then:
+        result == false
     }
 }
