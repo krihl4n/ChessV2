@@ -2,7 +2,7 @@ package com.krihl4n
 
 import spock.lang.Specification
 
-class PositionTrackerTest extends Specification {
+class PositionTrackerSpecification extends Specification {
 
     def positionTracker
 

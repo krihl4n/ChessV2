@@ -2,10 +2,9 @@ package com.krihl4n
 
 import spock.lang.Specification
 
-class GameTest extends Specification {
+class GameSpecification extends Specification {
 
     def game
-    def piece = new Piece(Color.WHITE, Type.PAWN)
     def from  = new Field("a2")
     def to = new Field("a3")
     
@@ -15,7 +14,7 @@ class GameTest extends Specification {
 
     def "can't perform move if game not started"() {
         when:
-        game.move(piece, from, to)
+        game.performMove(from, to)
 
         then:
         thrown(IllegalStateException)
@@ -26,7 +25,7 @@ class GameTest extends Specification {
         game.start()
 
         when:
-        def result = game.move(piece, from, to)
+        def result = game.performMove(from, to)
 
         then:
         result == true
@@ -38,7 +37,7 @@ class GameTest extends Specification {
         game.finish()
 
         when:
-        game.move(piece, from, to)
+        game.performMove(from, to)
 
         then:
         thrown(IllegalStateException)
