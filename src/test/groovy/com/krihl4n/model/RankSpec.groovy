@@ -1,8 +1,8 @@
 package com.krihl4n.model
 
-import spock.lang.Specification
+import com.krihl4n.BaseSpec
 
-class RankSpecification extends Specification {
+class RankSpec extends BaseSpec {
 
     def "should create a rank object with #token"() {
         when:

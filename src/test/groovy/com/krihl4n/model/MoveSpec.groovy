@@ -1,10 +1,8 @@
 package com.krihl4n.model
 
-import spock.lang.Specification
+import com.krihl4n.BaseSpec
 
-import static com.krihl4n.examples.Pieces.aWhitePawn
-
-class MoveSpecification extends Specification {
+class MoveSpec extends BaseSpec {
 
     def "move has to be performed to different field"() {
         given:

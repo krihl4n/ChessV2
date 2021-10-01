@@ -1,11 +1,9 @@
 package com.krihl4n
 
 import com.krihl4n.model.Field
-import spock.lang.Specification
 import spock.lang.Subject
-import static com.krihl4n.examples.Pieces.aWhitePawn
 
-class GameSpecification extends Specification {
+class GameSpec extends BaseSpec {
 
     @Subject
     def game

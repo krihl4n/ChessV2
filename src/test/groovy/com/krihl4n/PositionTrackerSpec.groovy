@@ -2,11 +2,8 @@ package com.krihl4n
 
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
-import spock.lang.Specification
 
-import static com.krihl4n.examples.Pieces.aWhitePawn
-
-class PositionTrackerSpecification extends Specification {
+class PositionTrackerSpec extends BaseSpec {
 
     def positionTracker
 

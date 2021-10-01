@@ -1,8 +1,8 @@
 package com.krihl4n.model
 
-import spock.lang.Specification
+import com.krihl4n.BaseSpec
 
-class FileSpecification extends Specification {
+class FileSpec extends BaseSpec {
 
     def "should create a file object with #token"() {
         when:

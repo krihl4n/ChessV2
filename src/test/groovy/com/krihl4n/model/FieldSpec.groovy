@@ -1,10 +1,10 @@
 package com.krihl4n.model
 
-import spock.lang.Specification
+import com.krihl4n.BaseSpec
 
-class FieldSpecification extends Specification {
+class FieldSpec extends BaseSpec {
 
-    def "field object can be created giving string token" () {
+    def "field object can be created giving string token"() {
         when:
         Field field = new Field("a1")
 
