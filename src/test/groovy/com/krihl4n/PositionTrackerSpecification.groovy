@@ -22,7 +22,7 @@ class PositionTrackerSpecification extends Specification {
         given:
         Piece piece = new Piece(Color.WHITE, Type.PAWN)
         Field field = new Field("a2")
-        positionTracker.set(piece, field)
+        positionTracker.setPieceAtField(piece, field)
 
         when:
         def retrievedPiece = positionTracker.getPieceAt(field)
@@ -36,10 +36,10 @@ class PositionTrackerSpecification extends Specification {
         Piece piece = new Piece(Color.WHITE, Type.PAWN)
         Field start = new Field("a2")
         Field destination = new Field("a3")
-        positionTracker.set(piece, start)
+        positionTracker.setPieceAtField(piece, start)
 
         when:
-        positionTracker.move(start, destination)
+        positionTracker.movePiece(start, destination)
 
         then:
         positionTracker.getPieceAt(start) == null
@@ -48,7 +48,7 @@ class PositionTrackerSpecification extends Specification {
 
     def "throw exception if no piece at start field"() {
         when:
-        positionTracker.move(new Field("a1"), new Field("a2"))
+        positionTracker.movePiece(new Field("a1"), new Field("a2"))
 
         then:
         thrown(IllegalArgumentException)
@@ -56,12 +56,24 @@ class PositionTrackerSpecification extends Specification {
 
     def "throw exception if start and destination fields are the same"() {
         given:
-        positionTracker.set(new Piece(Color.WHITE, Type.PAWN), new Field("a1"))
+        positionTracker.setPieceAtField(new Piece(Color.WHITE, Type.PAWN), new Field("a1"))
 
         when:
-        positionTracker.move(new Field("a1"), new Field("a1"))
+        positionTracker.movePiece(new Field("a1"), new Field("a1"))
 
         then:
         thrown(IllegalArgumentException)
+    }
+
+    def "should be able to remove piece from field"() {
+        given:
+        Field field = new Field("a1")
+        positionTracker.setPieceAtField(new Piece(Color.WHITE, Type.PAWN), field)
+
+        when:
+        positionTracker.removePieceFromField(field)
+
+        then:
+        positionTracker.getPieceAt(field) == null
     }
 }

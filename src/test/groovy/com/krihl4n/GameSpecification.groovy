@@ -1,15 +1,22 @@
 package com.krihl4n
 
 import spock.lang.Specification
+import spock.lang.Subject
 
 class GameSpecification extends Specification {
 
+    @Subject
     def game
+    def positionTracker
+
+    def piece = new Piece(Color.WHITE, Type.PAWN)
     def from  = new Field("a2")
     def to = new Field("a3")
     
     void setup() {
-        game = new Game()
+        positionTracker = new PositionTracker()
+        positionTracker.setPieceAtField(piece, from)
+        game = new Game(positionTracker)
     }
 
     def "can't perform move if game not started"() {
@@ -41,5 +48,22 @@ class GameSpecification extends Specification {
 
         then:
         thrown(IllegalStateException)
+    }
+
+    def "position tracker should be updated when move performed"() {
+        given:
+        game.start()
+
+        when:
+        game.performMove(from, to)
+
+        then:
+        positionTracker.getPieceAt(to) == piece
+    }
+
+    def "should return false if move couldn't be performed" () {
+        given:
+        game.start()
+
     }
 }
