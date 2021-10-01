@@ -1,5 +1,6 @@
-package com.krihl4n
+package com.krihl4n.model
 
+import com.krihl4n.model.File
 import spock.lang.Specification
 
 class FileSpecification extends Specification {

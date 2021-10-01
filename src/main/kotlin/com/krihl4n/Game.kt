@@ -1,5 +1,7 @@
 package com.krihl4n
 
+import com.krihl4n.model.Field
+
 class Game(val positionTracker: PositionTracker) {
 
     var gameInProgress = false

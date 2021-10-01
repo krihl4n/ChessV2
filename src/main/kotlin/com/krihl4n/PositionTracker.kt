@@ -1,5 +1,8 @@
 package com.krihl4n
 
+import com.krihl4n.model.Field
+import com.krihl4n.model.Piece
+
 class PositionTracker {
 
     private val piecePositions: HashMap<Field, Piece> = HashMap()

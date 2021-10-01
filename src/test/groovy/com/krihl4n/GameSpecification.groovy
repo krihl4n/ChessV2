@@ -1,5 +1,9 @@
 package com.krihl4n
 
+import com.krihl4n.model.Color
+import com.krihl4n.model.Field
+import com.krihl4n.model.Piece
+import com.krihl4n.model.Type
 import spock.lang.Specification
 import spock.lang.Subject
 

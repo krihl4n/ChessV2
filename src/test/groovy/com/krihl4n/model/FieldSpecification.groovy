@@ -1,5 +1,8 @@
-package com.krihl4n
+package com.krihl4n.model
 
+import com.krihl4n.model.Field
+import com.krihl4n.model.File
+import com.krihl4n.model.Rank
 import spock.lang.Specification
 
 class FieldSpecification extends Specification {
