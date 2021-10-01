@@ -1,6 +1,5 @@
 package com.krihl4n.model
 
-import com.krihl4n.model.Rank
 import spock.lang.Specification
 
 class RankSpecification extends Specification {
