@@ -1,10 +1,10 @@
 package com.krihl4n
 
-import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
-import com.krihl4n.model.Type
 import spock.lang.Specification
+
+import static com.krihl4n.examples.Pieces.aWhitePawn
 
 class PositionTrackerSpecification extends Specification {
 
@@ -24,7 +24,7 @@ class PositionTrackerSpecification extends Specification {
 
     def "when piece is set on a position, it can later be retrieved from that position"() {
         given:
-        Piece piece = new Piece(Color.WHITE, Type.PAWN)
+        Piece piece = aWhitePawn()
         Field field = new Field("a2")
         positionTracker.setPieceAtField(piece, field)
 
@@ -37,7 +37,7 @@ class PositionTrackerSpecification extends Specification {
 
     def "when move is performed, piece is moved from one field to another"() {
         given:
-        Piece piece = new Piece(Color.WHITE, Type.PAWN)
+        Piece piece = aWhitePawn()
         Field start = new Field("a2")
         Field destination = new Field("a3")
         positionTracker.setPieceAtField(piece, start)
@@ -60,7 +60,7 @@ class PositionTrackerSpecification extends Specification {
 
     def "throw exception if start and destination fields are the same"() {
         given:
-        positionTracker.setPieceAtField(new Piece(Color.WHITE, Type.PAWN), new Field("a1"))
+        positionTracker.setPieceAtField(aWhitePawn(), new Field("a1"))
 
         when:
         positionTracker.movePiece(new Field("a1"), new Field("a1"))
@@ -72,7 +72,7 @@ class PositionTrackerSpecification extends Specification {
     def "should be able to remove piece from field"() {
         given:
         Field field = new Field("a1")
-        positionTracker.setPieceAtField(new Piece(Color.WHITE, Type.PAWN), field)
+        positionTracker.setPieceAtField(aWhitePawn(), field)
 
         when:
         positionTracker.removePieceFromField(field)

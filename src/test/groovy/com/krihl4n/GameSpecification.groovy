@@ -1,11 +1,9 @@
 package com.krihl4n
 
-import com.krihl4n.model.Color
 import com.krihl4n.model.Field
-import com.krihl4n.model.Piece
-import com.krihl4n.model.Type
 import spock.lang.Specification
 import spock.lang.Subject
+import static com.krihl4n.examples.Pieces.aWhitePawn
 
 class GameSpecification extends Specification {
 
@@ -13,10 +11,10 @@ class GameSpecification extends Specification {
     def game
     def positionTracker
 
-    def piece = new Piece(Color.WHITE, Type.PAWN)
-    def from  = new Field("a2")
+    def piece = aWhitePawn()
+    def from = new Field("a2")
     def to = new Field("a3")
-    
+
     void setup() {
         positionTracker = new PositionTracker()
         positionTracker.setPieceAtField(piece, from)
@@ -65,7 +63,7 @@ class GameSpecification extends Specification {
         positionTracker.getPieceAt(to) == piece
     }
 
-    def "should return false if move couldn't be performed" () {
+    def "should return false if move couldn't be performed"() {
         given:
         game.start()
         positionTracker.removePieceFromField(from)
