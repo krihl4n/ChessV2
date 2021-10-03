@@ -3,7 +3,6 @@ package com.krihl4n.moveCalculators
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
-import com.krihl4n.model.Piece
 import com.krihl4n.model.Rank
 import kotlin.collections.HashSet
 
@@ -18,11 +17,13 @@ class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
         }
 
         if (pawn.color == Color.WHITE) {
-            val nextFieldForward = Field(start.file, Rank((start.rank.token.toInt() + 1).toString()))
-            moves.add(PossibleMove(start, nextFieldForward))
+            moves.add(PossibleMove(start, Field(start.file, start.rank + 1)))
+            if (isWhiteStartingPosition(start))
+                moves.add(PossibleMove(start, Field(start.file, start.rank + 2)))
         } else {
-            val nextFieldForward = Field(start.file, Rank((start.rank.token.toInt() - 1).toString()))
-            moves.add(PossibleMove(start, nextFieldForward))
+            moves.add(PossibleMove(start, Field(start.file, start.rank - 1)))
+            if (isBlackStartingPosition(start))
+                moves.add(PossibleMove(start, Field(start.file, start.rank - 2)))
         }
 
         return moves
@@ -30,5 +31,13 @@ class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
 
     private fun isLastRank(field: Field): Boolean {
         return field.rank == Rank("1") || field.rank == Rank("8")
+    }
+
+    private fun isWhiteStartingPosition(field: Field): Boolean {
+        return field.rank == Rank("2")
+    }
+
+    private fun isBlackStartingPosition(field: Field): Boolean {
+        return field.rank == Rank("7")
     }
 }

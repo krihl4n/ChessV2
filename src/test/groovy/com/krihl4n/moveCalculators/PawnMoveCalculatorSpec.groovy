@@ -16,63 +16,21 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         calculator = new PawnMoveCalculator(positionTracker)
     }
 
-    def "a white pawn can move forward in correct direction #start -> #finish"() {
+    def "a pawn can move one field forward"() {
         given:
-        positionTracker.setPieceAtField(aWhitePawn(), aField(start))
+        positionTracker.setPieceAtField(pawn, field)
 
         when:
-        def moves = calculator.calculateMoves(aField(start))
+        def moves = calculator.calculateMoves(field)
 
         then:
-        moves.contains(possibleMove(start, finish))
+        moves == expectedFields
 
         where:
-        start | finish
-        "a5"  | "a6"
-        "b5"  | "b6"
-        "c5"  | "c6"
-        "d5"  | "d6"
-        "e5"  | "e6"
-        "f5"  | "f6"
-        "g5"  | "g6"
-        "h5"  | "h6"
+        pawn         | field        || expectedFields
+        aWhitePawn() | aField("b3") || [possibleMove("b3", "b4")] as Set
+        aBlackPawn() | aField("b6") || [possibleMove("b6", "b5")] as Set
     }
-
-    def "a black pawn can move forward in correct direction #start -> #finish"() {
-        given:
-        positionTracker.setPieceAtField(aBlackPawn(), aField(start))
-
-        when:
-        def moves = calculator.calculateMoves(aField(start))
-
-        then:
-        moves.contains(possibleMove(start, finish))
-
-        where:
-        start | finish
-        "a6"  | "a5"
-        "b6"  | "b5"
-        "c6"  | "c5"
-        "d6"  | "d5"
-        "e6"  | "e5"
-        "f6"  | "f5"
-        "g6"  | "g5"
-        "h6"  | "h5"
-    }
-
-    def "a pawn cannot move from sideways"() {
-        given:
-        positionTracker.setPieceAtField(aWhitePawn(), aField("b2"))
-
-        when:
-        def moves = calculator.calculateMoves(aField("b2"))
-
-        then:
-        moves.each { move ->
-            move.to.file == new com.krihl4n.model.File("b")
-        }
-    }
-
 
     def "should return empty list if piece is on last rank"() {
         given:
@@ -85,9 +43,25 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         moves.isEmpty()
 
         where:
-        pawn            | field
-        aWhitePawn()    | aField("b8")
-        aBlackPawn()    | aField("b1")
+        pawn         | field
+        aWhitePawn() | aField("b8")
+        aBlackPawn() | aField("b1")
+    }
+
+    def "can move two fields forward from starting position"() {
+        given:
+        positionTracker.setPieceAtField(pawn, field)
+
+        when:
+        def moves = calculator.calculateMoves(field)
+
+        then:
+        moves == expectedFields
+
+        where:
+        pawn         | field        || expectedFields
+        aWhitePawn() | aField("b2") || [possibleMove("b2", "b3"), possibleMove("b2", "b4")] as Set
+        aBlackPawn() | aField("b7") || [possibleMove("b7", "b6"), possibleMove("b7", "b5")] as Set
     }
 
     static def possibleMove(String from, String to) {
