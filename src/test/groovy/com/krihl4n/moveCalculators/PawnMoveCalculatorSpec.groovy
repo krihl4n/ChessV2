@@ -73,6 +73,23 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         }
     }
 
+
+    def "should return empty list if piece is on last rank"() {
+        given:
+        positionTracker.setPieceAtField(pawn, field)
+
+        when:
+        def moves = calculator.calculateMoves(field)
+
+        then:
+        moves.isEmpty()
+
+        where:
+        pawn            | field
+        aWhitePawn()    | aField("b8")
+        aBlackPawn()    | aField("b1")
+    }
+
     static def possibleMove(String from, String to) {
         new PossibleMove(new Field(from), new Field(to))
     }

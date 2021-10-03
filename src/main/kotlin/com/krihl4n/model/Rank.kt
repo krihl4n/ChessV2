@@ -15,4 +15,12 @@ data class Rank(val token: String) {
             throw IllegalArgumentException("$token is not a rank token")
         }
     }
+
+    operator fun plus(param: Int): Rank {
+        return Rank(allowedTokens[allowedTokens.indexOf(token) + param])
+    }
+
+    operator fun minus(param: Int): Rank {
+        return Rank(allowedTokens[allowedTokens.indexOf(token) - param])
+    }
 }

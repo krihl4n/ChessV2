@@ -6,13 +6,15 @@ import spock.lang.Subject
 
 class PieceMoveCalculatorSpec extends BaseSpec {
 
-    PositionTracker positionTracker = new PositionTracker()
+    def positionTracker
 
     @Subject
     def calculator
 
     void setup() {
-        calculator = new PieceMoveCalculator(positionTracker, new CalculatorFactory())
+        positionTracker = new PositionTracker()
+        def factory = new CalculatorFactory(positionTracker)
+        calculator = new PieceMoveCalculator(positionTracker, factory)
     }
 
     def "should throw exception if there is no piece at field" () {

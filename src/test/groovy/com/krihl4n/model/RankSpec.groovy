@@ -25,4 +25,47 @@ class RankSpec extends BaseSpec {
         where:
         token << ['0', '-1', '9', ' ', '22']
     }
+
+    def "should add #number and create next rank"() {
+        given:
+        def rank = new Rank("1")
+
+        when:
+        def result = rank + number
+
+        then:
+        result == new Rank(expectedToken)
+
+        where:
+        number | expectedToken
+        1      | "2"
+        2      | "3"
+        3      | "4"
+        4      | "5"
+        5      | "6"
+        6      | "7"
+        7      | "8"
+    }
+
+    def "should throw index out of bounds exception when exceeding limit"() {
+        given:
+        def rank = new Rank("1")
+
+        when:
+        rank + 8
+
+        then:
+        thrown(IndexOutOfBoundsException)
+    }
+
+    def "should get previous rank"() {
+        given:
+        def rank = new Rank("2")
+
+        when:
+        def result = rank - 1
+
+        then:
+        result == new Rank("1")
+    }
 }
