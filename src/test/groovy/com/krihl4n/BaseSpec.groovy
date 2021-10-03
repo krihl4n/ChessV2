@@ -18,7 +18,15 @@ class BaseSpec extends Specification {
         return new Piece(Color.WHITE, Type.PAWN)
     }
 
+    static def aBlackPawn() {
+        return new Piece(Color.BLACK, Type.PAWN)
+    }
+
     static def aField() {
         return new Field("b2")
+    }
+
+    static def aField(String token) {
+        return new Field(token)
     }
 }

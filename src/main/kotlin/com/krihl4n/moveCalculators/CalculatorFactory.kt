@@ -1,10 +1,11 @@
 package com.krihl4n.moveCalculators
 
+import com.krihl4n.PositionTracker
 import com.krihl4n.model.Piece
 
-object CalculatorFactory {
+class CalculatorFactory(val positionTracker: PositionTracker) {
 
     fun getMoveCalculator(piece: Piece): MoveCalculator {
-        return PawnMoveCalculator
+        return PawnMoveCalculator(positionTracker) // todo map with instances?
     }
 }
