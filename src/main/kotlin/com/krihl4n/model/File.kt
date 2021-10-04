@@ -15,4 +15,18 @@ data class File(private val fileToken: String) {
         if (!allowedTokens.contains(token))
             throw IllegalArgumentException("$token is not allowed")
     }
+
+    operator fun plus(param: Int): File? {
+        val index = allowedTokens.indexOf(token) + param
+        if (index >= allowedTokens.size)
+            return null
+        return File(allowedTokens[index])
+    }
+
+    operator fun minus(param: Int): File? {
+        val index = allowedTokens.indexOf(token) - param
+        if (index < 0)
+            return null
+        return File(allowedTokens[index])
+    }
 }

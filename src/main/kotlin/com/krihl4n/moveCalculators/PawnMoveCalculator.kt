@@ -3,6 +3,7 @@ package com.krihl4n.moveCalculators
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
+import com.krihl4n.model.File
 import com.krihl4n.model.Rank
 
 class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCalculator {
@@ -24,6 +25,20 @@ class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
                     moves.add(PossibleMove(from, twoFieldsForward))
             }
         }
+
+        from.file.left(pawn.color)
+            ?.let {
+                val attackField = Field(it, from.rank.next(pawn.color))
+                if (!positionTracker.isFieldEmpty(attackField) && positionTracker.getPieceAt(attackField)?.color != pawn.color)
+                    moves.add(PossibleMove(from, attackField))
+            }
+
+        from.file.right(pawn.color)
+            ?.let {
+                val attackField = Field(it, from.rank.next(pawn.color))
+                if (!positionTracker.isFieldEmpty(attackField) && positionTracker.getPieceAt(attackField)?.color != pawn.color)
+                    moves.add(PossibleMove(from, attackField))
+            }
         return moves
     }
 
@@ -43,5 +58,19 @@ class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
             this.rank == Rank("7")
         else
             this.rank == Rank("2")
+    }
+
+    private fun File.left(color: Color): File? {
+        return if (color == Color.WHITE)
+            this - 1
+        else
+            this + 1
+    }
+
+    private fun File.right(color: Color): File? {
+        return if (color == Color.WHITE)
+            this + 1
+        else
+            this - 1
     }
 }

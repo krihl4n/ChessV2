@@ -88,6 +88,48 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         !moves.contains(possibleMove("b2", "b4"))
     }
 
+    def "pawns can attack diagonally" () {
+        given:
+        positionTracker.setPieceAtField(aWhitePawn(), aField("b2"))
+        positionTracker.setPieceAtField(aBlackPawn(), aField("c3"))
+        positionTracker.setPieceAtField(aBlackPawn(), aField("a3"))
+
+        when:
+        def moves = calculator.calculateMoves(aField("b2"))
+
+        then:
+        moves.contains(possibleMove("b2", "c3"))
+        moves.contains(possibleMove("b2", "a3"))
+    }
+
+    def "cannot attack pieces of same color" () {
+        given:
+        positionTracker.setPieceAtField(aWhitePawn(), aField("b2"))
+        positionTracker.setPieceAtField(aWhitePawn(), aField("c3"))
+        positionTracker.setPieceAtField(aWhitePawn(), aField("a3"))
+
+        when:
+        def moves = calculator.calculateMoves(aField("b2"))
+
+        then:
+        !moves.contains(possibleMove("b2", "c3"))
+        !moves.contains(possibleMove("b2", "a3"))
+    }
+
+    def "black pawns can attack diagonally" () {
+        given:
+        positionTracker.setPieceAtField(aBlackPawn(), aField("b7"))
+        positionTracker.setPieceAtField(aWhitePawn(), aField("c6"))
+        positionTracker.setPieceAtField(aWhitePawn(), aField("a6"))
+
+        when:
+        def moves = calculator.calculateMoves(aField("b7"))
+
+        then:
+        moves.contains(possibleMove("b7", "c6"))
+        moves.contains(possibleMove("b7", "a6"))
+    }
+
     static def possibleMove(String from, String to) {
         new PossibleMove(new Field(from), new Field(to))
     }
