@@ -4,5 +4,5 @@ import com.krihl4n.model.Field
 
 interface MoveCalculator {
 
-    fun calculateMoves(start: Field): Set<PossibleMove>
+    fun calculateMoves(from: Field): Set<PossibleMove>
 }

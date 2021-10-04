@@ -4,40 +4,39 @@ import com.krihl4n.PositionTracker
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Rank
-import kotlin.collections.HashSet
 
 class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCalculator {
 
-    override fun calculateMoves(start: Field): Set<PossibleMove> {
+    override fun calculateMoves(from: Field): Set<PossibleMove> {
         val moves = HashSet<PossibleMove>()
-        val pawn = positionTracker.getPieceAt(start) ?: throw IllegalArgumentException("no piece at $start")
+        val pawn = positionTracker.getPieceAt(from) ?: throw IllegalArgumentException("no piece at $from")
 
-        if (isLastRank(start)) {
+        if (from.rank.isLast()) {
             return moves
         }
 
-        if (pawn.color == Color.WHITE) {
-            moves.add(PossibleMove(start, Field(start.file, start.rank + 1)))
-            if (isWhiteStartingPosition(start))
-                moves.add(PossibleMove(start, Field(start.file, start.rank + 2)))
-        } else {
-            moves.add(PossibleMove(start, Field(start.file, start.rank - 1)))
-            if (isBlackStartingPosition(start))
-                moves.add(PossibleMove(start, Field(start.file, start.rank - 2)))
-        }
+        moves.add(PossibleMove(from, Field(from.file, from.rank.next(pawn.color))))
+        if (from.isStartingPosition(pawn.color))
+            moves.add(PossibleMove(from, Field(from.file, from.rank.next(pawn.color, 2))))
 
         return moves
     }
 
-    private fun isLastRank(field: Field): Boolean {
-        return field.rank == Rank("1") || field.rank == Rank("8")
+    private fun Rank.isLast(): Boolean {
+        return this == Rank("1") || this == Rank("8")
     }
 
-    private fun isWhiteStartingPosition(field: Field): Boolean {
-        return field.rank == Rank("2")
+    private fun Rank.next(color: Color, steps: Int = 1): Rank {
+        return if (color == Color.WHITE)
+            this + steps
+        else
+            this - steps
     }
 
-    private fun isBlackStartingPosition(field: Field): Boolean {
-        return field.rank == Rank("7")
+    private fun Field.isStartingPosition(color: Color): Boolean {
+        return if (color == Color.BLACK)
+            this.rank == Rank("7")
+        else
+            this.rank == Rank("2")
     }
 }
