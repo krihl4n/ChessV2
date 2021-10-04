@@ -15,10 +15,15 @@ class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
             return moves
         }
 
-        moves.add(PossibleMove(from, Field(from.file, from.rank.next(pawn.color))))
-        if (from.isStartingPosition(pawn.color))
-            moves.add(PossibleMove(from, Field(from.file, from.rank.next(pawn.color, 2))))
-
+        val nextFieldForward = Field(from.file, from.rank.next(pawn.color))
+        if (positionTracker.isFieldEmpty(nextFieldForward)) {
+            moves.add(PossibleMove(from, nextFieldForward))
+            if (from.isStartingPosition(pawn.color)) {
+                val twoFieldsForward = Field(from.file, from.rank.next(pawn.color, 2))
+                if (positionTracker.isFieldEmpty(twoFieldsForward))
+                    moves.add(PossibleMove(from, twoFieldsForward))
+            }
+        }
         return moves
     }
 

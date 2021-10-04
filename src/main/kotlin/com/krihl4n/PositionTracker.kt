@@ -26,4 +26,8 @@ class PositionTracker {
     fun removePieceFromField(field: Field) {
         piecePositions.remove(field)
     }
+
+    fun isFieldEmpty(field: Field) : Boolean {
+        return piecePositions[field] == null
+    }
 }

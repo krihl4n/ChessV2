@@ -64,6 +64,30 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         aBlackPawn() | aField("b7") || [possibleMove("b7", "b6"), possibleMove("b7", "b5")] as Set
     }
 
+    def "cannot move forward if blocked by another piece"() {
+        given:
+        positionTracker.setPieceAtField(aWhitePawn(), aField("b2"))
+        positionTracker.setPieceAtField(aWhitePawn(), aField("b3"))
+
+        when:
+        def moves = calculator.calculateMoves(aField("b2"))
+
+        then:
+        moves.isEmpty()
+    }
+
+    def "cannot move 2 fields forward if blocked by another piece"() {
+        given:
+        positionTracker.setPieceAtField(aWhitePawn(), aField("b2"))
+        positionTracker.setPieceAtField(aWhitePawn(), aField("b4"))
+
+        when:
+        def moves = calculator.calculateMoves(aField("b2"))
+
+        then:
+        !moves.contains(possibleMove("b2", "b4"))
+    }
+
     static def possibleMove(String from, String to) {
         new PossibleMove(new Field(from), new Field(to))
     }

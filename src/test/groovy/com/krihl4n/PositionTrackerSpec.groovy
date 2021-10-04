@@ -5,7 +5,7 @@ import com.krihl4n.model.Piece
 
 class PositionTrackerSpec extends BaseSpec {
 
-    def positionTracker
+    PositionTracker positionTracker
 
     void setup() {
         positionTracker = new PositionTracker()
@@ -76,5 +76,27 @@ class PositionTrackerSpec extends BaseSpec {
 
         then:
         positionTracker.getPieceAt(field) == null
+    }
+
+    def "should indicate if field is empty"() {
+        given:
+        positionTracker.removePieceFromField(aField("a1"))
+
+        when:
+        def result = positionTracker.isFieldEmpty(aField("a1"))
+
+        then:
+        result
+    }
+
+    def "should indicate if field is not empty"() {
+        given:
+        positionTracker.setPieceAtField(aWhitePawn(), aField("a1"))
+
+        when:
+        def result = positionTracker.isFieldEmpty(aField("a1"))
+
+        then:
+        !result
     }
 }
