@@ -2,6 +2,7 @@ package com.krihl4n.moveCalculators
 
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Field
+import com.krihl4n.model.Piece
 
 class RookMoveCalculator(private val positionTracker: PositionTracker) : MoveCalculator {
 
@@ -13,7 +14,7 @@ class RookMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
         while (nextFile != null) {
             val destination = Field(nextFile, from.rank)
             if (positionTracker.isFieldOccupied(destination)) {
-                if (positionTracker.getPieceAt(destination)?.color != rook.color) {
+                if (canAttack(destination, rook)) {
                     possibleMoves.add(PossibleMove(from, destination))
                 }
                 break
@@ -26,7 +27,7 @@ class RookMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
         while (previousFile != null) {
             val destination = Field(previousFile, from.rank)
             if (positionTracker.isFieldOccupied(destination)) {
-                if (positionTracker.getPieceAt(destination)?.color != rook.color) {
+                if (canAttack(destination, rook)) {
                     possibleMoves.add(PossibleMove(from, destination))
                 }
                 break
@@ -39,7 +40,7 @@ class RookMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
         while (nextRank != null) {
             val destination = Field(from.file, nextRank)
             if (positionTracker.isFieldOccupied(destination)) {
-                if (positionTracker.getPieceAt(destination)?.color != rook.color) {
+                if (canAttack(destination, rook)) {
                     possibleMoves.add(PossibleMove(from, destination))
                 }
                 break
@@ -52,7 +53,7 @@ class RookMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
         while (previousRank != null) {
             val destination = Field(from.file, previousRank)
             if (positionTracker.isFieldOccupied(destination)) {
-                if (positionTracker.getPieceAt(destination)?.color != rook.color) {
+                if (canAttack(destination, rook)) {
                     possibleMoves.add(PossibleMove(from, destination))
                 }
                 break
@@ -63,4 +64,12 @@ class RookMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
 
         return possibleMoves
     }
+
+    // todo
+//    private fun HashSet<PossibleMove>.appendWith(nextFieldFunction: Provider) {
+//
+//    }
+
+    private fun canAttack(destination: Field, rook: Piece) =
+        positionTracker.getPieceAt(destination)?.color != rook.color
 }
