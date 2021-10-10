@@ -16,11 +16,17 @@ data class Rank(val token: String) {
         }
     }
 
-    operator fun plus(param: Int): Rank {
-        return Rank(allowedTokens[allowedTokens.indexOf(token) + param])
+    operator fun plus(param: Int): Rank? {
+        val index = allowedTokens.indexOf(token) + param
+        if (index >= allowedTokens.size)
+            return null
+        return Rank(allowedTokens[index])
     }
 
-    operator fun minus(param: Int): Rank {
-        return Rank(allowedTokens[allowedTokens.indexOf(token) - param])
+    operator fun minus(param: Int): Rank? {
+        val index = allowedTokens.indexOf(token) - param
+        if (index < 0)
+            return null
+        return Rank(allowedTokens[index])
     }
 }

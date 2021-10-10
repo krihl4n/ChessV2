@@ -60,4 +60,26 @@ class RookMoveCalculatorSpec extends BaseSpec {
         where:
         rook << [aWhiteRook(), aBlackRook()]
     }
+
+    def "should give all fields up and down" () {
+        given:
+        positionTracker.setPieceAtField(rook, aField("a4"))
+
+        when:
+        def moves = calculator.findMoves(aField("a4"))
+
+        then:
+        moves.containsAll([
+                possibleMove("a4", "a1"),
+                possibleMove("a4", "a2"),
+                possibleMove("a4", "a3"),
+                possibleMove("a4", "a5"),
+                possibleMove("a4", "a6"),
+                possibleMove("a4", "a7"),
+                possibleMove("a4", "a8")
+        ])
+
+        where:
+        rook << [aWhiteRook(), aBlackRook()]
+    }
 }

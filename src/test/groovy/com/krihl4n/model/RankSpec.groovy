@@ -47,15 +47,15 @@ class RankSpec extends BaseSpec {
         7      | "8"
     }
 
-    def "should throw index out of bounds exception when exceeding limit"() {
+    def "should return null when exceeding limit"() {
         given:
         def rank = new Rank("1")
 
         when:
-        rank + 8
+        def result = rank + 8
 
         then:
-        thrown(IndexOutOfBoundsException)
+        result == null
     }
 
     def "should get previous rank"() {

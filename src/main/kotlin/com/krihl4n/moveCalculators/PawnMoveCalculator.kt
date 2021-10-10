@@ -12,15 +12,15 @@ class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
         val moves = HashSet<PossibleMove>()
         val pawn = positionTracker.getPieceAt(from) ?: throw IllegalArgumentException("no piece at $from")
 
-        if (from.rank.isLast()) {
+        if (from.rank.isLast()) { // todo for now this guarantees next rank null safety; refactor
             return moves
         }
 
-        val nextFieldForward = Field(from.file, from.rank.next(pawn.color))
+        val nextFieldForward = Field(from.file, from.rank.next(pawn.color)!!)
         if (positionTracker.isFieldEmpty(nextFieldForward)) {
             moves.add(PossibleMove(from, nextFieldForward))
             if (from.isStartingPosition(pawn.color)) {
-                val twoFieldsForward = Field(from.file, from.rank.next(pawn.color, 2))
+                val twoFieldsForward = Field(from.file, from.rank.next(pawn.color, 2)!!)
                 if (positionTracker.isFieldEmpty(twoFieldsForward))
                     moves.add(PossibleMove(from, twoFieldsForward))
             }
@@ -28,14 +28,14 @@ class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
 
         from.file.left(pawn.color)
             ?.let {
-                val attackField = Field(it, from.rank.next(pawn.color))
+                val attackField = Field(it, from.rank.next(pawn.color)!!)
                 if (!positionTracker.isFieldEmpty(attackField) && positionTracker.getPieceAt(attackField)?.color != pawn.color)
                     moves.add(PossibleMove(from, attackField))
             }
 
         from.file.right(pawn.color)
             ?.let {
-                val attackField = Field(it, from.rank.next(pawn.color))
+                val attackField = Field(it, from.rank.next(pawn.color)!!)
                 if (!positionTracker.isFieldEmpty(attackField) && positionTracker.getPieceAt(attackField)?.color != pawn.color)
                     moves.add(PossibleMove(from, attackField))
             }
@@ -46,7 +46,7 @@ class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
         return this == Rank("1") || this == Rank("8")
     }
 
-    private fun Rank.next(color: Color, steps: Int = 1): Rank {
+    private fun Rank.next(color: Color, steps: Int = 1): Rank? {
         return if (color == Color.WHITE)
             this + steps
         else
