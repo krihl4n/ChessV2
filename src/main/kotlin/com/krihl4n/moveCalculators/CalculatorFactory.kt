@@ -10,7 +10,7 @@ class CalculatorFactory(val positionTracker: PositionTracker) {
         return when (piece.type) {
             Type.ROOK -> RookMoveCalculator(positionTracker)
             Type.PAWN -> PawnMoveCalculator(positionTracker)
-            Type.KNIGHT -> TODO()
+            Type.KNIGHT -> KnightMoveCalculator(positionTracker)
             Type.BISHOP -> TODO()
             Type.QUEEN -> TODO()
             Type.KING -> KingMoveCalculator(positionTracker)

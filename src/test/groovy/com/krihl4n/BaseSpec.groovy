@@ -39,6 +39,14 @@ class BaseSpec extends Specification {
         return new Piece(Color.BLACK, Type.KING)
     }
 
+    static def aWhiteKnight() {
+        return new Piece(Color.WHITE, Type.KNIGHT)
+    }
+
+    static def aBlackKnight() {
+        return new Piece(Color.BLACK, Type.KNIGHT)
+    }
+
     static def aField() {
         return new Field("b2")
     }
