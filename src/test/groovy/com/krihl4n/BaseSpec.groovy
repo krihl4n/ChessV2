@@ -5,6 +5,7 @@ import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
+import com.krihl4n.moveCalculators.PossibleMove
 import spock.lang.Specification
 
 class BaseSpec extends Specification {
@@ -22,11 +23,23 @@ class BaseSpec extends Specification {
         return new Piece(Color.BLACK, Type.PAWN)
     }
 
+    static def aWhiteRook() {
+        return new Piece(Color.WHITE, Type.ROOK)
+    }
+
+    static def aBlackRook() {
+        return new Piece(Color.BLACK, Type.ROOK)
+    }
+
     static def aField() {
         return new Field("b2")
     }
 
     static def aField(String token) {
         return new Field(token)
+    }
+
+    static def possibleMove(String from, String to) {
+        new PossibleMove(new Field(from), new Field(to))
     }
 }

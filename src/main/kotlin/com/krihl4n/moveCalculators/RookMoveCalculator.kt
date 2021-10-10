@@ -1,9 +1,18 @@
 package com.krihl4n.moveCalculators
 
+import com.krihl4n.PositionTracker
 import com.krihl4n.model.Field
 
-object RookMoveCalculator: MoveCalculator {
+class RookMoveCalculator(positionTracker: PositionTracker) : MoveCalculator {
+
     override fun calculateMoves(from: Field): Set<PossibleMove> {
-        TODO("Not yet implemented")
+        val possibleMoves = HashSet<PossibleMove>()
+
+        var nextFile = from.file + 1
+        while (nextFile != null) {
+            possibleMoves.add(PossibleMove(from, Field(nextFile, from.rank)))
+            nextFile += 1
+        }
+        return possibleMoves
     }
 }

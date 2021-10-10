@@ -2,7 +2,6 @@ package com.krihl4n.moveCalculators
 
 import com.krihl4n.BaseSpec
 import com.krihl4n.PositionTracker
-import com.krihl4n.model.Field
 import spock.lang.Subject
 
 class PawnMoveCalculatorSpec extends BaseSpec {
@@ -130,7 +129,4 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         moves.contains(possibleMove("b7", "a6"))
     }
 
-    static def possibleMove(String from, String to) {
-        new PossibleMove(new Field(from), new Field(to))
-    }
 }
