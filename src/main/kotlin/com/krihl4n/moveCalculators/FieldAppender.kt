@@ -9,12 +9,16 @@ import com.krihl4n.model.Rank
 fun HashSet<PossibleMove>.append(
     positionTracker: PositionTracker,
     start: Field,
+    limit: Int? = null,
     getNextField: (Field) -> OptionalField
 ) {
     val piece = positionTracker.getPieceAt(start) ?: throw IllegalArgumentException("no piece at $start")
     var nextField = getNextField.invoke(start)
-
+    var fieldsAppended = 0
     while (nextField.isValid()) {
+        if (limit != null && fieldsAppended == limit) {
+            break
+        }
         val destination = Field(nextField.file!!, nextField.rank!!)
         if (positionTracker.isFieldOccupied(destination)) {
             if (canAttackPiece(positionTracker.getPieceAt(destination), piece)) {
@@ -24,6 +28,7 @@ fun HashSet<PossibleMove>.append(
         } else {
             this.add(PossibleMove(start, destination))
             nextField = getNextField.invoke(destination)
+            fieldsAppended++
         }
     }
 }

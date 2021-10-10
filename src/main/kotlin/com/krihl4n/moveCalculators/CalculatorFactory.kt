@@ -13,7 +13,7 @@ class CalculatorFactory(val positionTracker: PositionTracker) {
             Type.KNIGHT -> TODO()
             Type.BISHOP -> TODO()
             Type.QUEEN -> TODO()
-            Type.KING -> TODO()
+            Type.KING -> KingMoveCalculator(positionTracker)
         }
         // todo map with instances?
     }
