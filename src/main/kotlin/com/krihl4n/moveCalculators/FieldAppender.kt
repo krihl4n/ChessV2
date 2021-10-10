@@ -41,4 +41,3 @@ data class OptionalField(val file: File?, val rank: Rank?) {
 
 private fun canAttackPiece(pieceAtDestinationField: Piece?, piece: Piece) =
     pieceAtDestinationField?.color != piece.color
-
