@@ -102,4 +102,29 @@ class RookMoveCalculatorSpec extends BaseSpec {
         aWhiteRook() | aWhitePawn()
         aBlackRook() | aBlackPawn()
     }
+
+    def "should be able to attack other pieces"() {
+        given:
+        positionTracker.setPieceAtField(rook, aField("d5"))
+        positionTracker.setPieceAtField(pawn, aField("d4"))
+        positionTracker.setPieceAtField(pawn, aField("d6"))
+        positionTracker.setPieceAtField(pawn, aField("c5"))
+        positionTracker.setPieceAtField(pawn, aField("e5"))
+
+        when:
+        def moves = calculator.findMoves(aField("d5"))
+
+        then:
+        moves == [
+                possibleMove("d5", "d4"),
+                possibleMove("d5", "d6"),
+                possibleMove("d5", "c5"),
+                possibleMove("d5", "e5"),
+        ] as Set
+
+        where:
+        rook         | pawn
+        aWhiteRook() | aBlackPawn()
+        aBlackRook() | aWhitePawn()
+    }
 }
