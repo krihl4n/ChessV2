@@ -82,4 +82,24 @@ class RookMoveCalculatorSpec extends BaseSpec {
         where:
         rook << [aWhiteRook(), aBlackRook()]
     }
+
+    def "should not be able to move if surrounded by same color pieces"() {
+        given:
+        positionTracker.setPieceAtField(rook, aField("d5"))
+        positionTracker.setPieceAtField(pawn, aField("d4"))
+        positionTracker.setPieceAtField(pawn, aField("d6"))
+        positionTracker.setPieceAtField(pawn, aField("c5"))
+        positionTracker.setPieceAtField(pawn, aField("e5"))
+
+        when:
+        def moves = calculator.findMoves(aField("d5"))
+
+        then:
+        moves.isEmpty()
+
+        where:
+        rook         | pawn
+        aWhiteRook() | aWhitePawn()
+        aBlackRook() | aBlackPawn()
+    }
 }

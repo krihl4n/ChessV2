@@ -30,4 +30,8 @@ class PositionTracker {
     fun isFieldEmpty(field: Field) : Boolean {
         return piecePositions[field] == null
     }
-}
+
+    fun isFieldOccupied(field: Field) : Boolean {
+        return !isFieldEmpty(field)
+    }
+ }
