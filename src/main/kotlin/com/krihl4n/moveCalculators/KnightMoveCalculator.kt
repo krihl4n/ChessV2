@@ -7,14 +7,16 @@ class KnightMoveCalculator(private val positionTracker: PositionTracker) : MoveC
     override fun calculateMoves(from: Field): Set<PossibleMove> {
         val possibleMoves = HashSet<PossibleMove>()
 
-        possibleMoves.append(positionTracker, from, 1) { field: Field -> OptionalField(field.file + 1, field.rank + 2) }
-        possibleMoves.append(positionTracker, from, 1) { field: Field -> OptionalField(field.file + 2, field.rank + 1) }
-        possibleMoves.append(positionTracker, from, 1) { field: Field -> OptionalField(field.file - 1, field.rank + 2) }
-        possibleMoves.append(positionTracker, from, 1) { field: Field -> OptionalField(field.file - 2, field.rank + 1) }
-        possibleMoves.append(positionTracker, from, 1) { field: Field -> OptionalField(field.file + 1, field.rank - 2) }
-        possibleMoves.append(positionTracker, from, 1) { field: Field -> OptionalField(field.file + 2, field.rank - 1) }
-        possibleMoves.append(positionTracker, from, 1) { field: Field -> OptionalField(field.file - 1, field.rank - 2) }
-        possibleMoves.append(positionTracker, from, 1) { field: Field -> OptionalField(field.file - 2, field.rank - 1) }
+        possibleMoves.append(positionTracker, from, 1, setOf(
+            { field: Field -> OptionalField(field.file + 1, field.rank + 2) },
+            { field: Field -> OptionalField(field.file + 2, field.rank + 1) },
+            { field: Field -> OptionalField(field.file - 1, field.rank + 2) },
+            { field: Field -> OptionalField(field.file - 2, field.rank + 1) },
+            { field: Field -> OptionalField(field.file + 1, field.rank - 2) },
+            { field: Field -> OptionalField(field.file + 2, field.rank - 1) },
+            { field: Field -> OptionalField(field.file - 1, field.rank - 2) },
+            { field: Field -> OptionalField(field.file - 2, field.rank - 1) }
+        ))
 
         return possibleMoves
     }

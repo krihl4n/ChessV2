@@ -10,25 +10,27 @@ fun HashSet<PossibleMove>.append(
     positionTracker: PositionTracker,
     start: Field,
     limit: Int? = null,
-    getNextField: (Field) -> OptionalField
+    nextFieldFunctions: Set<(Field) -> OptionalField>
 ) {
-    val piece = positionTracker.getPieceAt(start) ?: throw IllegalArgumentException("no piece at $start")
-    var nextField = getNextField.invoke(start)
-    var fieldsAppended = 0
-    while (nextField.isValid()) {
-        if (limit != null && fieldsAppended == limit) {
-            break
-        }
-        val destination = Field(nextField.file!!, nextField.rank!!)
-        if (positionTracker.isFieldOccupied(destination)) {
-            if (canAttackPiece(positionTracker.getPieceAt(destination), piece)) {
-                this.add(PossibleMove(start, destination))
+    nextFieldFunctions.forEach {
+        val piece = positionTracker.getPieceAt(start) ?: throw IllegalArgumentException("no piece at $start")
+        var nextField = it.invoke(start)
+        var fieldsAppended = 0
+        while (nextField.isValid()) {
+            if (limit != null && fieldsAppended == limit) {
+                break
             }
-            break
-        } else {
-            this.add(PossibleMove(start, destination))
-            nextField = getNextField.invoke(destination)
-            fieldsAppended++
+            val destination = Field(nextField.file!!, nextField.rank!!)
+            if (positionTracker.isFieldOccupied(destination)) {
+                if (canAttackPiece(positionTracker.getPieceAt(destination), piece)) {
+                    this.add(PossibleMove(start, destination))
+                }
+                break
+            } else {
+                this.add(PossibleMove(start, destination))
+                nextField = it.invoke(destination)
+                fieldsAppended++
+            }
         }
     }
 }
