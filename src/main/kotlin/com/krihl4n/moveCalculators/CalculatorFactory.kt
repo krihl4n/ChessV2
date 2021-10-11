@@ -11,10 +11,10 @@ class CalculatorFactory(val positionTracker: PositionTracker) {
             Type.ROOK -> RookMoveCalculator(positionTracker)
             Type.PAWN -> PawnMoveCalculator(positionTracker)
             Type.KNIGHT -> KnightMoveCalculator(positionTracker)
-            Type.BISHOP -> TODO()
-            Type.QUEEN -> TODO()
+            Type.BISHOP -> BishopMoveCalculator(positionTracker)
+            Type.QUEEN -> QueenMoveCalculator(positionTracker)
             Type.KING -> KingMoveCalculator(positionTracker)
         }
-        // todo map with instances?
+        // todo map with instances?®
     }
 }

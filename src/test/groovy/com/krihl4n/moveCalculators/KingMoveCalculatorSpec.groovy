@@ -6,7 +6,6 @@ import spock.lang.Subject
 
 class KingMoveCalculatorSpec extends BaseSpec {
 
-
     PositionTracker positionTracker
 
     @Subject
