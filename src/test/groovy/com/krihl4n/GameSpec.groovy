@@ -4,6 +4,8 @@ import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
+import com.krihl4n.moveCalculators.CalculatorFactory
+import com.krihl4n.moveCalculators.PieceMoveCalculator
 import spock.lang.Subject
 
 class GameSpec extends BaseSpec {
@@ -21,7 +23,8 @@ class GameSpec extends BaseSpec {
         positionTracker.setPieceAtField(piece, from)
         CommandCoordinator commandCoordinator = new CommandCoordinator()
         CommandFactory commandFactory = new CommandFactory(positionTracker)
-        game = new Game(positionTracker, commandCoordinator, commandFactory)
+        MoveValidator moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker)))
+        game = new Game(positionTracker, commandCoordinator, commandFactory, moveValidator)
     }
 
     def "can't perform move if game not started"() {
@@ -108,5 +111,18 @@ class GameSpec extends BaseSpec {
         positionTracker.getPieceAt(from) == null
         and:
         positionTracker.getPieceAt(to) == piece
+    }
+
+    def "should not be able to perform illegal moves" () {
+        given:
+        game.start()
+        and:
+        positionTracker.setPieceAtField(aWhitePawn(), aField("a2"))
+
+        when:
+        def result = game.performMove(aField("a2"), aField("b8"))
+
+        then:
+        !result
     }
 }

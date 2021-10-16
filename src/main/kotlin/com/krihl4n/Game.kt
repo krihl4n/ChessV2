@@ -8,7 +8,8 @@ import com.krihl4n.model.Move
 class Game(
     private val positionTracker: PositionTracker,
     private val commandCoordinator: CommandCoordinator,
-    private val commandFactory: CommandFactory
+    private val commandFactory: CommandFactory,
+    private val moveValidator: MoveValidator
 ) {
 
     var gameInProgress = false
@@ -25,8 +26,11 @@ class Game(
         if (!gameInProgress)
             throw IllegalStateException("Game hasn't been started.")
 
+        val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return false
+        if (!moveValidator.isMoveValid(move))
+            return false
+
         try {
-            val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return false
             commandCoordinator.execute(commandFactory.getCommand(move))
         } catch (e: IllegalArgumentException) {
             println(e.message)
@@ -43,4 +47,5 @@ class Game(
     fun redoMove() {
         commandCoordinator.redo()
     }
+
 }
