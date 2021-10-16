@@ -1,7 +1,6 @@
 package com.krihl4n.moveCalculators
 
 import com.krihl4n.PositionTracker
-import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
 import java.util.*
 
@@ -19,7 +18,7 @@ class CalculatorFactory(val positionTracker: PositionTracker) {
         calculators[Type.KING] = KingMoveCalculator(positionTracker)
     }
 
-    fun getMoveCalculator(piece: Piece): MoveCalculator {
-        return calculators[piece.type] ?: throw IllegalArgumentException("cannot find calculator")
+    fun getMoveCalculator(pieceType: Type): MoveCalculator {
+        return calculators[pieceType] ?: throw IllegalArgumentException("cannot find calculator")
     }
 }

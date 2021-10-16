@@ -10,7 +10,7 @@ class PieceMoveCalculator(
 
     fun findMoves(field: Field): Set<PossibleMove> {
         val piece = positionTracker.getPieceAt(field) ?: throw IllegalArgumentException("No piece at field $field")
-        val calculator = calculatorFactory.getMoveCalculator(piece)
+        val calculator = calculatorFactory.getMoveCalculator(piece.type)
         return calculator.calculateMoves(field)
     }
 }
