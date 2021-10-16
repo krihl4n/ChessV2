@@ -3,7 +3,6 @@ package com.krihl4n.command
 import com.krihl4n.BaseSpec
 import com.krihl4n.PositionTracker
 import spock.lang.Subject
-import spock.lang.Unroll
 
 class CommandFactorySpec extends BaseSpec {
 
@@ -13,26 +12,20 @@ class CommandFactorySpec extends BaseSpec {
 
     def 'should return basic move command'() {
         when:
-        def command = commandFactory.getCommand(move(aWhitePawn(), "a1 a2"))
+        def command = commandFactory.getCommand(move(aWhitePawn(), "a2 a3"))
 
         then:
         command instanceof BasicMoveCommand
     }
 
-    @Unroll
-    def 'should not create any move command if field occupied by same color piece'() {
+    def "should return attack command"() {
         given:
-        positionTracker.setPieceAtField(friendlyPiece, aField("a2"))
+        positionTracker.setPieceAtField(aBlackPawn(), aField("b3"))
 
         when:
-        commandFactory.getCommand(move(movingPiece, "a1 a2"))
+        def command = commandFactory.getCommand(move(aWhitePawn(), "a2 b3"))
 
         then:
-        thrown(IllegalArgumentException)
-
-        where:
-        movingPiece  | friendlyPiece
-        aWhitePawn() | aWhitePawn()
-        aBlackPawn() | aBlackPawn()
+        command instanceof AttackMoveCommand
     }
 }
