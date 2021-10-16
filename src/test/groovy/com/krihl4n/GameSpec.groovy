@@ -22,7 +22,7 @@ class GameSpec extends BaseSpec {
         positionTracker = new PositionTracker()
         positionTracker.setPieceAtField(piece, from)
         CommandCoordinator commandCoordinator = new CommandCoordinator()
-        CommandFactory commandFactory = new CommandFactory(positionTracker)
+        CommandFactory commandFactory = new CommandFactory(positionTracker, new CaptureTracker())
         MoveValidator moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker)))
         game = new Game(positionTracker, commandCoordinator, commandFactory, moveValidator)
     }

@@ -1,6 +1,7 @@
 package com.krihl4n.command
 
 import com.krihl4n.BaseSpec
+import com.krihl4n.CaptureTracker
 import com.krihl4n.PositionTracker
 import spock.lang.Subject
 
@@ -8,7 +9,7 @@ class CommandFactorySpec extends BaseSpec {
 
     PositionTracker positionTracker = new PositionTracker()
     @Subject
-    def commandFactory = new CommandFactory(positionTracker)
+    def commandFactory = new CommandFactory(positionTracker, new CaptureTracker())
 
     def 'should return basic move command'() {
         when:
