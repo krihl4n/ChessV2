@@ -6,8 +6,6 @@ import com.krihl4n.model.Field
 class RookMoveCalculator(private val positionTracker: PositionTracker) : MoveCalculator {
 
     override fun calculateMoves(from: Field): Set<PossibleMove> {
-        val possibleMoves = HashSet<PossibleMove>()
-        possibleMoves.append(positionTracker, from, nextFieldFunctions = verticalMoves + horizontalMoves)
-        return possibleMoves
+        return PossibleMovesCreator.create(positionTracker, from, nextFieldFunctions = verticalMoves + horizontalMoves)
     }
 }

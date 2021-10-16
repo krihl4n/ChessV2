@@ -6,14 +6,10 @@ import com.krihl4n.model.Field
 class QueenMoveCalculator(private val positionTracker: PositionTracker) : MoveCalculator {
 
     override fun calculateMoves(from: Field): Set<PossibleMove> {
-        val possibleMoves = HashSet<PossibleMove>()
-
-        possibleMoves.append(
+        return PossibleMovesCreator.create(
             positionTracker,
             from,
             nextFieldFunctions = allDirectionsMoves
         )
-
-        return possibleMoves
     }
 }
