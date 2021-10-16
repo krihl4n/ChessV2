@@ -1,8 +1,15 @@
 package com.krihl4n
 
+import com.krihl4n.command.CommandCoordinator
+import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Field
+import com.krihl4n.model.Move
 
-class Game(val positionTracker: PositionTracker) {
+class Game(
+    private val positionTracker: PositionTracker,
+    private val commandCoordinator: CommandCoordinator,
+    private val commandFactory: CommandFactory
+) {
 
     var gameInProgress = false
 
@@ -19,12 +26,21 @@ class Game(val positionTracker: PositionTracker) {
             throw IllegalStateException("Game hasn't been started.")
 
         try {
-            positionTracker.movePiece(from, to)
+            val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return false
+            commandCoordinator.execute(commandFactory.getCommand(move))
         } catch (e: IllegalArgumentException) {
             println(e.message)
             return false
         }
 
         return true
+    }
+
+    fun undoMove() {
+        commandCoordinator.undo()
+    }
+
+    fun redoMove() {
+        commandCoordinator.redo()
     }
 }

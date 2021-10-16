@@ -1,14 +1,15 @@
 package com.krihl4n.command
 
+import com.krihl4n.PositionTracker
 import com.krihl4n.model.Move
 
-class BasicMoveCommand(val move: Move) : MoveCommand {
+class BasicMoveCommand(val move: Move, val positionTracker: PositionTracker) : MoveCommand {
 
     override fun execute() {
-        TODO("Not yet implemented")
+        positionTracker.movePiece(move.from, move.to)
     }
 
     override fun undo() {
-        TODO("Not yet implemented")
+        positionTracker.movePiece(move.to, move.from)
     }
 }

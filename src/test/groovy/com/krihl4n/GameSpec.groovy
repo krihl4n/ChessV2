@@ -1,22 +1,27 @@
 package com.krihl4n
 
+import com.krihl4n.command.CommandCoordinator
+import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Field
+import com.krihl4n.model.Piece
 import spock.lang.Subject
 
 class GameSpec extends BaseSpec {
 
     @Subject
-    def game
-    def positionTracker
+    Game game
+    PositionTracker positionTracker
 
-    def piece = aWhitePawn()
-    def from = new Field("a2")
-    def to = new Field("a3")
+    Piece piece = aWhitePawn()
+    Field from = new Field("a2")
+    Field to = new Field("a3")
 
     void setup() {
         positionTracker = new PositionTracker()
         positionTracker.setPieceAtField(piece, from)
-        game = new Game(positionTracker)
+        CommandCoordinator commandCoordinator = new CommandCoordinator()
+        CommandFactory commandFactory = new CommandFactory(positionTracker)
+        game = new Game(positionTracker, commandCoordinator, commandFactory)
     }
 
     def "can't perform move if game not started"() {
@@ -35,7 +40,7 @@ class GameSpec extends BaseSpec {
         def result = game.performMove(from, to)
 
         then:
-        result == true
+        result
     }
 
     def "can't perform move if game has been finished"() {
@@ -70,6 +75,38 @@ class GameSpec extends BaseSpec {
         def result = game.performMove(from, to)
 
         then:
-        result == false
+        !result
+    }
+
+    def "should undo move"() {
+        given:
+        game.start()
+
+        when:
+        game.performMove(from, to)
+        and:
+        game.undoMove()
+
+        then:
+        positionTracker.getPieceAt(to) == null
+        and:
+        positionTracker.getPieceAt(from) == piece
+    }
+
+    def "should redo move"() {
+        given:
+        game.start()
+
+        when:
+        game.performMove(from, to)
+        and:
+        game.undoMove()
+        and:
+        game.redoMove()
+
+        then:
+        positionTracker.getPieceAt(from) == null
+        and:
+        positionTracker.getPieceAt(to) == piece
     }
 }
