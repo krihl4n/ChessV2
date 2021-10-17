@@ -4,6 +4,11 @@ import com.krihl4n.CaptureTracker
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Move
 
+/*
+    TODO maybe
+    maybe this logic should be a part of the move entity, and we could have different types of moves
+    and moves would send domain events, which inform about performed actions?
+ */
 class AttackMoveCommand(
     val move: Move,
     private val positionTracker: PositionTracker,
