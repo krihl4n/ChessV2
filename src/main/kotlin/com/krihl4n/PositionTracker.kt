@@ -2,6 +2,7 @@ package com.krihl4n
 
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
+import kotlin.collections.HashMap
 
 class PositionTracker {
 
@@ -33,5 +34,9 @@ class PositionTracker {
 
     fun isFieldOccupied(field: Field) : Boolean {
         return !isFieldEmpty(field)
+    }
+
+    fun getPositionsOfAllPieces() : HashMap<Field, Piece> {
+        return HashMap(piecePositions)
     }
  }

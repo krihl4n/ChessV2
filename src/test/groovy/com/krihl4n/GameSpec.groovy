@@ -8,7 +8,7 @@ import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import spock.lang.Subject
 
-class GameSpec extends BaseSpec {
+class GameSpec extends BaseGameSpec {
 
     @Subject
     Game game
@@ -66,7 +66,7 @@ class GameSpec extends BaseSpec {
         game.performMove(from, to)
 
         then:
-        positionTracker.getPieceAt(to) == piece
+        assertPositions("wp_a3", positionTracker)
     }
 
     def "should return false if move couldn't be performed"() {
@@ -91,9 +91,7 @@ class GameSpec extends BaseSpec {
         game.undoMove()
 
         then:
-        positionTracker.getPieceAt(to) == null
-        and:
-        positionTracker.getPieceAt(from) == piece
+        assertPositions("wp_a2", positionTracker)
     }
 
     def "should redo move"() {
@@ -108,9 +106,7 @@ class GameSpec extends BaseSpec {
         game.redoMove()
 
         then:
-        positionTracker.getPieceAt(from) == null
-        and:
-        positionTracker.getPieceAt(to) == piece
+        assertPositions("wp_a3", positionTracker)
     }
 
     def "should not be able to perform illegal moves" () {
