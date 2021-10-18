@@ -12,15 +12,15 @@ class BaseGameSpec extends BaseSpec {
         def expected = toStringChessboard(map)
         def actual = toStringChessboard(getPositionsFromTracker(positionTracker.positionsOfAllPieces))
         assert expected == actual
-        return expected == actual
+        return this
     }
 
     private static def getPositionsFromTracker(Map<Field, Piece> mapFromTracker) {
         def map = [:]
         mapFromTracker.each { k, v ->
-           def stringVal = k.toString()
+            def stringVal = k.toString()
             def stripped = stringVal.substring(stringVal.indexOf('(') + 1, stringVal.indexOf(')'))
-           map.put(stripped, determineToken(v.color) + determineToken(v.type))
+            map.put(stripped, determineToken(v.color) + determineToken(v.type))
         }
         return map
     }
@@ -44,13 +44,13 @@ class BaseGameSpec extends BaseSpec {
         for (int i = 8; i > 0; i--) {
             chessboard +=
                     i + "  | " + getPiece("a" + i, piecePositions) + " |" +
-                    " " + getPiece("b" + i, piecePositions) + " |" +
-                    " " + getPiece("c" + i, piecePositions) + " |" +
-                    " " + getPiece("d" + i, piecePositions) + " |" +
-                    " " + getPiece("e" + i, piecePositions) + " |" +
-                    " " + getPiece("f" + i, piecePositions) + " |" +
-                    " " + getPiece("g" + i, piecePositions) + " |" +
-                    " " + getPiece("h" + i, piecePositions) + " |" +
+                            " " + getPiece("b" + i, piecePositions) + " |" +
+                            " " + getPiece("c" + i, piecePositions) + " |" +
+                            " " + getPiece("d" + i, piecePositions) + " |" +
+                            " " + getPiece("e" + i, piecePositions) + " |" +
+                            " " + getPiece("f" + i, piecePositions) + " |" +
+                            " " + getPiece("g" + i, piecePositions) + " |" +
+                            " " + getPiece("h" + i, piecePositions) + " |" +
                             "\n"
             chessboard += "    ---- ---- ---- ---- ---- ---- ---- ----\n"
         }
@@ -65,7 +65,7 @@ class BaseGameSpec extends BaseSpec {
     }
 
     private static def determineToken(Type pieceType) {
-        switch(pieceType) {
+        switch (pieceType) {
             case Type.PAWN: return "p"
             case Type.ROOK: return "r"
             case Type.KNIGHT: return "n"
@@ -76,7 +76,7 @@ class BaseGameSpec extends BaseSpec {
     }
 
     private static def determineToken(Color pieceColor) {
-        switch(pieceColor) {
+        switch (pieceColor) {
             case Color.WHITE: return "w"
             case Color.BLACK: return "b"
         }
