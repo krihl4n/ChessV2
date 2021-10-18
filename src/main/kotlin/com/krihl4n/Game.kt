@@ -22,6 +22,10 @@ class Game(
         gameInProgress = false
     }
 
+    fun performMove(from: String, to:String): Boolean {
+        return this.performMove(Field(from), Field(to))
+    }
+
     fun performMove(from: Field, to: Field): Boolean {
         if (!gameInProgress)
             throw IllegalStateException("Game hasn't been started.")

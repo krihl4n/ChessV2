@@ -1,13 +1,39 @@
 package com.krihl4n
 
+import com.krihl4n.command.CommandCoordinator
+import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
+import com.krihl4n.moveCalculators.CalculatorFactory
+import com.krihl4n.moveCalculators.PieceMoveCalculator
+import spock.lang.Subject
 
 class BaseGameSpec extends BaseSpec {
 
-    static def assertPositions(String expression, PositionTracker positionTracker) {
+    @Subject
+    Game game
+    PositionTracker positionTracker
+
+    void setup() {
+        positionTracker = new PositionTracker()
+        CommandCoordinator commandCoordinator = new CommandCoordinator()
+        CommandFactory commandFactory = new CommandFactory(positionTracker, new CaptureTracker())
+        MoveValidator moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker)))
+        game = new Game(positionTracker, commandCoordinator, commandFactory, moveValidator)
+    }
+
+    def setupPieces(String expression) {
+        Map<String, String> map = getPiecePositionsMap(expression)
+        for(item in map) {
+            def field = aField(item.key)
+            def piece = new Piece(determineColor(item.value[0]), determineType(item.value[1]))
+            positionTracker.setPieceAtField(piece, field)
+        }
+    }
+
+    def assertPositions(String expression) {
         def map = getPiecePositionsMap(expression)
         def expected = toStringChessboard(map)
         def actual = toStringChessboard(getPositionsFromTracker(positionTracker.positionsOfAllPieces))
@@ -15,8 +41,8 @@ class BaseGameSpec extends BaseSpec {
         return this
     }
 
-    private static def getPositionsFromTracker(Map<Field, Piece> mapFromTracker) {
-        def map = [:]
+    private static Map<String, String> getPositionsFromTracker(Map<Field, Piece> mapFromTracker) {
+        Map<String, String> map = [:]
         mapFromTracker.each { k, v ->
             def stringVal = k.toString()
             def stripped = stringVal.substring(stringVal.indexOf('(') + 1, stringVal.indexOf(')'))
@@ -25,10 +51,10 @@ class BaseGameSpec extends BaseSpec {
         return map
     }
 
-    private static def getPiecePositionsMap(String expression) {
+    private static Map<String, String> getPiecePositionsMap(String expression) {
         String[] tokens = expression.split("[\\n\\r\\s]+")
 
-        def map = [:]
+        Map<String, String> map = [:]
         tokens.each { token ->
             token = token.toLowerCase()
             map.put(token[3] + token[4], token[0] + token[1])
@@ -75,10 +101,28 @@ class BaseGameSpec extends BaseSpec {
         }
     }
 
+    private static def determineType(String token) {
+        switch (token) {
+            case "p": return Type.PAWN
+            case "r": return Type.ROOK
+            case "n": return Type.KNIGHT
+            case "b": return Type.BISHOP
+            case "q": return Type.QUEEN
+            case "k": return Type.KING
+        }
+    }
+
     private static def determineToken(Color pieceColor) {
         switch (pieceColor) {
             case Color.WHITE: return "w"
             case Color.BLACK: return "b"
+        }
+    }
+
+    private static def determineColor(String token) {
+        switch (token) {
+            case "w": return Color.WHITE
+            case "b": return Color.BLACK
         }
     }
 }

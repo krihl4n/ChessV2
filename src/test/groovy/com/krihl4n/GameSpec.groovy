@@ -1,35 +1,14 @@
 package com.krihl4n
 
-import com.krihl4n.command.CommandCoordinator
-import com.krihl4n.command.CommandFactory
-import com.krihl4n.model.Field
-import com.krihl4n.model.Piece
-import com.krihl4n.moveCalculators.CalculatorFactory
-import com.krihl4n.moveCalculators.PieceMoveCalculator
-import spock.lang.Subject
-
 class GameSpec extends BaseGameSpec {
 
-    @Subject
-    Game game
-    PositionTracker positionTracker
-
-    Piece piece = aWhitePawn()
-    Field from = new Field("a2")
-    Field to = new Field("a3")
-
     void setup() {
-        positionTracker = new PositionTracker()
-        positionTracker.setPieceAtField(piece, from)
-        CommandCoordinator commandCoordinator = new CommandCoordinator()
-        CommandFactory commandFactory = new CommandFactory(positionTracker, new CaptureTracker())
-        MoveValidator moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker)))
-        game = new Game(positionTracker, commandCoordinator, commandFactory, moveValidator)
+        setupPieces("wp_a2")
     }
 
     def "can't perform move if game not started"() {
         when:
-        game.performMove(from, to)
+        game.performMove("a2", "a3")
 
         then:
         thrown(IllegalStateException)
@@ -40,7 +19,7 @@ class GameSpec extends BaseGameSpec {
         game.start()
 
         when:
-        def result = game.performMove(from, to)
+        def result = game.performMove("a2", "a3")
 
         then:
         result
@@ -52,7 +31,7 @@ class GameSpec extends BaseGameSpec {
         game.finish()
 
         when:
-        game.performMove(from, to)
+        game.performMove("a2", "a3")
 
         then:
         thrown(IllegalStateException)
@@ -63,19 +42,19 @@ class GameSpec extends BaseGameSpec {
         game.start()
 
         when:
-        game.performMove(from, to)
+        game.performMove("a2", "a3")
 
         then:
-        assertPositions("wp_a3", positionTracker)
+        assertPositions("wp_a3")
     }
 
     def "should return false if move couldn't be performed"() {
         given:
         game.start()
-        positionTracker.removePieceFromField(from)
+        positionTracker.removePieceFromField(aField("a2"))
 
         when:
-        def result = game.performMove(from, to)
+        def result = game.performMove("a2", "a3")
 
         then:
         !result
@@ -86,12 +65,12 @@ class GameSpec extends BaseGameSpec {
         game.start()
 
         when:
-        game.performMove(from, to)
+        game.performMove("a2", "a3")
         and:
         game.undoMove()
 
         then:
-        assertPositions("wp_a2", positionTracker)
+        assertPositions("wp_a2")
     }
 
     def "should redo move"() {
@@ -99,17 +78,17 @@ class GameSpec extends BaseGameSpec {
         game.start()
 
         when:
-        game.performMove(from, to)
+        game.performMove("a2", "a3")
         and:
         game.undoMove()
         and:
         game.redoMove()
 
         then:
-        assertPositions("wp_a3", positionTracker)
+        assertPositions("wp_a3")
     }
 
-    def "should not be able to perform illegal moves" () {
+    def "should not be able to perform illegal moves"() {
         given:
         game.start()
         and:
