@@ -37,7 +37,7 @@ class BaseGameSpec extends BaseSpec {
         def map = getPiecePositionsMap(expression)
         def expected = toStringChessboard(map)
         def actual = toStringChessboard(getPositionsFromTracker(positionTracker.positionsOfAllPieces))
-        assert expected == actual
+        assert actual == expected
         return this
     }
 

@@ -5,8 +5,11 @@ import com.krihl4n.model.Field
 
 class KingMoveCalculator(private val positionTracker: PositionTracker) : MoveCalculator {
 
-    // todo castling
     override fun calculateMoves(from: Field): Set<PossibleMove> {
-        return PossibleMovesCreator.create(positionTracker, from, 1, allDirectionsMoves)
+        val moves = PossibleMovesCreator.create(positionTracker, from, 1, allDirectionsMoves)
+        if (from == Field("e1")) {
+            moves.add(PossibleMove(Field("e1"), Field("c1"))) // todo can castle
+        }
+        return moves
     }
 }

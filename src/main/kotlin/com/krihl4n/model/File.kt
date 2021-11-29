@@ -1,5 +1,7 @@
 package com.krihl4n.model
 
+import kotlin.math.abs
+
 data class File(private val fileToken: String) {
 
     private val allowedTokens = arrayOf("a", "b", "c", "d", "e", "f", "g", "h")
@@ -28,5 +30,9 @@ data class File(private val fileToken: String) {
         if (index < 0)
             return null
         return File(allowedTokens[index])
+    }
+
+    fun distanceTo(file: File): Int {
+        return abs(allowedTokens.indexOf(this.token) - allowedTokens.indexOf(file.token))
     }
 }
