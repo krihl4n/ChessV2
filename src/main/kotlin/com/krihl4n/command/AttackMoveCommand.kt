@@ -18,6 +18,8 @@ class AttackMoveCommand(
     override fun execute() {
         val capturedPiece =
             positionTracker.getPieceAt(move.to) ?: throw IllegalStateException("no piece at desired field")
+        if(capturedPiece.color == move.piece.color)
+            throw IllegalArgumentException("cannot attack friendly pieces")
         captureTracker.pieceCaptured(capturedPiece, move.to)
         positionTracker.movePiece(move.from, move.to)
     }
