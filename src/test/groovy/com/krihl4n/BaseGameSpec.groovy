@@ -29,6 +29,10 @@ class BaseGameSpec extends BaseSpec {
         game.performMove(tokens[0], tokens[1])
     }
 
+    def undoMove() {
+        game.undoMove()
+    }
+
     def setupPieces(String expression) {
         Map<String, String> map = getPiecePositionsMap(expression)
         for(item in map) {
