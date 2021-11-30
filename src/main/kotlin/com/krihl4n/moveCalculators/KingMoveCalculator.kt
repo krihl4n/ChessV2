@@ -7,9 +7,17 @@ class KingMoveCalculator(private val positionTracker: PositionTracker) : MoveCal
 
     override fun calculateMoves(from: Field): Set<PossibleMove> {
         val moves = PossibleMovesCreator.create(positionTracker, from, 1, allDirectionsMoves)
+        // todo can castle check
         if (from == Field("e1")) {
-            moves.add(PossibleMove(Field("e1"), Field("c1"))) // todo can castle
+            moves.add(PossibleMove(Field("e1"), Field("c1")))
+            moves.add(PossibleMove(Field("e1"), Field("g1")))
         }
+
+        if (from == Field("e8")) {
+            moves.add(PossibleMove(Field("e8"), Field("c8")))
+            moves.add(PossibleMove(Field("e8"), Field("g8")))
+        }
+
         return moves
     }
 }

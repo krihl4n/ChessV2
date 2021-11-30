@@ -6,29 +6,21 @@ class CastlingSpec extends BaseGameSpec {
         game.start()
     }
 
-    def "castling white king long"() {
+    def "basic castling #type"() {
         given:
-        setupPieces("wk_e1 wr_a1")
+        setupPieces(setup)
 
         when:
-        game.performMove("e1", "c1")
+        performMove(move)
 
         then:
-        assertPositions("wk_c1 wr_d1")
-    }
+        assertPositions(positions)
 
-    def "castling white king short"() {
-        // king e1 g1
-        // rook h1 f1
-    }
-
-    def "castling black king long"() {
-        // king e8 c8
-        // rook a8 d8
-    }
-
-    def "castling black king short"() {
-        // king e8 g8
-        // rook h8 f8
+        where:
+        type               | setup         | move    || positions
+        "white king long"  | "wk_e1 wr_a1" | "e1 c1" || "wk_c1 wr_d1"
+        "white king short" | "wk_e1 wr_h1" | "e1 g1" || "wk_g1 wr_f1"
+        "black king long"  | "bk_e8 br_a8" | "e8 c8" || "bk_c8 br_d8"
+        "black king short" | "bk_e8 br_h8" | "e8 g8" || "bk_g8 br_f8"
     }
 }

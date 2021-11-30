@@ -24,6 +24,11 @@ class BaseGameSpec extends BaseSpec {
         game = new Game(positionTracker, commandCoordinator, commandFactory, moveValidator)
     }
 
+    def performMove(String move) {
+        String[] tokens = move.split(' ')
+        game.performMove(tokens[0], tokens[1])
+    }
+
     def setupPieces(String expression) {
         Map<String, String> map = getPiecePositionsMap(expression)
         for(item in map) {

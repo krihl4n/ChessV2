@@ -21,4 +21,8 @@ class Move(val piece: Piece, val from: Field, val to: Field) {
             return Move(piece, tokens[0], tokens[1])
         }
     }
+
+    override fun toString(): String {
+        return "Move(piece=$piece, from=$from, to=$to)"
+    }
 }

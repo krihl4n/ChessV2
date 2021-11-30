@@ -31,8 +31,10 @@ class Game(
             throw IllegalStateException("Game hasn't been started.")
 
         val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return false
-        if (!moveValidator.isMoveValid(move))
+        if (!moveValidator.isMoveValid(move)){
+            println("$move is not valid")
             return false
+        }
 
         try {
             commandCoordinator.execute(commandFactory.getCommand(move))
