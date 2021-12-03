@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.castling.CastlingGuard
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Color
@@ -19,8 +20,10 @@ class BaseGameSpec extends BaseSpec {
     void setup() {
         positionTracker = new PositionTracker()
         CommandCoordinator commandCoordinator = new CommandCoordinator()
+        CastlingGuard castlingGuard = new CastlingGuard()
+        commandCoordinator.registerObserver(castlingGuard)
         CommandFactory commandFactory = new CommandFactory(positionTracker, new CaptureTracker())
-        MoveValidator moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker)))
+        MoveValidator moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker, castlingGuard)))
         game = new Game(positionTracker, commandCoordinator, commandFactory, moveValidator)
     }
 
@@ -36,8 +39,8 @@ class BaseGameSpec extends BaseSpec {
     def setupPieces(String expression) {
         Map<String, String> map = getPiecePositionsMap(expression)
         for(item in map) {
-            def field = aField(item.key)
-            def piece = new Piece(determineColor(item.value[0]), determineType(item.value[1]))
+            Field field = aField(item.key)
+            Piece piece = new Piece(determineColor(item.value[0]), determineType(item.value[1]))
             positionTracker.setPieceAtField(piece, field)
         }
     }
@@ -96,7 +99,7 @@ class BaseGameSpec extends BaseSpec {
 
     private static getPiece(String field, def piecePositions) {
         def piece = piecePositions[field]
-        if (piece == null) return "  " else return piece.trim()
+        if (piece == null) return "  " else return piece
     }
 
     private static def determineToken(Type pieceType) {
@@ -128,7 +131,7 @@ class BaseGameSpec extends BaseSpec {
         }
     }
 
-    private static def determineColor(String token) {
+    private static Color determineColor(String token) {
         switch (token) {
             case "w": return Color.WHITE
             case "b": return Color.BLACK

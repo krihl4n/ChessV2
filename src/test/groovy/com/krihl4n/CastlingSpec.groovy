@@ -43,4 +43,18 @@ class CastlingSpec extends BaseGameSpec {
         "black king short" | "bk_e8 br_h8" | "e8 g8" || "bk_e8 br_h8"
     }
 
+    def "cannot do white king short castle if rook moved before"() {
+        given:
+        setupPieces("wk_e1 wr_h1")
+
+        and:
+        performMove("h1 h2")
+        performMove("h2 h1")
+
+        when:
+        performMove("e1 g1")
+
+        then:
+        assertPositions("wk_e1 wr_h1")
+    }
 }

@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.castling.CastlingGuard
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import spock.lang.Subject
@@ -12,7 +13,7 @@ class MoveValidatorSpec extends BaseSpec {
 
     void setup() {
         positionTracker = new PositionTracker()
-        moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker)))
+        moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker, new CastlingGuard())))
     }
 
     def "should allow not allow performing illegal moves"() {

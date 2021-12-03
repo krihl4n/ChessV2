@@ -5,7 +5,7 @@ import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 
 class CastlingMoveCommand(
-    val move: Move,
+    private val move: Move,
     private val positionTracker: PositionTracker
 ) : MoveCommand {
 
@@ -48,5 +48,9 @@ class CastlingMoveCommand(
             throw IllegalStateException("Cannot resolve castling")
         }
         return Pair(from, to)
+    }
+
+    override fun getMove(): Move {
+        return this.move
     }
 }

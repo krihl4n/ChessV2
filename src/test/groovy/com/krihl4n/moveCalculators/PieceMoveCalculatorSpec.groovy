@@ -2,6 +2,7 @@ package com.krihl4n.moveCalculators
 
 import com.krihl4n.BaseSpec
 import com.krihl4n.PositionTracker
+import com.krihl4n.castling.CastlingGuard
 import spock.lang.Subject
 
 class PieceMoveCalculatorSpec extends BaseSpec {
@@ -13,7 +14,7 @@ class PieceMoveCalculatorSpec extends BaseSpec {
 
     void setup() {
         positionTracker = new PositionTracker()
-        def factory = new CalculatorFactory(positionTracker)
+        def factory = new CalculatorFactory(positionTracker, new CastlingGuard())
         calculator = new PieceMoveCalculator(positionTracker, factory)
     }
 

@@ -5,9 +5,17 @@ class CommandCoordinator {
     private val executedCommands = ArrayDeque<MoveCommand>()
     private val undidCommands = ArrayDeque<MoveCommand>()
 
+    private val moveObservers = mutableSetOf<MoveObserver>()
+
+    fun registerObserver(moveObserver: MoveObserver) {
+        this.moveObservers.add(moveObserver)
+    }
+
     fun execute(command: MoveCommand) {
         command.execute()
         executedCommands.add(command)
+
+        moveObservers.forEach{ it.movePerformed(command.getMove())}
     }
 
     fun undo() {

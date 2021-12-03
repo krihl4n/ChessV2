@@ -10,7 +10,7 @@ import com.krihl4n.model.Move
     and moves would send domain events, which inform about performed actions?
  */
 class AttackMoveCommand(
-    val move: Move,
+    private val move: Move,
     private val positionTracker: PositionTracker,
     private val captureTracker: CaptureTracker
 ) : MoveCommand {
@@ -31,5 +31,9 @@ class AttackMoveCommand(
 
         positionTracker.setPieceAtField(movingPiece, move.from)
         positionTracker.setPieceAtField(capturedPiece, move.to)
+    }
+
+    override fun getMove(): Move {
+        return this.move
     }
 }
