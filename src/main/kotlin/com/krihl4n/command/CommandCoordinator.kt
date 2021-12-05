@@ -15,7 +15,7 @@ class CommandCoordinator {
         command.execute()
         executedCommands.add(command)
 
-        moveObservers.forEach{ it.movePerformed(command.getMove())}
+        moveObservers.forEach { it.movePerformed(command.getMove()) }
     }
 
     fun undo() {
@@ -25,6 +25,8 @@ class CommandCoordinator {
         command.undo()
         executedCommands.removeLast()
         undidCommands.add(command)
+
+        moveObservers.forEach { it.moveUndid(command.getMove()) }
     }
 
     fun redo() {
