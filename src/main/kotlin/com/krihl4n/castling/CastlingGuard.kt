@@ -7,84 +7,86 @@ private const val WHITE_ROOK_KING_SIDE_STARTING_POS = "h1"
 private const val WHITE_ROOK_QUEEN_SIDE_STARTING_POS = "a1"
 private const val BLACK_ROOK_KING_SIDE_STARTING_POS = "h8"
 private const val BLACK_ROOK_QUEEN_SIDE_STARTING_POS = "a8"
+private const val WHITE_KING_STARTING_POS = "e1"
+private const val BLACK_KING_STARTING_POS = "e8"
 
 class CastlingGuard : MoveObserver {
 
-    private var whiteKingShortCastlingAllowed = true
-    private var whiteKingLongCastlingAllowed = true
-    private var blackKingShortCastlingAllowed = true
-    private var blackKingLongCastlingAllowed = true
+    private val whiteKingShortCastlingPermit = CastlingPermit()
+    private val whiteKingLongCastlingPermit = CastlingPermit()
+    private val blackKingShortCastlingPermit = CastlingPermit()
+    private val blackKingLongCastlingPermit = CastlingPermit()
 
     override fun movePerformed(move: Move) {
-        if (whiteKingShortCastlingAllowed && move.whiteKingMoved()) {
-            whiteKingShortCastlingAllowed = false
-            whiteKingLongCastlingAllowed = false
+        if (move.whiteKingMovedFromStartingPosition()) {
+            whiteKingShortCastlingPermit.blockCastling(move)
+            whiteKingLongCastlingPermit.blockCastling(move)
         }
 
-        if (blackKingShortCastlingAllowed && move.blackKingMoved()) {
-            blackKingShortCastlingAllowed = false
-            blackKingLongCastlingAllowed = false
+        if (move.blackKingMovedFromStartingPosition()) {
+            blackKingShortCastlingPermit.blockCastling(move)
+            blackKingLongCastlingPermit.blockCastling(move)
         }
 
-        if (whiteKingShortCastlingAllowed && move.whiteRookMovedFrom(WHITE_ROOK_KING_SIDE_STARTING_POS)) {
-            whiteKingShortCastlingAllowed = false
+        if (move.whiteRookMovedFrom(WHITE_ROOK_KING_SIDE_STARTING_POS)) {
+            whiteKingShortCastlingPermit.blockCastling(move)
         }
 
-        if (whiteKingShortCastlingAllowed && move.whiteRookMovedFrom(WHITE_ROOK_QUEEN_SIDE_STARTING_POS)) {
-            whiteKingLongCastlingAllowed = false
+        if (move.whiteRookMovedFrom(WHITE_ROOK_QUEEN_SIDE_STARTING_POS)) {
+            whiteKingLongCastlingPermit.blockCastling(move)
         }
 
-        if (blackKingShortCastlingAllowed && move.blackRookMovedFrom(BLACK_ROOK_KING_SIDE_STARTING_POS)) {
-            blackKingShortCastlingAllowed = false
+        if (move.blackRookMovedFrom(BLACK_ROOK_KING_SIDE_STARTING_POS)) {
+            blackKingShortCastlingPermit.blockCastling(move)
         }
 
-        if (blackKingLongCastlingAllowed && move.blackRookMovedFrom(BLACK_ROOK_QUEEN_SIDE_STARTING_POS)) {
-            blackKingLongCastlingAllowed = false
+        if (move.blackRookMovedFrom(BLACK_ROOK_QUEEN_SIDE_STARTING_POS)) {
+            blackKingLongCastlingPermit.blockCastling(move)
         }
     }
 
     override fun moveUndid(move: Move) {
-        if (!whiteKingShortCastlingAllowed && move.whiteKingMoved()) {
-            whiteKingShortCastlingAllowed = true
-            whiteKingLongCastlingAllowed = true
+        if (move.whiteKingMovedFromStartingPosition()) {
+            whiteKingShortCastlingPermit.unblockCastling(move)
+            whiteKingLongCastlingPermit.unblockCastling(move)
         }
 
-        if (!blackKingShortCastlingAllowed && move.blackKingMoved()) {
-            blackKingShortCastlingAllowed = true
-            blackKingLongCastlingAllowed = true
+        if (move.blackKingMovedFromStartingPosition()) {
+            blackKingShortCastlingPermit.unblockCastling(move)
+            blackKingLongCastlingPermit.unblockCastling(move)
         }
 
-        if (!whiteKingShortCastlingAllowed && move.whiteRookMovedFrom(WHITE_ROOK_KING_SIDE_STARTING_POS)) {
-            whiteKingShortCastlingAllowed = true
+        if (move.whiteRookMovedFrom(WHITE_ROOK_KING_SIDE_STARTING_POS)) {
+            whiteKingShortCastlingPermit.unblockCastling(move)
         }
 
-        if (!whiteKingShortCastlingAllowed && move.whiteRookMovedFrom(WHITE_ROOK_QUEEN_SIDE_STARTING_POS)) {
-            whiteKingLongCastlingAllowed = true
+        if (move.whiteRookMovedFrom(WHITE_ROOK_QUEEN_SIDE_STARTING_POS)) {
+            whiteKingLongCastlingPermit.unblockCastling(move)
         }
 
-        if (!blackKingShortCastlingAllowed && move.blackRookMovedFrom(BLACK_ROOK_KING_SIDE_STARTING_POS)) {
-            blackKingShortCastlingAllowed = true
+        if (move.blackRookMovedFrom(BLACK_ROOK_KING_SIDE_STARTING_POS)) {
+            blackKingShortCastlingPermit.unblockCastling(move)
         }
 
-        if (!blackKingLongCastlingAllowed && move.blackRookMovedFrom(BLACK_ROOK_QUEEN_SIDE_STARTING_POS)) {
-            blackKingLongCastlingAllowed = true
+        if (move.blackRookMovedFrom(BLACK_ROOK_QUEEN_SIDE_STARTING_POS)) {
+            blackKingLongCastlingPermit.unblockCastling(move)
         }
     }
 
     fun canWhiteKingShortCastle(): Boolean {
-        return whiteKingShortCastlingAllowed
+        return whiteKingShortCastlingPermit.isPermitted()
     }
 
     fun canWhiteKingLongCastle(): Boolean {
-        return whiteKingLongCastlingAllowed
+        return whiteKingLongCastlingPermit.isPermitted()
     }
 
     fun canBlackKingShortCastle(): Boolean {
-        return blackKingShortCastlingAllowed
+        return blackKingShortCastlingPermit.isPermitted()
     }
 
     fun canBlackKingLongCastle(): Boolean {
-        return blackKingLongCastlingAllowed
+        return blackKingLongCastlingPermit.isPermitted()
     }
 
     private fun Move.whiteRookMovedFrom(field: String) =
@@ -93,7 +95,31 @@ class CastlingGuard : MoveObserver {
     private fun Move.blackRookMovedFrom(field: String) =
         this.piece == Piece(Color.BLACK, Type.ROOK) && this.from == Field(field)
 
-    private fun Move.whiteKingMoved() = this.piece == Piece(Color.WHITE, Type.KING)
+    private fun Move.whiteKingMovedFromStartingPosition() =
+        this.piece == Piece(Color.WHITE, Type.KING) &&
+                this.from == Field(WHITE_KING_STARTING_POS)
 
-    private fun Move.blackKingMoved() = this.piece == Piece(Color.BLACK, Type.KING)
+    private fun Move.blackKingMovedFromStartingPosition() =
+        this.piece == Piece(Color.BLACK, Type.KING) &&
+                this.from == Field(BLACK_KING_STARTING_POS)
+}
+
+private class CastlingPermit {
+    val blockingMoves = mutableSetOf<Move>()
+
+    fun blockCastling(move: Move) {
+        if (blockingMoves.alreadyBlockedByMoveFromField(move.from))
+            return
+        blockingMoves.add(move)
+    }
+
+    fun unblockCastling(move: Move) {
+        blockingMoves.remove(move)
+    }
+
+    fun isPermitted(): Boolean {
+        return blockingMoves.isEmpty()
+    }
+
+    fun Set<Move>.alreadyBlockedByMoveFromField(field: Field) = this.find { it.from == field } != null
 }
