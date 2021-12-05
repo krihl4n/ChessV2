@@ -3,6 +3,7 @@ package com.krihl4n.moveCalculators
 import com.krihl4n.BaseSpec
 import com.krihl4n.PositionTracker
 import com.krihl4n.castling.CastlingGuard
+import com.krihl4n.moveCalculators.filters.PossibleMoveFilter
 import spock.lang.Subject
 
 class RookMoveCalculatorSpec extends BaseSpec {
@@ -15,7 +16,7 @@ class RookMoveCalculatorSpec extends BaseSpec {
     void setup() {
         positionTracker = new PositionTracker()
         def factory = new CalculatorFactory(positionTracker, new CastlingGuard())
-        calculator = new PieceMoveCalculator(positionTracker, factory)
+        calculator = new PieceMoveCalculator(positionTracker, factory, new HashSet<PossibleMoveFilter>())
     }
 
     def "should give all fields to the right"() {

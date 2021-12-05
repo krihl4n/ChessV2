@@ -4,9 +4,15 @@ import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
 import kotlin.collections.HashMap
 
-class PositionTracker {
+class PositionTracker(private val piecePositions:HashMap<Field, Piece> = HashMap() ) {
 
-    private val piecePositions: HashMap<Field, Piece> = HashMap()
+   // private val piecePositions: HashMap<Field, Piece> = HashMap()
+
+    fun withMove(start: Field, destination: Field): PositionTracker {
+        val newTracker = PositionTracker(HashMap(this.piecePositions))
+        newTracker.movePiece(start, destination)
+        return newTracker
+    }
 
     fun setPieceAtField(piece: Piece, field: Field) {
         piecePositions[field] = piece

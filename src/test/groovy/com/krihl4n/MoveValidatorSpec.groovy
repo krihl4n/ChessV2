@@ -3,6 +3,7 @@ package com.krihl4n
 import com.krihl4n.castling.CastlingGuard
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import com.krihl4n.moveCalculators.filters.PossibleMoveFilter
 import spock.lang.Subject
 
 class MoveValidatorSpec extends BaseSpec {
@@ -13,7 +14,7 @@ class MoveValidatorSpec extends BaseSpec {
 
     void setup() {
         positionTracker = new PositionTracker()
-        moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker, new CastlingGuard())))
+        moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker, new CastlingGuard()), new HashSet<PossibleMoveFilter>()))
     }
 
     def "should allow not allow performing illegal moves"() {

@@ -1,6 +1,8 @@
 package com.krihl4n
 
 import com.krihl4n.castling.CastlingGuard
+import com.krihl4n.check.CheckGuard
+import com.krihl4n.check.FieldAttackResolver
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Color
@@ -9,6 +11,8 @@ import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import com.krihl4n.moveCalculators.filters.OwnKingCannotBeCheckedAfterMoveFilter
+import com.krihl4n.moveCalculators.filters.PossibleMoveFilter
 import spock.lang.Subject
 
 class BaseGameSpec extends BaseSpec {
@@ -23,7 +27,21 @@ class BaseGameSpec extends BaseSpec {
         CastlingGuard castlingGuard = new CastlingGuard()
         commandCoordinator.registerObserver(castlingGuard)
         CommandFactory commandFactory = new CommandFactory(positionTracker, new CaptureTracker())
-        MoveValidator moveValidator = new MoveValidator(new PieceMoveCalculator(positionTracker, new CalculatorFactory(positionTracker, castlingGuard)))
+        Set<PossibleMoveFilter> filters = [
+                new OwnKingCannotBeCheckedAfterMoveFilter(
+                        new CheckGuard(
+                                new FieldAttackResolver(positionTracker),
+                                positionTracker
+                        )
+                )
+        ]
+        MoveValidator moveValidator = new MoveValidator(
+                new PieceMoveCalculator(
+                        positionTracker,
+                        new CalculatorFactory(positionTracker, castlingGuard),
+                        filters
+                )
+        )
         game = new Game(positionTracker, commandCoordinator, commandFactory, moveValidator)
     }
 
@@ -38,7 +56,7 @@ class BaseGameSpec extends BaseSpec {
 
     def setupPieces(String expression) {
         Map<String, String> map = getPiecePositionsMap(expression)
-        for(item in map) {
+        for (item in map) {
             Field field = aField(item.key)
             Piece piece = new Piece(determineColor(item.value[0]), determineType(item.value[1]))
             positionTracker.setPieceAtField(piece, field)

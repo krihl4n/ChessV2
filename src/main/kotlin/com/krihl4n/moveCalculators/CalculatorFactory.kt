@@ -5,7 +5,7 @@ import com.krihl4n.castling.CastlingGuard
 import com.krihl4n.model.Type
 import java.util.*
 
-class CalculatorFactory(val positionTracker: PositionTracker, castlingGuard: CastlingGuard) {
+class CalculatorFactory(val positionTracker: PositionTracker, val castlingGuard: CastlingGuard) {
 
     private val calculators: Map<Type, MoveCalculator>
 
@@ -17,6 +17,10 @@ class CalculatorFactory(val positionTracker: PositionTracker, castlingGuard: Cas
         calculators[Type.BISHOP] = BishopMoveCalculator(positionTracker)
         calculators[Type.QUEEN] = QueenMoveCalculator(positionTracker)
         calculators[Type.KING] = KingMoveCalculator(positionTracker, castlingGuard)
+    }
+
+    fun withPositionTracker(positionTracker: PositionTracker): CalculatorFactory {
+       return CalculatorFactory(positionTracker, this.castlingGuard )
     }
 
     fun getMoveCalculator(pieceType: Type): MoveCalculator {

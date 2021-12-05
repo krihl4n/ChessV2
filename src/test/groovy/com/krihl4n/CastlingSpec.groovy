@@ -156,4 +156,8 @@ class CastlingSpec extends BaseGameSpec {
         "black king long"  | "bk_e8 br_a8" | "e8 e7"   | "e7 e8"   | "e8 e7"   | "e8 c8"      || startingSetup
         "black king short" | "bk_e8 br_h8" | "e8 e7"   | "e7 e8"   | "e8 e7"   | "e8 g8"      || startingSetup
     }
+
+    def "cannot castle if king would be attack during move"() { // todo check if king can castle if "check"
+        // todo
+    }
 }
