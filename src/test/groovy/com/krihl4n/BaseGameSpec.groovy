@@ -2,7 +2,6 @@ package com.krihl4n
 
 import com.krihl4n.castling.CastlingGuard
 import com.krihl4n.check.CheckGuard
-import com.krihl4n.check.FieldAttackResolver
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Color
@@ -29,10 +28,7 @@ class BaseGameSpec extends BaseSpec {
         CommandFactory commandFactory = new CommandFactory(positionTracker, new CaptureTracker())
         Set<PossibleMoveFilter> filters = [
                 new OwnKingCannotBeCheckedAfterMoveFilter(
-                        new CheckGuard(
-                                new FieldAttackResolver(positionTracker),
-                                positionTracker
-                        )
+                        new CheckGuard(positionTracker)
                 )
         ]
         MoveValidator moveValidator = new MoveValidator(
@@ -154,5 +150,6 @@ class BaseGameSpec extends BaseSpec {
             case "w": return Color.WHITE
             case "b": return Color.BLACK
         }
+        throw new IllegalArgumentException("cannot determine color")
     }
 }

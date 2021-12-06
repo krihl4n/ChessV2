@@ -19,8 +19,7 @@ class PieceMoveCalculator(
         val piece = positionTracker.getPieceAt(field) ?: throw IllegalArgumentException("No piece at field $field")
         val calculator = calculatorFactory.withPositionTracker(positionTracker).getMoveCalculator(piece.type)
         val unfilteredMoves = calculator.calculateMoves(field)
-        val filteredMoves = filterMoves(piece.color, unfilteredMoves)
-        return filteredMoves
+        return filterMoves(piece.color, unfilteredMoves)
     }
 
     private fun filterMoves(color: Color, moves: Set<PossibleMove>): Set<PossibleMove> {

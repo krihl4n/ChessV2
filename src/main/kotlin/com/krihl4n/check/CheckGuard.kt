@@ -6,7 +6,7 @@ import com.krihl4n.model.*
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCalculators.PossibleMove
 
-class CheckGuard(private val fieldAttackResolver: FieldAttackResolver, val positionTracker: PositionTracker) :
+class CheckGuard(val positionTracker: PositionTracker) :
     MoveObserver {
 
     override fun movePerformed(move: Move) {
@@ -22,18 +22,20 @@ class CheckGuard(private val fieldAttackResolver: FieldAttackResolver, val posit
 //        return fieldAttackResolver.isFieldUnderAttackByColor(kingPosition, color.opposite())
 //    }
 
-    fun willKingBeCheckedAfterMove(moveCalculator: PieceMoveCalculator, color: Color, possibleMove: PossibleMove): Boolean {
-        if(possibleMove.to == Field("e3")) {
-            println("debug")
-        }
-
+    fun willKingBeCheckedAfterMove(
+        moveCalculator: PieceMoveCalculator,
+        color: Color,
+        possibleMove: PossibleMove,
+    ): Boolean {
         val trackerWithMovePerformed = this.positionTracker.withMove(possibleMove.from, possibleMove.to)
         val kingPosition: Field = findKingPosition(color, trackerWithMovePerformed) ?: return false
-        val result =  fieldAttackResolver
-            .withPositionTracker(trackerWithMovePerformed)
-            .isFieldUnderAttackByColor(kingPosition, color.opposite(), moveCalculator.withPositionTracker(trackerWithMovePerformed))
+        val result = isFieldUnderAttackByColor(
+            kingPosition,
+            color.opposite(),
+            moveCalculator.withPositionTracker(trackerWithMovePerformed),
+            trackerWithMovePerformed)
 
-        if(result) {
+        if (result) {
             println("King would be checked if this move was performed!")
         }
         return result
@@ -52,5 +54,17 @@ class CheckGuard(private val fieldAttackResolver: FieldAttackResolver, val posit
 
     private fun Color.opposite(): Color {
         return if (this == Color.WHITE) Color.BLACK else Color.WHITE
+    }
+
+    private fun isFieldUnderAttackByColor(
+        field: Field,
+        color: Color,
+        pieceMoveCalculator: PieceMoveCalculator,
+        positionTracker: PositionTracker,
+    ): Boolean {
+        return positionTracker.getPositionsOfAllPieces()
+            .filter { it.value.color == color }
+            .flatMap { pieceMoveCalculator.findMoves(it.key) }
+            .any { it.to == field }
     }
 }
