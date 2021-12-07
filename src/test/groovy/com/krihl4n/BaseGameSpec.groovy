@@ -1,9 +1,5 @@
 package com.krihl4n
 
-import com.krihl4n.castling.CastlingGuard
-import com.krihl4n.check.CheckGuard
-import com.krihl4n.command.CommandCoordinator
-import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
@@ -21,24 +17,18 @@ class BaseGameSpec extends BaseSpec {
     PositionTracker positionTracker
 
     void setup() {
-        positionTracker = new PositionTracker()
-        CommandCoordinator commandCoordinator = new CommandCoordinator()
-        CastlingGuard castlingGuard = new CastlingGuard()
-        commandCoordinator.registerObserver(castlingGuard)
-        CommandFactory commandFactory = new CommandFactory(positionTracker, new CaptureTracker())
+        new Dependencies()
+        new CalculatorFactory()
+        positionTracker = Dependencies.positionTracker
+        Dependencies.commandCoordinator.registerObserver(Dependencies.castlingGuard)
         Set<PossibleMoveFilter> filters = [
-                new OwnKingCannotBeCheckedAfterMoveFilter(
-                        new CheckGuard(positionTracker)
-                )
+                new OwnKingCannotBeCheckedAfterMoveFilter()
         ]
+
         MoveValidator moveValidator = new MoveValidator(
-                new PieceMoveCalculator(
-                        positionTracker,
-                        new CalculatorFactory(positionTracker, castlingGuard),
-                        filters
-                )
+                new PieceMoveCalculator(positionTracker)
         )
-        game = new Game(positionTracker, commandCoordinator, commandFactory, moveValidator)
+        game = new Game(moveValidator)
     }
 
     def performMove(String move) {

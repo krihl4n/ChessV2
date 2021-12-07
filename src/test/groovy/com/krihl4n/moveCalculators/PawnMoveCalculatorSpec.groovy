@@ -8,11 +8,11 @@ class PawnMoveCalculatorSpec extends BaseSpec {
 
     PositionTracker positionTracker
     @Subject
-    def calculator
+    MoveCalculator calculator
 
     void setup() {
         positionTracker = new PositionTracker()
-        calculator = new PawnMoveCalculator(positionTracker)
+        calculator = new PawnMoveCalculator()
     }
 
     def "a pawn can move one field forward"() {
@@ -20,7 +20,7 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         positionTracker.setPieceAtField(pawn, field)
 
         when:
-        def moves = calculator.calculateMoves(field)
+        def moves = calculator.calculateMoves(field, positionTracker)
 
         then:
         moves == expectedFields
@@ -36,7 +36,7 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         positionTracker.setPieceAtField(pawn, field)
 
         when:
-        def moves = calculator.calculateMoves(field)
+        def moves = calculator.calculateMoves(field, positionTracker)
 
         then:
         moves.isEmpty()
@@ -52,7 +52,7 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         positionTracker.setPieceAtField(pawn, field)
 
         when:
-        def moves = calculator.calculateMoves(field)
+        def moves = calculator.calculateMoves(field, positionTracker)
 
         then:
         moves == expectedFields
@@ -69,7 +69,7 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         positionTracker.setPieceAtField(aWhitePawn(), aField("b3"))
 
         when:
-        def moves = calculator.calculateMoves(aField("b2"))
+        def moves = calculator.calculateMoves(aField("b2"), positionTracker)
 
         then:
         moves.isEmpty()
@@ -81,7 +81,7 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         positionTracker.setPieceAtField(aWhitePawn(), aField("b4"))
 
         when:
-        def moves = calculator.calculateMoves(aField("b2"))
+        def moves = calculator.calculateMoves(aField("b2"), positionTracker)
 
         then:
         !moves.contains(possibleMove("b2", "b4"))
@@ -94,7 +94,7 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         positionTracker.setPieceAtField(aBlackPawn(), aField("a3"))
 
         when:
-        def moves = calculator.calculateMoves(aField("b2"))
+        def moves = calculator.calculateMoves(aField("b2"), positionTracker)
 
         then:
         moves.contains(possibleMove("b2", "c3"))
@@ -108,7 +108,7 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         positionTracker.setPieceAtField(aWhitePawn(), aField("a3"))
 
         when:
-        def moves = calculator.calculateMoves(aField("b2"))
+        def moves = calculator.calculateMoves(aField("b2"), positionTracker)
 
         then:
         !moves.contains(possibleMove("b2", "c3"))
@@ -122,11 +122,10 @@ class PawnMoveCalculatorSpec extends BaseSpec {
         positionTracker.setPieceAtField(aWhitePawn(), aField("a6"))
 
         when:
-        def moves = calculator.calculateMoves(aField("b7"))
+        def moves = calculator.calculateMoves(aField("b7"), positionTracker)
 
         then:
         moves.contains(possibleMove("b7", "c6"))
         moves.contains(possibleMove("b7", "a6"))
     }
-
 }

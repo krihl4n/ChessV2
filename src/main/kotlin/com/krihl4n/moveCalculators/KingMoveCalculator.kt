@@ -1,13 +1,12 @@
 package com.krihl4n.moveCalculators
 
+import com.krihl4n.Dependencies.Companion.castlingGuard
 import com.krihl4n.PositionTracker
-import com.krihl4n.castling.CastlingGuard
 import com.krihl4n.model.Field
 
-class KingMoveCalculator(private val positionTracker: PositionTracker, private val castlingGuard: CastlingGuard) :
-    MoveCalculator {
+class KingMoveCalculator : MoveCalculator {
 
-    override fun calculateMoves(from: Field): Set<PossibleMove> {
+    override fun calculateMoves(from: Field, positionTracker: PositionTracker): Set<PossibleMove> {
         val moves = PossibleMovesCreator.create(positionTracker, from, 1, allDirectionsMoves)
         if (from == Field("e1")) {
             if (castlingGuard.canWhiteKingLongCastle() && positionTracker.fieldsAreEmpty("b1", "c1", "d1"))

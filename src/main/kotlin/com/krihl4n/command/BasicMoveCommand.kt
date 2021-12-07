@@ -1,9 +1,9 @@
 package com.krihl4n.command
 
-import com.krihl4n.PositionTracker
+import com.krihl4n.Dependencies.Companion.positionTracker
 import com.krihl4n.model.Move
 
-class BasicMoveCommand(private val move: Move, val positionTracker: PositionTracker) : MoveCommand {
+class BasicMoveCommand(private val move: Move) : MoveCommand {
 
     override fun execute() {
         positionTracker.movePiece(move.from, move.to)

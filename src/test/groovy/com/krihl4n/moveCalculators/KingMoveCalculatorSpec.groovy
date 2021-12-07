@@ -1,9 +1,8 @@
 package com.krihl4n.moveCalculators
 
 import com.krihl4n.BaseSpec
+import com.krihl4n.Dependencies
 import com.krihl4n.PositionTracker
-import com.krihl4n.castling.CastlingGuard
-import com.krihl4n.moveCalculators.filters.PossibleMoveFilter
 import spock.lang.Subject
 
 class KingMoveCalculatorSpec extends BaseSpec {
@@ -14,16 +13,16 @@ class KingMoveCalculatorSpec extends BaseSpec {
     PieceMoveCalculator calculator
 
     void setup() {
-        positionTracker = new PositionTracker()
-        def factory = new CalculatorFactory(positionTracker, new CastlingGuard())
-        calculator = new PieceMoveCalculator(positionTracker, factory, new HashSet<PossibleMoveFilter>())
+        new Dependencies()
+        new CalculatorFactory()
+        positionTracker = Dependencies.positionTracker
+        calculator = new PieceMoveCalculator(positionTracker)
     }
 
     def "should calculate basic moves for the king"() {
         given:
         positionTracker.setPieceAtField(king, aField("e5"))
         positionTracker.setPieceAtField(friendlyPiece, aField("e4"))
-        positionTracker.setPieceAtField(enemyPiece, aField("e6"))
 
         when:
         def moves = calculator.findMoves(aField("e5"))
@@ -40,8 +39,8 @@ class KingMoveCalculatorSpec extends BaseSpec {
         ] as Set
 
         where:
-        king         | friendlyPiece | enemyPiece
-        aWhiteKing() | aWhitePawn()  | aBlackPawn()
-        aBlackKing() | aBlackPawn()  | aWhitePawn()
+        king         | friendlyPiece
+        aWhiteKing() | aWhitePawn()
+        aBlackKing() | aBlackPawn()
     }
 }

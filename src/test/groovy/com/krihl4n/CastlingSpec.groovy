@@ -45,7 +45,7 @@ class CastlingSpec extends BaseGameSpec {
 
     def "can't do castling of type #type if rook moved before"() {
         given:
-        setupPieces(sstartingSetup)
+        setupPieces(startingSetup)
 
         and:
         performMove(rookMove1)
@@ -58,11 +58,11 @@ class CastlingSpec extends BaseGameSpec {
         assertPositions(positions)
 
         where:
-        type               | sstartingSetup | rookMove1 | rookMove2 | castlingMove || positions
-        "white king long"  | "wk_e1 wr_a1"  | "a1 a2"   | "a2 a1"   | "e1 c1"      || sstartingSetup
-        "white king short" | "wk_e1 wr_h1"  | "h1 h2"   | "h2 h1"   | "e1 g1"      || sstartingSetup
-        "black king long"  | "bk_e8 br_a8"  | "a8 a7"   | "a7 a8"   | "e8 c8"      || sstartingSetup
-        "black king short" | "bk_e8 br_h8"  | "h8 h7"   | "h7 h8"   | "e8 g8"      || sstartingSetup
+        type               | startingSetup | rookMove1 | rookMove2 | castlingMove || positions
+        "white king long"  | "wk_e1 wr_a1" | "a1 a2"   | "a2 a1"   | "e1 c1"      || startingSetup
+        "white king short" | "wk_e1 wr_h1" | "h1 h2"   | "h2 h1"   | "e1 g1"      || startingSetup
+        "black king long"  | "bk_e8 br_a8" | "a8 a7"   | "a7 a8"   | "e8 c8"      || startingSetup
+        "black king short" | "bk_e8 br_h8" | "h8 h7"   | "h7 h8"   | "e8 g8"      || startingSetup
     }
 
     def "can't do castling of type #type if king moved before"() {

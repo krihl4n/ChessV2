@@ -6,10 +6,10 @@ import com.krihl4n.model.Field
 import com.krihl4n.model.File
 import com.krihl4n.model.Rank
 
-class PawnMoveCalculator(private val positionTracker: PositionTracker) : MoveCalculator {
+class PawnMoveCalculator : MoveCalculator {
 
     // todo en passant
-    override fun calculateMoves(from: Field): Set<PossibleMove> {
+    override fun calculateMoves(from: Field, positionTracker: PositionTracker): Set<PossibleMove> {
         val moves = HashSet<PossibleMove>()
         val pawn = positionTracker.getPieceAt(from) ?: throw IllegalArgumentException("no piece at $from")
 

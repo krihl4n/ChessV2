@@ -3,9 +3,9 @@ package com.krihl4n.moveCalculators
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Field
 
-class RookMoveCalculator(private val positionTracker: PositionTracker) : MoveCalculator {
+class RookMoveCalculator : MoveCalculator {
 
-    override fun calculateMoves(from: Field): Set<PossibleMove> {
+    override fun calculateMoves(from: Field, positionTracker: PositionTracker): Set<PossibleMove> {
         return PossibleMovesCreator.create(positionTracker, from, nextFieldFunctions = verticalMoves + horizontalMoves)
     }
 }

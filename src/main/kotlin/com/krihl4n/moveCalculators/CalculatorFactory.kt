@@ -1,29 +1,26 @@
 package com.krihl4n.moveCalculators
 
-import com.krihl4n.PositionTracker
-import com.krihl4n.castling.CastlingGuard
 import com.krihl4n.model.Type
 import java.util.*
 
-class CalculatorFactory(val positionTracker: PositionTracker, val castlingGuard: CastlingGuard) {
+class CalculatorFactory {
 
-    private val calculators: Map<Type, MoveCalculator>
+    companion object {
+        lateinit var calculators: Map<Type, MoveCalculator>
+
+        fun getMoveCalculator(pieceType: Type): MoveCalculator {
+            return calculators[pieceType] ?: throw IllegalArgumentException("cannot find calculator")
+        }
+    }
 
     init {
-        calculators = EnumMap(Type::class.java)
-        calculators[Type.ROOK] = RookMoveCalculator(positionTracker)
-        calculators[Type.PAWN] = PawnMoveCalculator(positionTracker)
-        calculators[Type.KNIGHT] = KnightMoveCalculator(positionTracker)
-        calculators[Type.BISHOP] = BishopMoveCalculator(positionTracker)
-        calculators[Type.QUEEN] = QueenMoveCalculator(positionTracker)
-        calculators[Type.KING] = KingMoveCalculator(positionTracker, castlingGuard)
-    }
-
-    fun withPositionTracker(positionTracker: PositionTracker): CalculatorFactory {
-       return CalculatorFactory(positionTracker, this.castlingGuard )
-    }
-
-    fun getMoveCalculator(pieceType: Type): MoveCalculator {
-        return calculators[pieceType] ?: throw IllegalArgumentException("cannot find calculator")
+        val calc = EnumMap<Type, MoveCalculator>(Type::class.java)
+        calc[Type.ROOK] = RookMoveCalculator()
+        calc[Type.PAWN] = PawnMoveCalculator()
+        calc[Type.KNIGHT] = KnightMoveCalculator()
+        calc[Type.BISHOP] = BishopMoveCalculator()
+        calc[Type.QUEEN] = QueenMoveCalculator()
+        calc[Type.KING] = KingMoveCalculator()
+        calculators = calc
     }
 }

@@ -1,9 +1,8 @@
 package com.krihl4n.moveCalculators
 
 import com.krihl4n.BaseSpec
+import com.krihl4n.Dependencies
 import com.krihl4n.PositionTracker
-import com.krihl4n.castling.CastlingGuard
-import com.krihl4n.moveCalculators.filters.PossibleMoveFilter
 import spock.lang.Subject
 
 class KnightMoveCalculatorSpec extends BaseSpec {
@@ -15,9 +14,10 @@ class KnightMoveCalculatorSpec extends BaseSpec {
     PieceMoveCalculator calculator
 
     void setup() {
-        positionTracker = new PositionTracker()
-        def factory = new CalculatorFactory(positionTracker, new CastlingGuard())
-        calculator = new PieceMoveCalculator(positionTracker, factory, new HashSet<PossibleMoveFilter>())
+        new Dependencies()
+        new CalculatorFactory()
+        positionTracker = Dependencies.positionTracker
+        calculator = new PieceMoveCalculator(positionTracker)
     }
 
     def "should move correctly from corners"() {
