@@ -1,7 +1,9 @@
 package com.krihl4n.castling
 
+import com.krihl4n.PositionTracker
 import com.krihl4n.command.MoveObserver
 import com.krihl4n.model.*
+import com.krihl4n.moveCalculators.PieceMoveCalculator
 
 private const val WHITE_ROOK_KING_SIDE_STARTING_POS = "h1"
 private const val WHITE_ROOK_QUEEN_SIDE_STARTING_POS = "a1"
@@ -102,6 +104,18 @@ class CastlingGuard : MoveObserver {
     private fun Move.blackKingMovedFromStartingPosition() =
         this.piece == Piece(Color.BLACK, Type.KING) &&
                 this.from == Field(BLACK_KING_STARTING_POS)
+
+    private fun isFieldUnderAttackByColor(
+        field: Field,
+        color: Color,
+        pieceMoveCalculator: PieceMoveCalculator,
+        positionTracker: PositionTracker,
+    ): Boolean {
+        return positionTracker.getPositionsOfAllPieces()
+            .filter { it.value.color == color }
+            .flatMap { pieceMoveCalculator.findMoves(it.key) }
+            .any { it.to == field }
+    }
 }
 
 private class CastlingPermit {
