@@ -1,6 +1,6 @@
 package com.krihl4n.castling
 
-import com.krihl4n.PositionTracker
+import com.krihl4n.Dependencies.Companion.positionTracker
 import com.krihl4n.command.MoveObserver
 import com.krihl4n.model.*
 import com.krihl4n.moveCalculators.PieceMoveCalculator
@@ -18,6 +18,8 @@ class CastlingGuard : MoveObserver {
     private val whiteKingLongCastlingPermit = CastlingPermit()
     private val blackKingShortCastlingPermit = CastlingPermit()
     private val blackKingLongCastlingPermit = CastlingPermit()
+
+    private val pieceMoveCalculator = PieceMoveCalculator(positionTracker)
 
     override fun movePerformed(move: Move) {
         if (move.whiteKingMovedFromStartingPosition()) {
@@ -76,19 +78,27 @@ class CastlingGuard : MoveObserver {
     }
 
     fun canWhiteKingShortCastle(): Boolean {
-        return whiteKingShortCastlingPermit.isPermitted()
+        return whiteKingShortCastlingPermit.isPermitted() &&
+                !Color.BLACK.attacksAnyOfFields("e1", "f1")
     }
 
     fun canWhiteKingLongCastle(): Boolean {
-        return whiteKingLongCastlingPermit.isPermitted()
+        return whiteKingLongCastlingPermit.isPermitted() &&
+                !Color.BLACK.attacksAnyOfFields("e1", "d1", "c1")
     }
 
     fun canBlackKingShortCastle(): Boolean {
-        return blackKingShortCastlingPermit.isPermitted()
+        return blackKingShortCastlingPermit.isPermitted() &&
+                !Color.WHITE.attacksAnyOfFields("e8", "f8")
     }
 
     fun canBlackKingLongCastle(): Boolean {
-        return blackKingLongCastlingPermit.isPermitted()
+        return blackKingLongCastlingPermit.isPermitted() &&
+                !Color.WHITE.attacksAnyOfFields("e8", "d8", "c8")
+    }
+
+    private fun Color.attacksAnyOfFields(vararg fields: String): Boolean {
+        return fields.any { isFieldUnderAttackByColor(Field(it), this) }
     }
 
     private fun Move.whiteRookMovedFrom(field: String) =
@@ -108,8 +118,6 @@ class CastlingGuard : MoveObserver {
     private fun isFieldUnderAttackByColor(
         field: Field,
         color: Color,
-        pieceMoveCalculator: PieceMoveCalculator,
-        positionTracker: PositionTracker,
     ): Boolean {
         return positionTracker.getPositionsOfAllPieces()
             .filter { it.value.color == color }

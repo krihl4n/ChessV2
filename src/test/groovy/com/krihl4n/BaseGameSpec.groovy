@@ -6,8 +6,6 @@ import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
-import com.krihl4n.moveCalculators.filters.OwnKingCannotBeCheckedAfterMoveFilter
-import com.krihl4n.moveCalculators.filters.PossibleMoveFilter
 import spock.lang.Subject
 
 class BaseGameSpec extends BaseSpec {
@@ -21,10 +19,6 @@ class BaseGameSpec extends BaseSpec {
         new CalculatorFactory()
         positionTracker = Dependencies.positionTracker
         Dependencies.commandCoordinator.registerObserver(Dependencies.castlingGuard)
-        Set<PossibleMoveFilter> filters = [
-                new OwnKingCannotBeCheckedAfterMoveFilter()
-        ]
-
         MoveValidator moveValidator = new MoveValidator(
                 new PieceMoveCalculator(positionTracker)
         )

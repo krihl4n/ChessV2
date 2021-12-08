@@ -194,7 +194,9 @@ class CastlingSpec extends BaseGameSpec {
         where:
         startingSetup       | move    || positions
         "wk_e1 wr_a1 bq_e8" | "e1 c1" || startingSetup
+        "wk_e1 wr_h1 bq_e8" | "e1 g1" || startingSetup
         "bk_e8 br_a8 wq_e1" | "e8 c8" || startingSetup
+        "bk_e8 br_h8 wq_e1" | "e8 g8" || startingSetup
     }
 
     def "can castle if rook is under attack"() {
@@ -228,7 +230,23 @@ class CastlingSpec extends BaseGameSpec {
         "bk_e8 br_a8 wq_b1" | "e8 c8" || "bk_c8 br_d8 wq_b1"
     }
 
-    def "cannot castle if king would be attack during move"() { // todo check if king can castle if "check"
-        // todo
+    def "cannot castle if king would be attack during move"() {
+            given:
+            setupPieces(startingSetup)
+
+            when:
+            performMove(move)
+
+            then:
+            assertPositions(positions)
+
+            where:
+            startingSetup       | move    || positions
+            "wk_e1 wr_a1 bq_c8" | "e1 c1" || startingSetup
+            "wk_e1 wr_a1 bq_d8" | "e1 c1" || startingSetup
+            "wk_e1 wr_h1 bq_f8" | "e1 g1" || startingSetup
+            "bk_e8 br_a8 wq_c1" | "e8 c8" || startingSetup
+            "bk_e8 br_a8 wq_d1" | "e8 c8" || startingSetup
+            "bk_e8 br_h8 wq_f1" | "e8 g8" || startingSetup
     }
 }
