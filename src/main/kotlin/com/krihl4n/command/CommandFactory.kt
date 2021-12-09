@@ -11,20 +11,22 @@ class CommandFactory {
         if (kingAttemptsCastling(move))
             return CastlingMoveCommand(move)
 
-        if (pawnReachesLastRank(move)) {
-             return PawnToQueenMoveCommand(move)
-        }
+        if (pawnReachesLastRank(move))
+            return PawnToQueenMoveCommand(move)
 
-        if (pieceAttacks(move)) {
-            return AttackMoveCommand(move)
-        }
+        if (isEnPassantAttack(move))
+            return EnPassantAttackMoveCommand(move)
 
-        return BasicMoveCommand(move)
+        if (pieceAttacks(move))
+            return StandardAttackMoveCommand(move)
+
+        return StandardMoveCommand(move)
     }
 
-    private fun pieceAttacks(move: Move): Boolean {
-        return positionTracker.getPieceAt(move.to) != null
-    }
+    private fun isEnPassantAttack(move: Move) =
+        move.piece.type == Type.PAWN && move.to.file != move.from.file && positionTracker.isFieldEmpty(move.to)
+
+    private fun pieceAttacks(move: Move) = positionTracker.getPieceAt(move.to) != null
 
     private fun kingAttemptsCastling(move: Move) =
         move.piece.type == Type.KING && move.from.file.distanceTo(move.to.file) >= 2
@@ -32,5 +34,3 @@ class CommandFactory {
     private fun pawnReachesLastRank(move: Move) =
         move.piece.type == Type.PAWN && move.to.rank.isLastFor(move.piece.color)
 }
-
-// en passant

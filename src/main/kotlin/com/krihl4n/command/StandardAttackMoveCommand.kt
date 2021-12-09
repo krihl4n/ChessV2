@@ -9,7 +9,7 @@ import com.krihl4n.model.Move
     maybe this logic should be a part of the move entity, and we could have different types of moves
     and moves would send domain events, which inform about performed actions?
  */
-class AttackMoveCommand(
+class StandardAttackMoveCommand(
     private val move: Move,
 ) : MoveCommand {
 

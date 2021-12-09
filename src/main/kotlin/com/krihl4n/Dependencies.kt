@@ -1,7 +1,7 @@
 package com.krihl4n
 
 import com.krihl4n.castling.CastlingGuard
-import com.krihl4n.check.CheckGuard
+import com.krihl4n.guards.CheckGuard
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
 

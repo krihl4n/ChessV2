@@ -1,4 +1,4 @@
-package com.krihl4n.check
+package com.krihl4n.guards
 
 import com.krihl4n.Dependencies.Companion.positionTracker
 import com.krihl4n.PositionTracker
@@ -29,20 +29,11 @@ class CheckGuard : MoveObserver {
     ): Boolean {
         val trackerWithMovePerformed = positionTracker.withMove(possibleMove.from, possibleMove.to)
         val kingPosition: Field = findKingPosition(color, trackerWithMovePerformed) ?: return false
-        val result = isFieldUnderAttackByColor(
+        return isFieldUnderAttackByColor(
             kingPosition,
             color.opposite(),
             moveCalculator.withPositionTracker(trackerWithMovePerformed),
             trackerWithMovePerformed)
-
-        if (result) {
-            println("King would be checked if this move was performed!")
-        }
-        return result
-    }
-
-    fun findKingSavingMoves() {
-        // todo ?
     }
 
     private fun findKingPosition(color: Color, positionTracker: PositionTracker): Field? {
