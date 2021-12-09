@@ -1,5 +1,7 @@
 package com.krihl4n.command
 
+import com.krihl4n.model.Move
+
 class CommandCoordinator {
 
     private val executedCommands = ArrayDeque<MoveCommand>()
@@ -36,5 +38,10 @@ class CommandCoordinator {
         command.execute()
         undidCommands.removeLast()
         executedCommands.add(command)
+    }
+
+    fun getLastMove(): Move? {
+        return if (executedCommands.isNotEmpty()) executedCommands.last().getMove()
+        else null
     }
 }

@@ -1,5 +1,6 @@
 package com.krihl4n.moveCalculators
 
+import com.krihl4n.Dependencies.Companion.enPassantGuard
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
@@ -8,7 +9,6 @@ import com.krihl4n.model.Rank
 
 class PawnMoveCalculator : MoveCalculator {
 
-    // todo en passant
     override fun calculateMoves(from: Field, positionTracker: PositionTracker): Set<PossibleMove> {
         val moves = HashSet<PossibleMove>()
         val pawn = positionTracker.getPieceAt(from) ?: throw IllegalArgumentException("no piece at $from")
@@ -40,6 +40,8 @@ class PawnMoveCalculator : MoveCalculator {
                 if (!positionTracker.isFieldEmpty(attackField) && positionTracker.getPieceAt(attackField)?.color != pawn.color)
                     moves.add(PossibleMove(from, attackField))
             }
+
+        moves.addAll(enPassantGuard.getEnPassantMoves())
         return moves
     }
 

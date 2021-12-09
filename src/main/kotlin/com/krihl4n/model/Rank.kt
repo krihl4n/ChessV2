@@ -1,5 +1,7 @@
 package com.krihl4n.model
 
+import kotlin.math.abs
+
 data class Rank(val token: String) {
 
     private val allowedTokens = arrayOf("1", "2", "3", "4", "5", "6", "7", "8")
@@ -33,5 +35,9 @@ data class Rank(val token: String) {
     fun isLastFor(color: Color): Boolean {
         return color == Color.WHITE && token == "8" ||
                 color == Color.BLACK && token == "1"
+    }
+
+    fun distanceTo(rank: Rank): Int {
+        return abs(rank.token.toInt() - this.token.toInt())
     }
 }

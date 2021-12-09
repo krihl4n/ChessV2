@@ -4,6 +4,7 @@ import com.krihl4n.castling.CastlingGuard
 import com.krihl4n.guards.CheckGuard
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
+import com.krihl4n.guards.EnPassantGuard
 
 class Dependencies {
 
@@ -14,6 +15,7 @@ class Dependencies {
         lateinit var checkGuard: CheckGuard
         lateinit var captureTracker: CaptureTracker
         lateinit var commandFactory: CommandFactory
+        lateinit var enPassantGuard: EnPassantGuard
     }
 
     init {
@@ -23,5 +25,6 @@ class Dependencies {
         captureTracker = CaptureTracker()
         checkGuard = CheckGuard()
         commandFactory = CommandFactory()
+        enPassantGuard = EnPassantGuard()
     }
 }
