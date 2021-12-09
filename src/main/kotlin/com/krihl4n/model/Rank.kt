@@ -29,4 +29,9 @@ data class Rank(val token: String) {
             return null
         return Rank(allowedTokens[index])
     }
+
+    fun isLastFor(color: Color): Boolean {
+        return color == Color.WHITE && token == "8" ||
+                color == Color.BLACK && token == "1"
+    }
 }

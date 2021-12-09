@@ -8,16 +8,29 @@ class CommandFactory {
 
     fun getCommand(move: Move): MoveCommand {
 
-        if (move.piece.type == Type.KING && move.from.file.distanceTo(move.to.file) >= 2)
+        if (kingAttemptsCastling(move))
             return CastlingMoveCommand(move)
 
-        positionTracker.getPieceAt(move.to)?.let {
+        if (pawnReachesLastRank(move)) {
+             return PawnToQueenMoveCommand(move)
+        }
+
+        if (pieceAttacks(move)) {
             return AttackMoveCommand(move)
         }
 
         return BasicMoveCommand(move)
     }
+
+    private fun pieceAttacks(move: Move): Boolean {
+        return positionTracker.getPieceAt(move.to) != null
+    }
+
+    private fun kingAttemptsCastling(move: Move) =
+        move.piece.type == Type.KING && move.from.file.distanceTo(move.to.file) >= 2
+
+    private fun pawnReachesLastRank(move: Move) =
+        move.piece.type == Type.PAWN && move.to.rank.isLastFor(move.piece.color)
 }
 
 // en passant
-// pawn reaches the end
