@@ -7,7 +7,6 @@ import com.krihl4n.model.Type
 class CommandFactory {
 
     fun getCommand(move: Move): MoveCommand {
-
         if (kingAttemptsCastling(move))
             return CastlingMoveCommand(move)
 

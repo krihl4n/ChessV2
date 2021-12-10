@@ -13,33 +13,35 @@ class EnPassantGuard {
             return emptyList()
 
         val moves = mutableListOf<PossibleMove>()
+        val attackedField: Field = findAttackedField(lastMove)
 
-        val pawnToTheLeft = getPawnAt(lastMove.to.file - 1, lastMove.to.rank)
-        val pawnToTheRight = getPawnAt(lastMove.to.file + 1, lastMove.to.rank)
-
-        val attackedField: Field = if (lastMove.piece.color == Color.BLACK) {
-            Field(
-                lastMove.to.file,
-                (lastMove.to.rank + 1) ?: throw IllegalArgumentException("Illegal field"))
-        } else {
-            Field(
-                lastMove.to.file,
-                (lastMove.to.rank - 1) ?: throw IllegalArgumentException("Illegal field"))
+        getPawnToTheLeft(lastMove)?.let {
+            moves.appendWith((lastMove.to.file - 1)!!, lastMove.to.rank, attackedField)
         }
 
-        pawnToTheLeft?.let {
-            moves.add(
-                PossibleMove(
-                    Field((lastMove.to.file - 1)!!, lastMove.to.rank), attackedField))
-        }
-
-        pawnToTheRight?.let {
-            moves.add(
-                PossibleMove(
-                    Field((lastMove.to.file + 1)!!, lastMove.to.rank), attackedField))
+        getPawnToTheRight(lastMove)?.let {
+            moves.appendWith((lastMove.to.file + 1)!!, lastMove.to.rank, attackedField)
         }
 
         return moves
+    }
+
+    private fun MutableList<PossibleMove>.appendWith(fromFile:File, fromRank: Rank, toField: Field) {
+        this.add(PossibleMove(Field(fromFile, fromRank), toField))
+    }
+
+    private fun getPawnToTheRight(lastMove: Move) = getPawnAt(lastMove.to.file + 1, lastMove.to.rank)
+
+    private fun getPawnToTheLeft(lastMove: Move) = getPawnAt(lastMove.to.file - 1, lastMove.to.rank)
+
+    private fun findAttackedField(lastMove: Move): Field {
+        val rank: Rank? = if (lastMove.piece.color == Color.BLACK) {
+            lastMove.to.rank + 1
+        } else {
+            lastMove.to.rank - 1
+        }
+
+        return Field(lastMove.to.file, rank ?: throw IllegalArgumentException("Illegal field"))
     }
 
     private fun getPawnAt(file: File?, rank: Rank): Piece? {

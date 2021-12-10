@@ -79,4 +79,28 @@ class EnPassantSpec extends BaseGameSpec {
         then:
         assertPositions("wp_e5 bp_f5")
     }
+
+    def "should be able to do en passant at the edge of chessboard"() {
+        given:
+        setupPieces("wp_b5 bp_a7")
+
+        when:
+        performMove("a7 a5")
+        performMove("b5 a6")
+
+        then:
+        assertPositions("wp_a6")
+    }
+
+    def "should be able to do en passant with black pawn"() {
+        given:
+        setupPieces("wp_e2 bp_f4")
+
+        when:
+        performMove("e2 e4")
+        performMove("f4 e3")
+
+        then:
+        assertPositions("bp_e3")
+    }
 }
