@@ -1,9 +1,20 @@
 package com.krihl4n.model
 
-data class Piece (val color: Color, val type: Type)
+data class Piece(val color: Color, val type: Type)
 
 enum class Color {
-    WHITE, BLACK
+    WHITE {
+        override fun opposite(): Color {
+            return BLACK
+        }
+    },
+    BLACK {
+        override fun opposite(): Color {
+            return WHITE
+        }
+    };
+
+    abstract fun opposite(): Color
 }
 
 enum class Type {

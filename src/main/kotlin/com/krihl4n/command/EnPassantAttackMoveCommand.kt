@@ -1,10 +1,7 @@
 package com.krihl4n.command
 
 import com.krihl4n.Dependencies.Companion.positionTracker
-import com.krihl4n.model.Color
-import com.krihl4n.model.Field
-import com.krihl4n.model.Move
-import com.krihl4n.model.Rank
+import com.krihl4n.model.*
 
 class EnPassantAttackMoveCommand(
     private val move: Move,
@@ -13,22 +10,11 @@ class EnPassantAttackMoveCommand(
     override fun execute() {
         positionTracker.removePieceFromField(findAttackedPawnLocation())
         positionTracker.movePiece(move.from, move.to)
-
-//        val capturedPiece =
-//            positionTracker.getPieceAt(move.to) ?: throw IllegalStateException("no piece at desired field")
-//        if (capturedPiece.color == move.piece.color)
-//            throw IllegalArgumentException("cannot attack friendly pieces")
-//        captureTracker.pieceCaptured(capturedPiece, move.to)
-//        positionTracker.movePiece(move.from, move.to)
     }
 
     override fun undo() {
-//        val capturedPiece = captureTracker.popLastPieceCapturedAtField(move.to)
-//        val movingPiece =
-//            positionTracker.getPieceAt(move.to) ?: throw IllegalStateException("no piece at desired field")
-//
-//        positionTracker.setPieceAtField(movingPiece, move.from)
-//        positionTracker.setPieceAtField(capturedPiece, move.to)
+        positionTracker.setPieceAtField(Piece(move.piece.color.opposite(), Type.PAWN), findAttackedPawnLocation())
+        positionTracker.movePiece(move.to, move.from)
     }
 
     override fun getMove(): Move {
