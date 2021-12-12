@@ -21,6 +21,10 @@ class EnPassantAttackMoveCommand(
         return this.move
     }
 
+    private fun Color.opposite(): Color {
+        return if (this == Color.WHITE) Color.BLACK else Color.WHITE
+    }
+
     private fun findAttackedPawnLocation(): Field {
         val rank: Rank? = if (move.piece.color == Color.WHITE) {
             move.to.rank - 1

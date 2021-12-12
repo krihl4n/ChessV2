@@ -6,8 +6,10 @@ import com.krihl4n.model.Move
 import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
 import com.krihl4n.moveCalculators.PossibleMove
+import groovy.transform.CompileStatic
 import spock.lang.Specification
 
+@CompileStatic
 class BaseSpec extends Specification {
 
     static def move(Piece piece, String expression) {
