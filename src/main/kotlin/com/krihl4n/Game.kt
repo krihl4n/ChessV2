@@ -6,9 +6,7 @@ import com.krihl4n.Dependencies.Companion.positionTracker
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 
-class Game(
-    private val moveValidator: MoveValidator
-) {
+class Game(private val moveValidator: MoveValidator) {
 
     var gameInProgress = false
 
@@ -20,7 +18,7 @@ class Game(
         gameInProgress = false
     }
 
-    fun performMove(from: String, to:String): Boolean {
+    fun performMove(from: String, to: String): Boolean {
         return this.performMove(Field(from), Field(to))
     }
 
@@ -29,7 +27,7 @@ class Game(
             throw IllegalStateException("Game hasn't been started.")
 
         val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return false
-        if (!moveValidator.isMoveValid(move)){
+        if (!moveValidator.isMoveValid(move)) {
             println("$move is not valid")
             return false
         }
@@ -51,5 +49,4 @@ class Game(
     fun redoMove() {
         commandCoordinator.redo()
     }
-
 }
