@@ -16,6 +16,7 @@ internal class Dependencies {
         lateinit var captureTracker: CaptureTracker
         lateinit var commandFactory: CommandFactory
         lateinit var enPassantGuard: EnPassantGuard
+        lateinit var debugLogger: DebugLogger
     }
 
     init {
@@ -26,5 +27,6 @@ internal class Dependencies {
         checkGuard = CheckGuard()
         commandFactory = CommandFactory()
         enPassantGuard = EnPassantGuard()
+        debugLogger = DebugLogger()
     }
 }

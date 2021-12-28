@@ -8,8 +8,8 @@ class GameOfChess {
     private val moveValidator = MoveValidator(PieceMoveCalculator(Dependencies.positionTracker))
     private val game = Game(moveValidator)
 
-
     fun start() {
+        game.enableDebugMode()
         game.start()
     }
 

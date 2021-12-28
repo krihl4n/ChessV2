@@ -9,9 +9,14 @@ import com.krihl4n.model.Move
 internal class Game(private val moveValidator: MoveValidator) {
 
     var gameInProgress = false
+    var debugMode = false
 
     fun start() {
         gameInProgress = true
+        if (debugMode) {
+            println("Start game")
+            Dependencies.debugLogger.printChessboard()
+        }
     }
 
     fun finish() {
@@ -26,7 +31,13 @@ internal class Game(private val moveValidator: MoveValidator) {
         if (!gameInProgress)
             throw IllegalStateException("Game hasn't been started.")
 
+        if(positionTracker.isFieldEmpty(from)) {
+            println("No piece at field $from")
+            return false
+        }
+
         val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return false
+
         if (!moveValidator.isMoveValid(move)) {
             println("$move is not valid")
             return false
@@ -39,6 +50,10 @@ internal class Game(private val moveValidator: MoveValidator) {
             return false
         }
 
+        if (debugMode) {
+            println(move)
+            Dependencies.debugLogger.printChessboard()
+        }
         return true
     }
 
@@ -48,5 +63,13 @@ internal class Game(private val moveValidator: MoveValidator) {
 
     fun redoMove() {
         commandCoordinator.redo()
+    }
+
+    fun enableDebugMode() {
+        this.debugMode = true
+    }
+
+    fun disableDebugMode() {
+        this.debugMode = false
     }
 }
