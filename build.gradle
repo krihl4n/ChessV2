@@ -1,22 +1,15 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
-    id 'groovy'
-}
-group = 'me.krihl4n'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
 }
 compileKotlin {
     kotlinOptions.jvmTarget = '10'
 }
 
-test {
-    useJUnitPlatform()
+subprojects {
+    group = 'me.krihl4n'
+    version = '1.0-SNAPSHOT'
+}
+
+repositories {
+    mavenCentral()
 }

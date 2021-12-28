@@ -1,3 +1,5 @@
-
 rootProject.name = 'ChessV2'
+
+include 'game'
+include 'api'
 
