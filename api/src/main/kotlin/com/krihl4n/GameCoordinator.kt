@@ -36,6 +36,7 @@ class GameCoordinator {
     }
 
     fun startGame() {
+        gameOfChess.setupChessboard()
         gameOfChess.start()
     }
 

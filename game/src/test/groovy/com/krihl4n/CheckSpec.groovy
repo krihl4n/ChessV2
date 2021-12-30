@@ -1,5 +1,9 @@
 package com.krihl4n
 
+import com.krihl4n.model.Color
+import com.krihl4n.model.Piece
+import com.krihl4n.model.Type
+
 class CheckSpec extends BaseGameSpec {
 
     void setup() {
@@ -104,5 +108,16 @@ class CheckSpec extends BaseGameSpec {
         where:
         startingSetup       | move    || positions
         "wk_e4 wq_f5 bq_e8" | "f5 e5" || "wk_e4 wq_f5 bq_e8"
+    }
+
+    def "check test with full piece setup" () {
+        given:
+        positionTracker.resetInitialGameSetup()
+
+        when:
+        performMove("a2 a3")
+
+        then:
+        assertSinglePosition(new Piece(Color.WHITE, Type.PAWN), "a3")
     }
 }

@@ -51,6 +51,10 @@ class BaseGameSpec extends BaseSpec {
         return this
     }
 
+    def assertSinglePosition(Piece piece, String field) {
+        positionTracker.getPieceAt(new Field(field)) == piece
+    }
+
     private static Map<String, String> getPositionsFromTracker(Map<Field, Piece> mapFromTracker) {
         Map<String, String> map = [:]
         mapFromTracker.each { k, v ->

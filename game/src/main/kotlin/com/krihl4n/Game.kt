@@ -5,13 +5,19 @@ import com.krihl4n.Dependencies.Companion.commandFactory
 import com.krihl4n.Dependencies.Companion.positionTracker
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
+import com.krihl4n.moveCalculators.CalculatorFactory
 
 internal class Game(private val moveValidator: MoveValidator) {
 
     var gameInProgress = false
     var debugMode = false
 
+    fun setupChessboard() {
+        positionTracker.resetInitialGameSetup()
+    }
+
     fun start() {
+        CalculatorFactory()
         gameInProgress = true
         if (debugMode) {
             println("Start game")
