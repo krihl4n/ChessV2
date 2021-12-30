@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.api.GameOfChess
 import java.util.*
 
 class GameCoordinator {

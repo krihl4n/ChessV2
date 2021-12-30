@@ -1,5 +1,8 @@
-package com.krihl4n
+package com.krihl4n.api
 
+import com.krihl4n.Dependencies
+import com.krihl4n.Game
+import com.krihl4n.MoveValidator
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 
 class GameOfChess {
@@ -7,6 +10,8 @@ class GameOfChess {
     private val dependencies = Dependencies()
     private val moveValidator = MoveValidator(PieceMoveCalculator(Dependencies.positionTracker))
     private val game = Game(moveValidator)
+
+    private var pieceMoveListener: PiecePositionUpdate? = null
 
     fun setupChessboard() {
         game.setupChessboard()
@@ -35,5 +40,9 @@ class GameOfChess {
 
     fun getPositions() {
 
+    }
+
+    fun registerMoveListener(listener: PiecePositionUpdate) {
+        this.pieceMoveListener = listener
     }
 }

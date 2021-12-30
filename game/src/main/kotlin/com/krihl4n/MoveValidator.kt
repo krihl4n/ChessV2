@@ -23,4 +23,5 @@ internal class MoveValidator(private val pieceMoveCalculator: PieceMoveCalculato
     }
 
     // // todo do not need to filter if its a finishing move
+    //  (implementing check mate should force to do it
 }
