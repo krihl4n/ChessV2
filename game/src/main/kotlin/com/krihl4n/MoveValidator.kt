@@ -10,11 +10,9 @@ internal class MoveValidator(private val pieceMoveCalculator: PieceMoveCalculato
     private val filter = OwnKingCannotBeCheckedAfterMoveFilter()
 
     fun isMoveValid(move: Move) : Boolean {
-        println("[MOVE_VALIDATOR] is move valid $move")
         val possibleMoves = pieceMoveCalculator.findMoves(move.from)
         val filteredMoves = filterMoves(move.piece.color, possibleMoves)
 
-        println("[MOVE_VALIDATOR] possible moves $possibleMoves")
         return filteredMoves.stream().anyMatch { it.from == move.from && it.to == move.to }
     }
 
