@@ -59,6 +59,8 @@ private fun move(expression: String) {
     game!!.move(playerOne?.id!!, fields[0], fields[1])
 }
 
+//https://www.baeldung.com/websockets-spring
+
 fun server() {
     val server = ServerSocket(9998)
     val client = server.accept()
