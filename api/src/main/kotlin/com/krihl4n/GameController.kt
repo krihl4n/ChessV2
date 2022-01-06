@@ -13,11 +13,10 @@ class GameController {
     @MessageMapping("/game")
     @SendTo("/topic/moves")
     @Throws(Exception::class)
-    fun send(move: Move): OutputMessage {
+    fun move(move: Move): OutputMessage {
         println(move)
         val time = SimpleDateFormat("HH:mm").format(Date())
         return OutputMessage(move.from, move.to, time)
-       // return OutputMessage(message, message, time)
     }
 
     @MessageMapping("/gameControls")
@@ -27,5 +26,16 @@ class GameController {
         println(controls)
         val time = SimpleDateFormat("HH:mm").format(Date())
         return OutputMessage("xxx", "xxx", time)
+    }
+
+    @MessageMapping("/piecePositions")
+    @SendTo("/topic/piecePositions")
+    @Throws(Exception::class)
+    fun piecePositions(command: String): List<PiecePosition> {
+        println(command)
+        return listOf(
+            PiecePosition("a2", Piece("WHITE", "PAWN")),
+            PiecePosition("a7", Piece("BLACK", "PAWN"))
+        )
     }
 }
