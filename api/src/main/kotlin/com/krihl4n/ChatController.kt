@@ -9,13 +9,14 @@ import java.util.*
 @Controller
 class ChatController {
 
+    //https://www.baeldung.com/spring-websockets-sendtouser
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
     @Throws(Exception::class)
-    fun send(message: Message): OutputMessage {
-        println("received message")
+    fun send(move: Move): OutputMessage {
+        println(move)
         val time = SimpleDateFormat("HH:mm").format(Date())
-        return OutputMessage(message.text ?: "default", message.from ?: "default", time)
+        return OutputMessage(move.from, move.to, time)
        // return OutputMessage(message, message, time)
     }
 }
