@@ -7,16 +7,25 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Controller
-class ChatController {
+class GameController {
 
     //https://www.baeldung.com/spring-websockets-sendtouser
-    @MessageMapping("/chat")
-    @SendTo("/topic/messages")
+    @MessageMapping("/game")
+    @SendTo("/topic/moves")
     @Throws(Exception::class)
     fun send(move: Move): OutputMessage {
         println(move)
         val time = SimpleDateFormat("HH:mm").format(Date())
         return OutputMessage(move.from, move.to, time)
        // return OutputMessage(message, message, time)
+    }
+
+    @MessageMapping("/gameControls")
+    @SendTo("/topic/gameControls")
+    @Throws(Exception::class)
+    fun gameControls(controls: String): OutputMessage {
+        println(controls)
+        val time = SimpleDateFormat("HH:mm").format(Date())
+        return OutputMessage("xxx", "xxx", time)
     }
 }
