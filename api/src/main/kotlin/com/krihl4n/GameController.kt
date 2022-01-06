@@ -35,7 +35,9 @@ class GameController {
         println(command)
         return listOf(
             PiecePosition("a2", Piece("WHITE", "PAWN")),
-            PiecePosition("a7", Piece("BLACK", "PAWN"))
+            PiecePosition("a7", Piece("BLACK", "PAWN")),
+            PiecePosition("b5", Piece("BLACK", "QUEEN")),
+            PiecePosition("h2", Piece("WHITE", "KING"))
         )
     }
 }
