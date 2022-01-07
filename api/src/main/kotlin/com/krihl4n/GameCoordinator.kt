@@ -56,3 +56,11 @@ class GameCoordinator {
         return gameOfChess.getFieldOccupationInfo()
     }
 }
+
+/*
+    state machine?
+    started?
+    waiting for players
+    in progress
+    finished
+ */

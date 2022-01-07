@@ -17,8 +17,6 @@ open class WebSocketConfig: WebSocketMessageBrokerConfigurer {
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/game").setAllowedOriginPatterns("*")
-        registry.addEndpoint("/game").setAllowedOriginPatterns("*").withSockJS();
-        registry.addEndpoint("/gameControls").setAllowedOriginPatterns("*")
-        registry.addEndpoint("/gameControls").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/game").setAllowedOriginPatterns("*").withSockJS()
     }
 }

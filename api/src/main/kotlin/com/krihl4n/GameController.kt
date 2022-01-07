@@ -10,7 +10,8 @@ import java.util.*
 @Controller
 class GameController (private val gameCoordinator: GameCoordinator){
 
-    //https://www.baeldung.com/spring-websockets-sendtouser
+    // https://medium.com/swlh/websockets-with-spring-part-3-stomp-over-websocket-3dab4a21f397 todo subscribe, error handling
+    // https://www.baeldung.com/spring-websockets-sendtouser
     @MessageMapping("/move")
     @SendTo("/topic/moves")
     @Throws(Exception::class)
