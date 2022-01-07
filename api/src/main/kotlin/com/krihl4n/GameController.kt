@@ -11,13 +11,13 @@ import java.util.*
 class GameController (private val gameCoordinator: GameCoordinator){
 
     //https://www.baeldung.com/spring-websockets-sendtouser
-    @MessageMapping("/game")
+    @MessageMapping("/move")
     @SendTo("/topic/moves")
     @Throws(Exception::class)
-    fun move(move: Move): OutputMessage {
+    fun move(move: Move): Move {
         println(move)
-        val time = SimpleDateFormat("HH:mm").format(Date())
-        return OutputMessage(move.from, move.to, time)
+        gameCoordinator.move("", move.from, move.to)
+        return Move(move.from, move.to) // todo return only if really performed.
     }
 
     @MessageMapping("/gameControls")

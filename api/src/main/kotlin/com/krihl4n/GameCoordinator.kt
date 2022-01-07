@@ -45,9 +45,9 @@ class GameCoordinator {
     }
 
     fun move(playerId: String, from: String, to: String) {
-        if(playerId != player1Id && playerId != player2Id) {
-            throw IllegalArgumentException("Player $playerId is not registered in this game")
-        }
+//        if(playerId != player1Id && playerId != player2Id) {
+//            throw IllegalArgumentException("Player $playerId is not registered in this game")
+//        }
 
         gameOfChess.move(from, to)
     }
