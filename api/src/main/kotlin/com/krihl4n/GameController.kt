@@ -30,17 +30,11 @@ class GameController (private val gameCoordinator: GameCoordinator){
         return OutputMessage("xxx", "xxx", time)
     }
 
-    @MessageMapping("/piecePositions")
-    @SendTo("/topic/piecePositions")
+    @MessageMapping("/fieldsOccupation")
+    @SendTo("/topic/fieldsOccupation")
     @Throws(Exception::class)
-    fun piecePositions(command: String): List<FieldOccupationDto> {
+    fun fieldsOccupation(command: String): List<FieldOccupationDto> {
         println(command)
         return gameCoordinator.getPositions()
-//        return listOf(
-//            PiecePosition("a2", Piece("WHITE", "PAWN")),
-//            PiecePosition("a7", Piece("BLACK", "PAWN")),
-//            PiecePosition("b5", Piece("BLACK", "QUEEN")),
-//            PiecePosition("h2", Piece("WHITE", "KING"))
-//        )
     }
 }
