@@ -38,8 +38,8 @@ class GameOfChess {
         game.redoMove()
     }
 
-    fun getPositions() {
-
+    fun getFieldOccupationInfo(): List<FieldOccupationDto> {
+        return game.getFieldOccupationInfo()
     }
 
     fun registerMoveListener(listener: PiecePositionUpdate) {

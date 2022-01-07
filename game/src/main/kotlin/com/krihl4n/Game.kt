@@ -3,6 +3,8 @@ package com.krihl4n
 import com.krihl4n.Dependencies.Companion.commandCoordinator
 import com.krihl4n.Dependencies.Companion.commandFactory
 import com.krihl4n.Dependencies.Companion.positionTracker
+import com.krihl4n.api.FieldOccupationDto
+import com.krihl4n.api.FieldsOccupationMapper
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 import com.krihl4n.moveCalculators.CalculatorFactory
@@ -69,6 +71,10 @@ internal class Game(private val moveValidator: MoveValidator) {
 
     fun redoMove() {
         commandCoordinator.redo()
+    }
+
+    fun getFieldOccupationInfo(): List<FieldOccupationDto> {
+        return FieldsOccupationMapper.from(positionTracker.getPositionsOfAllPieces())
     }
 
     fun enableDebugMode() {

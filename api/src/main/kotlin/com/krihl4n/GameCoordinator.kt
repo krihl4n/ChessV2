@@ -1,8 +1,11 @@
 package com.krihl4n
 
+import com.krihl4n.api.FieldOccupationDto
 import com.krihl4n.api.GameOfChess
+import org.springframework.stereotype.Service
 import java.util.*
 
+@Service
 class GameCoordinator {
 
     private var gameOfChess = GameOfChess()
@@ -49,7 +52,7 @@ class GameCoordinator {
         gameOfChess.move(from, to)
     }
 
-    fun getPositions() {
-
+    fun getPositions(): List<FieldOccupationDto> {
+        return gameOfChess.getFieldOccupationInfo()
     }
 }
