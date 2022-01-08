@@ -8,7 +8,7 @@ import com.krihl4n.guards.EnPassantGuard
 
 internal class Dependencies {
 
-    companion object  {
+    companion object {
         lateinit var positionTracker: PositionTracker
         lateinit var commandCoordinator: CommandCoordinator
         lateinit var castlingGuard: CastlingGuard
@@ -28,5 +28,7 @@ internal class Dependencies {
         commandFactory = CommandFactory()
         enPassantGuard = EnPassantGuard()
         debugLogger = DebugLogger()
+
+        commandCoordinator.registerObserver(castlingGuard)
     }
 }

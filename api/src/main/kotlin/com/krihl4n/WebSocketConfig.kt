@@ -10,6 +10,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 open class WebSocketConfig: WebSocketMessageBrokerConfigurer {
 
+    // https://coderedirect.com/questions/139260/spring-websocket-sendtosession-send-message-to-specific-session
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
         registry.enableSimpleBroker("/topic")
         registry.setApplicationDestinationPrefixes("/chessApp")
