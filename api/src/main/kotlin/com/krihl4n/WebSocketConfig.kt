@@ -14,10 +14,13 @@ open class WebSocketConfig: WebSocketMessageBrokerConfigurer {
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
         registry.enableSimpleBroker("/topic")
         registry.setApplicationDestinationPrefixes("/chessApp")
+        registry.enableSimpleBroker("/secured/user/queue/specific-user")
+    //    registry.setUserDestinationPrefix("/secured/user")// not needed?
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/game").setAllowedOriginPatterns("*")
         registry.addEndpoint("/game").setAllowedOriginPatterns("*").withSockJS()
+        registry.addEndpoint("/secured/room").setAllowedOriginPatterns("*").withSockJS()
     }
 }
