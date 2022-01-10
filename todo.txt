@@ -5,3 +5,15 @@
 
 * security
     https://www.baeldung.com/spring-security-websockets
+
+* game rules
+    check mate
+    stalemate
+
+
+* security, accounts etc
+ //todo later on it will have to be send to specific user who can have multiple sessions
+
+* persistence
+ mongo
+ optimistic locking

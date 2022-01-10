@@ -12,15 +12,12 @@ open class WebSocketConfig: WebSocketMessageBrokerConfigurer {
 
     // https://coderedirect.com/questions/139260/spring-websocket-sendtosession-send-message-to-specific-session
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
-        registry.enableSimpleBroker("/topic")
+        registry.enableSimpleBroker("/user/queue")
         registry.setApplicationDestinationPrefixes("/chessApp")
-        registry.enableSimpleBroker("/secured/user/queue/specific-user")
-    //    registry.setUserDestinationPrefix("/secured/user")// not needed?
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/game").setAllowedOriginPatterns("*")
         registry.addEndpoint("/game").setAllowedOriginPatterns("*").withSockJS()
-        registry.addEndpoint("/secured/room").setAllowedOriginPatterns("*").withSockJS()
     }
 }
