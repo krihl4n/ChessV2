@@ -1,7 +1,7 @@
 package com.krihl4n.command
 
-import com.krihl4n.Dependencies.Companion.captureTracker
-import com.krihl4n.Dependencies.Companion.positionTracker
+import com.krihl4n.CaptureTracker
+import com.krihl4n.PositionTracker
 import com.krihl4n.model.Move
 
 /*
@@ -11,6 +11,8 @@ import com.krihl4n.model.Move
  */
 internal class StandardAttackMoveCommand(
     private val move: Move,
+    private val positionTracker: PositionTracker,
+    private val captureTracker: CaptureTracker
 ) : MoveCommand {
 
     override fun execute() {

@@ -1,25 +1,28 @@
 package com.krihl4n.command
 
-import com.krihl4n.Dependencies.Companion.positionTracker
+import com.krihl4n.CaptureTracker
+import com.krihl4n.PositionTracker
 import com.krihl4n.model.Move
 import com.krihl4n.model.Type
 
-internal class CommandFactory {
+internal class CommandFactory(private val positionTracker: PositionTracker) {
+
+    private val captureTracker = CaptureTracker()
 
     fun getCommand(move: Move): MoveCommand {
         if (kingAttemptsCastling(move))
-            return CastlingMoveCommand(move)
+            return CastlingMoveCommand(move, positionTracker)
 
         if (pawnReachesLastRank(move))
-            return PawnToQueenMoveCommand(move)
+            return PawnToQueenMoveCommand(move, positionTracker, captureTracker)
 
         if (isEnPassantAttack(move))
-            return EnPassantAttackMoveCommand(move)
+            return EnPassantAttackMoveCommand(move, positionTracker)
 
         if (pieceAttacks(move))
-            return StandardAttackMoveCommand(move)
+            return StandardAttackMoveCommand(move, positionTracker, captureTracker)
 
-        return StandardMoveCommand(move)
+        return StandardMoveCommand(move, positionTracker)
     }
 
     private fun isEnPassantAttack(move: Move) =

@@ -12,7 +12,7 @@ import org.springframework.web.socket.handler.WebSocketHandlerDecorator
 
 @Configuration
 @EnableWebSocketMessageBroker
-open class WebSocketConfig: WebSocketMessageBrokerConfigurer {
+open class WebSocketConfig(private val connectionListener: ConnectionListener) : WebSocketMessageBrokerConfigurer {
 
     // https://coderedirect.com/questions/139260/spring-websocket-sendtosession-send-message-to-specific-session
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
@@ -31,11 +31,13 @@ open class WebSocketConfig: WebSocketMessageBrokerConfigurer {
                 @Throws(Exception::class)
                 override fun afterConnectionEstablished(session: WebSocketSession) {
                     println("connection established: $session")
+                    connectionListener.connectionEstablished(session.id)
                     super.afterConnectionEstablished(session)
                 }
 
                 override fun afterConnectionClosed(session: WebSocketSession, closeStatus: CloseStatus) {
                     println("connection closed: $session")
+                    connectionListener.connectionClosed(session.id)
                     super.afterConnectionClosed(session, closeStatus)
                 }
             }

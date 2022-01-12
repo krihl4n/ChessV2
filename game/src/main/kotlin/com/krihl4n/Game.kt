@@ -1,15 +1,16 @@
 package com.krihl4n
 
-import com.krihl4n.Dependencies.Companion.commandCoordinator
-import com.krihl4n.Dependencies.Companion.commandFactory
-import com.krihl4n.Dependencies.Companion.positionTracker
 import com.krihl4n.api.FieldOccupationDto
 import com.krihl4n.api.FieldsOccupationMapper
+import com.krihl4n.command.CommandCoordinator
+import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
-import com.krihl4n.moveCalculators.CalculatorFactory
 
-internal class Game(private val moveValidator: MoveValidator) {
+internal class Game(private val moveValidator: MoveValidator,
+                    private val commandCoordinator: CommandCoordinator,
+                    private val commandFactory: CommandFactory,
+                    private val positionTracker: PositionTracker) {
 
     var gameInProgress = false
     var debugMode = false
@@ -19,11 +20,10 @@ internal class Game(private val moveValidator: MoveValidator) {
     }
 
     fun start() {
-        CalculatorFactory()
         gameInProgress = true
         if (debugMode) {
             println("Start game")
-            Dependencies.debugLogger.printChessboard()
+            DebugLogger.printChessboard(positionTracker)
         }
     }
 
@@ -60,7 +60,7 @@ internal class Game(private val moveValidator: MoveValidator) {
 
         if (debugMode) {
             println(move)
-            Dependencies.debugLogger.printChessboard()
+            DebugLogger.printChessboard(positionTracker)
         }
         return true
     }

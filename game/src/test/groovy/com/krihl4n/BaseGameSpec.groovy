@@ -1,11 +1,17 @@
 package com.krihl4n
 
+import com.krihl4n.command.CommandCoordinator
+import com.krihl4n.command.CommandFactory
+import com.krihl4n.guards.CastlingGuard
+import com.krihl4n.guards.CheckGuard
+import com.krihl4n.guards.EnPassantGuard
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import groovy.transform.CompileStatic
 import spock.lang.Subject
 
 class BaseGameSpec extends BaseSpec {
@@ -15,14 +21,21 @@ class BaseGameSpec extends BaseSpec {
     PositionTracker positionTracker
 
     void setup() {
-        new Dependencies()
-        new CalculatorFactory()
-        positionTracker = Dependencies.positionTracker
-        Dependencies.commandCoordinator.registerObserver(Dependencies.castlingGuard)
+       // new Dependencies()
+        CalculatorFactory calculatorFactory = new CalculatorFactory()
+        positionTracker = new PositionTracker()
+        CastlingGuard castlingGuard = new CastlingGuard(positionTracker, calculatorFactory)
+        CheckGuard checkGuard = new CheckGuard(positionTracker)
+        CommandCoordinator commandCoordinator = new CommandCoordinator()
+        commandCoordinator.registerObserver(castlingGuard)
         MoveValidator moveValidator = new MoveValidator(
-                new PieceMoveCalculator(positionTracker)
+                new PieceMoveCalculator(positionTracker, calculatorFactory),
+                checkGuard
         )
-        game = new Game(moveValidator)
+        CommandFactory commandFactory = new CommandFactory(positionTracker)
+        game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker)
+        EnPassantGuard enPassantGuard = new EnPassantGuard(positionTracker, commandCoordinator)
+        calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
     }
 
     def performMove(String move) {

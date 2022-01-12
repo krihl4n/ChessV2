@@ -5,10 +5,10 @@ import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
 
-internal class DebugLogger {
+internal object DebugLogger {
 
-    fun printChessboard() {
-        val piecePositions = getPositionsFromTracker(Dependencies.positionTracker.getPositionsOfAllPieces())
+    fun printChessboard(positionTracker: PositionTracker) {
+        val piecePositions = getPositionsFromTracker(positionTracker.getPositionsOfAllPieces())
 
         var chessboard = ""
 

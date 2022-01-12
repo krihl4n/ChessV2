@@ -1,17 +1,35 @@
 package com.krihl4n.api
 
-import com.krihl4n.Dependencies
 import com.krihl4n.Game
 import com.krihl4n.MoveValidator
+import com.krihl4n.PositionTracker
+import com.krihl4n.command.CommandCoordinator
+import com.krihl4n.command.CommandFactory
+import com.krihl4n.guards.CastlingGuard
+import com.krihl4n.guards.CheckGuard
+import com.krihl4n.guards.EnPassantGuard
+import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 
 class GameOfChess {
 
-    private val dependencies = Dependencies()
-    private val moveValidator = MoveValidator(PieceMoveCalculator(Dependencies.positionTracker))
-    private val game = Game(moveValidator)
+    private val positionTracker = PositionTracker()
+    private val commandCoordinator = CommandCoordinator()
+    private val checkGuard = CheckGuard(positionTracker)
+    private val calculatorFactory = CalculatorFactory()
+    private val moveValidator = MoveValidator(PieceMoveCalculator(positionTracker, calculatorFactory), checkGuard)
+    private val commandFactory = CommandFactory(positionTracker)
+    private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
+    private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
+    private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker)
 
     private var pieceMoveListener: PiecePositionUpdate? = null
+
+    init {
+        calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
+        commandCoordinator.registerObserver(this.castlingGuard)
+       // commandCoordinator.registerObserver(this.checkGuard) // todo needed?
+    }
 
     fun setupChessboard() {
         game.setupChessboard()

@@ -1,13 +1,12 @@
 package com.krihl4n.guards
 
-import com.krihl4n.Dependencies.Companion.positionTracker
 import com.krihl4n.PositionTracker
 import com.krihl4n.command.MoveObserver
 import com.krihl4n.model.*
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCalculators.PossibleMove
 
-internal class CheckGuard : MoveObserver {
+internal class CheckGuard(private val positionTracker: PositionTracker) : MoveObserver {
 
     override fun movePerformed(move: Move) {
         TODO("Not yet implemented")

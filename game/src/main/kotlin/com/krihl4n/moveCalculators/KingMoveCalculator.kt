@@ -1,10 +1,10 @@
 package com.krihl4n.moveCalculators
 
-import com.krihl4n.Dependencies.Companion.castlingGuard
 import com.krihl4n.PositionTracker
+import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.model.Field
 
-internal class KingMoveCalculator : MoveCalculator {
+internal class KingMoveCalculator(private val castlingGuard: CastlingGuard) : MoveCalculator {
 
     override fun calculateMoves(from: Field, positionTracker: PositionTracker): Set<PossibleMove> {
         val moves = PossibleMovesCreator.create(positionTracker, from, 1, allDirectionsMoves)

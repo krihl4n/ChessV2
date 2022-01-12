@@ -1,13 +1,13 @@
 package com.krihl4n.moveCalculators
 
-import com.krihl4n.Dependencies.Companion.enPassantGuard
 import com.krihl4n.PositionTracker
+import com.krihl4n.guards.EnPassantGuard
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.File
 import com.krihl4n.model.Rank
 
-internal class PawnMoveCalculator : MoveCalculator {
+internal class PawnMoveCalculator(private val enPassantGuard: EnPassantGuard) : MoveCalculator {
 
     override fun calculateMoves(from: Field, positionTracker: PositionTracker): Set<PossibleMove> {
         val moves = HashSet<PossibleMove>()

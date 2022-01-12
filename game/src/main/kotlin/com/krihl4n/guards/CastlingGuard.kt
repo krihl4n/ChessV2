@@ -1,8 +1,9 @@
-package com.krihl4n.castling
+package com.krihl4n.guards
 
-import com.krihl4n.Dependencies.Companion.positionTracker
+import com.krihl4n.PositionTracker
 import com.krihl4n.command.MoveObserver
 import com.krihl4n.model.*
+import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 
 private const val WHITE_ROOK_KING_SIDE_STARTING_POS = "h1"
@@ -12,14 +13,16 @@ private const val BLACK_ROOK_QUEEN_SIDE_STARTING_POS = "a8"
 private const val WHITE_KING_STARTING_POS = "e1"
 private const val BLACK_KING_STARTING_POS = "e8"
 
-internal class CastlingGuard : MoveObserver {
+internal class CastlingGuard(
+    private val positionTracker: PositionTracker,
+    calculatorFactory: CalculatorFactory) : MoveObserver {
 
     private val whiteKingShortCastlingPermit = CastlingPermit()
     private val whiteKingLongCastlingPermit = CastlingPermit()
     private val blackKingShortCastlingPermit = CastlingPermit()
     private val blackKingLongCastlingPermit = CastlingPermit()
 
-    private val pieceMoveCalculator = PieceMoveCalculator(positionTracker)
+    private val pieceMoveCalculator = PieceMoveCalculator(positionTracker, calculatorFactory)
 
     override fun movePerformed(move: Move) {
         if (move.whiteKingMovedFromStartingPosition()) {

@@ -1,11 +1,12 @@
 package com.krihl4n.command
 
-import com.krihl4n.Dependencies.Companion.positionTracker
+import com.krihl4n.PositionTracker
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 
 internal class CastlingMoveCommand(
-    private val move: Move
+    private val move: Move,
+    private val positionTracker: PositionTracker
 ) : MoveCommand {
 
     override fun execute() {

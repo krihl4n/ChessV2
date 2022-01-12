@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class GameController(
-    private val gameCoordinator: GameCoordinator,
+    private val gameHandler: GameHandler,
     private val simpMessagingTemplate: SimpMessagingTemplate,
 ) {
 
@@ -22,7 +22,7 @@ class GameController(
     @Throws(Exception::class)
     fun move(@Payload move: Move, @Header("simpSessionId") sessionId: String) {
         println(move)
-        gameCoordinator.move("", move.from, move.to)
+        gameHandler.move(sessionId, move.from, move.to)
         simpMessagingTemplate.convertAndSendToUser(
             sessionId,
             "/user/queue/moves",
@@ -34,7 +34,7 @@ class GameController(
     @Throws(Exception::class)
     fun gameControls(@Payload controls: String, @Header("simpSessionId") sessionId: String) {
         println(controls)
-        gameCoordinator.startGame()
+        gameHandler.startGame(sessionId)
         // todo response ?
     }
 
@@ -45,7 +45,7 @@ class GameController(
         simpMessagingTemplate.convertAndSendToUser(
             sessionId,
             "/user/queue/fieldsOccupation",
-            gameCoordinator.getPositions(),
+            gameHandler.getPositions(sessionId),
             prepareSessionIdHeader(sessionId))
     }
 
