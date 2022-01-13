@@ -8,10 +8,8 @@ import kotlin.collections.HashMap
 
 internal class PositionTracker(private val piecePositions: HashMap<Field, Piece> = HashMap()) {
 
-    fun withMove(start: Field, destination: Field): PositionTracker {
-        val newTracker = PositionTracker(HashMap(this.piecePositions))
-        newTracker.movePiece(start, destination)
-        return newTracker
+    fun copy(): PositionTracker {
+        return PositionTracker(HashMap(this.piecePositions))
     }
 
     fun setPieceAtField(piece: Piece, field: Field) {

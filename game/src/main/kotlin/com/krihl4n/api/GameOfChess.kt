@@ -28,7 +28,6 @@ class GameOfChess {
     init {
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
         commandCoordinator.registerObserver(this.castlingGuard)
-       // commandCoordinator.registerObserver(this.checkGuard) // todo needed?
     }
 
     fun setupChessboard() {

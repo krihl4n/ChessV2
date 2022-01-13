@@ -1,38 +1,26 @@
 package com.krihl4n.guards
 
 import com.krihl4n.PositionTracker
-import com.krihl4n.command.MoveObserver
 import com.krihl4n.model.*
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCalculators.PossibleMove
 
-internal class CheckGuard(private val positionTracker: PositionTracker) : MoveObserver {
+internal class CheckGuard(private val positionTracker: PositionTracker) {
 
-    override fun movePerformed(move: Move) {
-        TODO("Not yet implemented")
-    }
-
-    override fun moveUndid(move: Move) {
-        TODO("Not yet implemented")
-    }
-
-//    fun isKingChecked(color: Color): Boolean { // todo
-//        val kingPosition: Field = findKingPosition(color) ?: return false
-//        return fieldAttackResolver.isFieldUnderAttackByColor(kingPosition, color.opposite())
-//    }
-
-    fun willKingBeCheckedAfterMove(
+    fun isKingCheckedAfterMove(
         moveCalculator: PieceMoveCalculator,
         color: Color,
         possibleMove: PossibleMove,
     ): Boolean {
-        val trackerWithMovePerformed = positionTracker.withMove(possibleMove.from, possibleMove.to)
-        val kingPosition: Field = findKingPosition(color, trackerWithMovePerformed) ?: return false
+        val newTracker = positionTracker.copy()
+        newTracker.movePiece(possibleMove.from, possibleMove.to)
+
+        val kingPosition: Field = findKingPosition(color, newTracker) ?: return false
         return isFieldUnderAttackByColor(
             kingPosition,
             color.opposite(),
-            moveCalculator.withPositionTracker(trackerWithMovePerformed),
-            trackerWithMovePerformed)
+            moveCalculator.withPositionTracker(newTracker),
+            newTracker)
     }
 
     private fun findKingPosition(color: Color, positionTracker: PositionTracker): Field? {
