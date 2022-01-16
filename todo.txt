@@ -1,5 +1,5 @@
-* send messages to specific session
-* game instances management
+game listeners
+
 * player registration
 * cleanup api module
 

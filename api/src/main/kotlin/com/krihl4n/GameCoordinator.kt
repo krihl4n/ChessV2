@@ -8,7 +8,7 @@ import java.util.*
 @Service
 class GameCoordinator {
 
-    private var gameOfChess = GameOfChess()
+    private var gameOfChess = GameOfChess("")
     private var player1Id: String? = null
     private var player2Id: String? = null
 

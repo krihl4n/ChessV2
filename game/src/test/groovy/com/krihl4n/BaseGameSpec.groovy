@@ -11,7 +11,6 @@ import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
-import groovy.transform.CompileStatic
 import spock.lang.Subject
 
 class BaseGameSpec extends BaseSpec {
@@ -21,7 +20,6 @@ class BaseGameSpec extends BaseSpec {
     PositionTracker positionTracker
 
     void setup() {
-       // new Dependencies()
         CalculatorFactory calculatorFactory = new CalculatorFactory()
         positionTracker = new PositionTracker()
         CastlingGuard castlingGuard = new CastlingGuard(positionTracker, calculatorFactory)

@@ -11,7 +11,7 @@ import com.krihl4n.guards.EnPassantGuard
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 
-class GameOfChess {
+class GameOfChess(private var gameId: String) {
 
     private val positionTracker = PositionTracker()
     private val commandCoordinator = CommandCoordinator()
@@ -25,12 +25,14 @@ class GameOfChess {
 
     private var pieceMoveListener: PiecePositionUpdate? = null
 
+    private var gameEventListener: GameEventListener? = null
+
     init {
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
         commandCoordinator.registerObserver(this.castlingGuard)
     }
 
-    fun setupChessboard() {
+    fun setupChessboard() { // parametrized for testing?
         game.setupChessboard()
     }
 
@@ -44,7 +46,9 @@ class GameOfChess {
     }
 
     fun move(from: String, to: String) {
-        game.performMove(from, to)
+        if(game.performMove(from, to)) {
+            gameEventListener?.pieceMoved(this.gameId, from, to)
+        }
     }
 
     fun undoMove() {
@@ -61,5 +65,9 @@ class GameOfChess {
 
     fun registerMoveListener(listener: PiecePositionUpdate) {
         this.pieceMoveListener = listener
+    }
+
+    fun registerGameEventListener(listener: GameEventListener) {
+        this.gameEventListener = listener
     }
 }

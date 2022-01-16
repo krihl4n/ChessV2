@@ -15,7 +15,7 @@ class GameHandler : ConnectionListener{
 
     override fun connectionEstablished(sessionId: String) {
         println("Register a new game for $sessionId")
-        games[sessionId] = GameOfChess()
+        games[sessionId] = GameOfChess(sessionId)
         games[sessionId]?.setupChessboard()
     }
 
