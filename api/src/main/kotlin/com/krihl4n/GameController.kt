@@ -10,7 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 
 @Controller
-class GameController(
+class GameController (
     private val gameHandler: GameHandler,
     private val simpMessagingTemplate: SimpMessagingTemplate,
 ) {
@@ -23,11 +23,6 @@ class GameController(
     fun move(@Payload move: Move, @Header("simpSessionId") sessionId: String) {
         println(move)
         gameHandler.move(sessionId, move.from, move.to)
-        simpMessagingTemplate.convertAndSendToUser(
-            sessionId,
-            "/user/queue/moves",
-            Move(move.from, move.to),
-            prepareSessionIdHeader(sessionId))
     }
 
     @MessageMapping("/gameControls")

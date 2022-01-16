@@ -5,7 +5,7 @@ import com.krihl4n.api.GameOfChess
 import org.springframework.stereotype.Service
 
 @Service
-class GameHandler : ConnectionListener{
+class GameHandler(val gameEventSender: GameEventSender) : ConnectionListener{
 
     private val games: MutableMap<String, GameOfChess> = mutableMapOf()
 
@@ -17,6 +17,7 @@ class GameHandler : ConnectionListener{
         println("Register a new game for $sessionId")
         games[sessionId] = GameOfChess(sessionId)
         games[sessionId]?.setupChessboard()
+        games[sessionId]?.registerGameEventListener(gameEventSender)
     }
 
     override fun connectionClosed(sessionId: String) {
