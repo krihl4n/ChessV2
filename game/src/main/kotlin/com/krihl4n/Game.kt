@@ -2,6 +2,7 @@ package com.krihl4n
 
 import com.krihl4n.api.FieldOccupationDto
 import com.krihl4n.api.FieldsOccupationMapper
+import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Field
@@ -15,8 +16,8 @@ internal class Game(private val moveValidator: MoveValidator,
     var gameInProgress = false
     var debugMode = false
 
-    fun setupChessboard() {
-        positionTracker.resetInitialGameSetup()
+    fun setupChessboard(pieceSetup: PieceSetup?) {
+        positionTracker.resetInitialGameSetup(pieceSetup)
     }
 
     fun start() {

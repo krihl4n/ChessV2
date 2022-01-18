@@ -3,6 +3,7 @@ package com.krihl4n.api
 import com.krihl4n.Game
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
+import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
 import com.krihl4n.guards.CastlingGuard
@@ -32,8 +33,8 @@ class GameOfChess(private var gameId: String) {
         commandCoordinator.registerObserver(this.castlingGuard)
     }
 
-    fun setupChessboard() { // parametrized for testing?
-        game.setupChessboard()
+    fun setupChessboard(pieceSetup: PieceSetup? = null) {
+        game.setupChessboard(pieceSetup)
     }
 
     fun start() {

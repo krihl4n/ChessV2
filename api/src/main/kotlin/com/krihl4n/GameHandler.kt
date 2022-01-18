@@ -2,6 +2,7 @@ package com.krihl4n
 
 import com.krihl4n.api.FieldOccupationDto
 import com.krihl4n.api.GameOfChess
+import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,7 +17,7 @@ class GameHandler(val gameEventSender: GameEventSender) : ConnectionListener{
     override fun connectionEstablished(sessionId: String) {
         println("Register a new game for $sessionId")
         games[sessionId] = GameOfChess(sessionId)
-        games[sessionId]?.setupChessboard()
+        games[sessionId]?.setupChessboard(CastlingPieceSetup())
         games[sessionId]?.registerGameEventListener(gameEventSender)
     }
 

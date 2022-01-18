@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
@@ -44,9 +45,18 @@ internal class PositionTracker(private val piecePositions: HashMap<Field, Piece>
         return HashMap(piecePositions)
     }
 
-    fun resetInitialGameSetup() {
+    fun resetInitialGameSetup(pieceSetup: PieceSetup?) {
         piecePositions.clear()
 
+        if (pieceSetup != null) {
+            pieceSetup.get().forEach { token ->
+                val tokens = token.split(" ")
+                piecePositions[Field(tokens[0])] = Piece(Color.of(tokens[1]), Type.of(tokens[2]))
+            }
+            return
+        }
+
+        // todo refactor, create DefaultPieceSetup class
         piecePositions[Field("a1")] = Piece(Color.WHITE, Type.ROOK)
         piecePositions[Field("b1")] = Piece(Color.WHITE, Type.KNIGHT)
         piecePositions[Field("c1")] = Piece(Color.WHITE, Type.BISHOP)

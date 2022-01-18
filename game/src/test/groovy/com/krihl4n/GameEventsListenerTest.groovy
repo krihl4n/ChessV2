@@ -2,6 +2,7 @@ package com.krihl4n
 
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
+import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import spock.lang.Specification
 
 class GameEventsListenerTest extends Specification{
@@ -49,5 +50,18 @@ class GameEventsListenerTest extends Specification{
         then:
             1 * secondListener.pieceMoved(SECOND_GAME_ID, "a2", "a3")
             0 * listener.pieceMoved(GAME_ID, "a2", "a3")
+    }
+
+    def "should notify about two moves when castling"() {
+        given:
+            gameOfChess.setupChessboard(new CastlingPieceSetup())
+            gameOfChess.start()
+
+        when:
+            gameOfChess.move("e1", "g1")
+
+        then:
+            1 * listener.pieceMoved(GAME_ID, "e1", "g1")
+            1 * listener.pieceMoved(GAME_ID, "h1", "f1")
     }
 }
