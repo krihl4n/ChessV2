@@ -25,7 +25,7 @@ class GameController (
         gameHandler.move(sessionId, move.from, move.to)
     }
 
-    @MessageMapping("/gameControls")
+    @MessageMapping("/game-controls")
     @Throws(Exception::class)
     fun gameControls(@Payload controls: String, @Header("simpSessionId") sessionId: String) {
         println(controls)
@@ -33,13 +33,13 @@ class GameController (
         // todo response ?
     }
 
-    @MessageMapping("/fieldsOccupation")
+    @MessageMapping("/fields-occupation")
     @Throws(Exception::class)
     fun fieldsOccupation(@Payload command: String, @Header("simpSessionId") sessionId: String) {
         println(command)
         simpMessagingTemplate.convertAndSendToUser(
             sessionId,
-            "/user/queue/fieldsOccupation",
+            "/user/queue/fields-occupation",
             gameHandler.getPositions(sessionId),
             prepareSessionIdHeader(sessionId))
     }
