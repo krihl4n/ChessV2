@@ -1,5 +1,7 @@
 package com.krihl4n.api
 
+import com.krihl4n.api.dto.FieldOccupationDto
+import com.krihl4n.api.dto.PieceDto
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
 

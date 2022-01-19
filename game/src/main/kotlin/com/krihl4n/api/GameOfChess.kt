@@ -3,6 +3,7 @@ package com.krihl4n.api
 import com.krihl4n.Game
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
+import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
@@ -24,8 +25,6 @@ class GameOfChess(private val gameId: String) {
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
     private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker)
 
-   // private var gameEventListener: GameEventListener? = null
-
     init {
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
         commandCoordinator.registerObserver(this.castlingGuard)
@@ -46,9 +45,6 @@ class GameOfChess(private val gameId: String) {
 
     fun move(from: String, to: String) {
         game.performMove(from, to)
-//        if(game.performMove(from, to)) {
-//            gameEventListener?.pieceMoved(this.gameId, from, to)
-//        }
     }
 
     fun undoMove() {
@@ -64,7 +60,6 @@ class GameOfChess(private val gameId: String) {
     }
 
     fun registerGameEventListener(listener: GameEventListener) {
-       // this.gameEventListener = listener
         commandCoordinator.registerGameEventListener(listener)
     }
 }

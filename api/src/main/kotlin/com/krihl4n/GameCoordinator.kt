@@ -1,6 +1,6 @@
 package com.krihl4n
 
-import com.krihl4n.api.FieldOccupationDto
+import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.GameOfChess
 import org.springframework.stereotype.Service
 import java.util.*
