@@ -1,14 +1,12 @@
 package com.krihl4n.command
 
 import com.krihl4n.BaseSpec
-import com.krihl4n.api.MoveDto
-import com.krihl4n.api.PiecePositionUpdateDto
 import spock.lang.Subject
 
 class CommandCoordinatorSpec extends BaseSpec {
 
     @Subject
-    def coordinator = new CommandCoordinator("")
+    def coordinator = new CommandCoordinator()
 
     def command = Mock(MoveCommand)
 

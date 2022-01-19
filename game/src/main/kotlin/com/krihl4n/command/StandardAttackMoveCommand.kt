@@ -2,15 +2,9 @@ package com.krihl4n.command
 
 import com.krihl4n.CaptureTracker
 import com.krihl4n.PositionTracker
-import com.krihl4n.api.MoveDto
-import com.krihl4n.api.PiecePositionUpdateDto
 import com.krihl4n.model.Move
+import com.krihl4n.model.PiecePositionUpdate
 
-/*
-    TODO maybe
-    maybe this logic should be a part of the move entity, and we could have different types of moves
-    and moves would send domain events, which inform about performed actions?
- */
 internal class StandardAttackMoveCommand(
     private val move: Move,
     private val positionTracker: PositionTracker,
@@ -39,7 +33,7 @@ internal class StandardAttackMoveCommand(
         return this.move
     }
 
-    override fun getPiecePositionUpdate(): PiecePositionUpdateDto {
-        return PiecePositionUpdateDto(MoveDto(move.from.token(), move.to.token()))
+    override fun getPiecePositionUpdate(): PiecePositionUpdate {
+        return PiecePositionUpdate(move)
     }
 }

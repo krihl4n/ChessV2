@@ -17,7 +17,7 @@ class KingMoveCalculatorSpec extends BaseSpec {
     void setup() {
         CalculatorFactory calculatorFactory = new CalculatorFactory()
         positionTracker = new PositionTracker()
-        calculatorFactory.initCalculators(new EnPassantGuard(positionTracker, new CommandCoordinator("")), new CastlingGuard(positionTracker, calculatorFactory))
+        calculatorFactory.initCalculators(new EnPassantGuard(positionTracker, new CommandCoordinator()), new CastlingGuard(positionTracker, calculatorFactory))
         calculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
     }
 

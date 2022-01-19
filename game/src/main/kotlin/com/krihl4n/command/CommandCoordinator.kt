@@ -1,22 +1,21 @@
 package com.krihl4n.command
 
-import com.krihl4n.api.GameEventListener
 import com.krihl4n.model.Move
 
-internal class CommandCoordinator(private val gameId: String) {
+internal class CommandCoordinator() {
 
     private val executedCommands = ArrayDeque<MoveCommand>()
     private val undidCommands = ArrayDeque<MoveCommand>()
 
     private val moveObservers = mutableSetOf<MoveObserver>()
-    private var gameEventListener: GameEventListener? = null
+    private var piecePositionUpdateListener: PiecePositionUpdateListener? = null
 
     fun registerObserver(moveObserver: MoveObserver) {
         this.moveObservers.add(moveObserver)
     }
 
-    fun registerGameEventListener(listener: GameEventListener) {
-        this.gameEventListener = listener
+    fun registerPiecePositionUpdateListener(listener: PiecePositionUpdateListener) {
+        this.piecePositionUpdateListener = listener
     }
 
     fun execute(command: MoveCommand) {
@@ -25,23 +24,21 @@ internal class CommandCoordinator(private val gameId: String) {
 
         moveObservers.forEach { it.movePerformed(command.getMove()) }
 
-        if(command.getPiecePositionUpdate() == null) {
-            return
-        }
-
-        gameEventListener?.pieceMoved( // todo send more complex object instead of two moves
-            gameId,
-            command.getPiecePositionUpdate()!!.primaryMove.from,
-            command.getPiecePositionUpdate()!!.primaryMove.to
-        )
-
-        if(command.getPiecePositionUpdate()!!.secondaryMove != null) {
-            gameEventListener?.pieceMoved(
-                gameId,
-                command.getPiecePositionUpdate()!!.secondaryMove!!.from,
-                command.getPiecePositionUpdate()!!.secondaryMove!!.to
-            )
-        }
+        command.getPiecePositionUpdate()?.let { piecePositionUpdateListener?.positionsUpdated(it) }
+//
+//        piecePositionUpdateListener?.pieceMoved( // todo send more complex object instead of two moves
+//            gameId,
+//            command.getPiecePositionUpdate()!!.primaryMove.from,
+//            command.getPiecePositionUpdate()!!.primaryMove.to
+//        )
+//
+//        if(command.getPiecePositionUpdate()!!.secondaryMove != null) {
+//            piecePositionUpdateListener?.pieceMoved(
+//                gameId,
+//                command.getPiecePositionUpdate()!!.secondaryMove!!.from,
+//                command.getPiecePositionUpdate()!!.secondaryMove!!.to
+//            )
+//        }
     }
 
     fun undo() {

@@ -1,4 +1,4 @@
-package com.krihl4n.api
+package com.krihl4n.api.mappers
 
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.PieceDto

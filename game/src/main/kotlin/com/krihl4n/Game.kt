@@ -1,7 +1,7 @@
 package com.krihl4n
 
 import com.krihl4n.api.dto.FieldOccupationDto
-import com.krihl4n.api.FieldsOccupationMapper
+import com.krihl4n.api.mappers.FieldsOccupationMapper
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
