@@ -2,6 +2,8 @@ package com.krihl4n.command
 
 import com.krihl4n.CaptureTracker
 import com.krihl4n.PositionTracker
+import com.krihl4n.api.MoveDto
+import com.krihl4n.api.PiecePositionUpdateDto
 import com.krihl4n.model.Move
 
 /*
@@ -35,5 +37,9 @@ internal class StandardAttackMoveCommand(
 
     override fun getMove(): Move {
         return this.move
+    }
+
+    override fun getPiecePositionUpdate(): PiecePositionUpdateDto {
+        return PiecePositionUpdateDto(MoveDto(move.from.token(), move.to.token()))
     }
 }

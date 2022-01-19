@@ -1,6 +1,8 @@
 package com.krihl4n.command
 
 import com.krihl4n.PositionTracker
+import com.krihl4n.api.MoveDto
+import com.krihl4n.api.PiecePositionUpdateDto
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 
@@ -8,6 +10,8 @@ internal class CastlingMoveCommand(
     private val move: Move,
     private val positionTracker: PositionTracker
 ) : MoveCommand {
+
+    private var update: PiecePositionUpdateDto? = null
 
     override fun execute() {
         positionTracker.movePiece(move.from, move.to)
@@ -17,6 +21,11 @@ internal class CastlingMoveCommand(
         val rookTo = pair.second
 
         positionTracker.movePiece(rookFrom, rookTo)
+
+        update = PiecePositionUpdateDto(
+            MoveDto(move.from.token(), move.to.token()),
+            MoveDto(rookFrom.token(), rookTo.token())
+        )
     }
 
     override fun undo() {
@@ -27,6 +36,10 @@ internal class CastlingMoveCommand(
         val rookTo = pair.second
 
         positionTracker.movePiece(rookTo, rookFrom)
+    }
+
+    override fun getPiecePositionUpdate(): PiecePositionUpdateDto {
+        return update as PiecePositionUpdateDto
     }
 
     private fun determineRookMove(): Pair<Field, Field> {

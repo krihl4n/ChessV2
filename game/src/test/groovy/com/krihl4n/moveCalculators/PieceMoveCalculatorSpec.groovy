@@ -1,7 +1,6 @@
 package com.krihl4n.moveCalculators
 
 import com.krihl4n.BaseSpec
-import com.krihl4n.Dependencies
 import com.krihl4n.PositionTracker
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.guards.CastlingGuard
@@ -18,7 +17,7 @@ class PieceMoveCalculatorSpec extends BaseSpec {
     void setup() {
         CalculatorFactory calculatorFactory = new CalculatorFactory()
         positionTracker = new PositionTracker()
-        calculatorFactory.initCalculators(new EnPassantGuard(positionTracker, new CommandCoordinator()), new CastlingGuard(positionTracker, calculatorFactory))
+        calculatorFactory.initCalculators(new EnPassantGuard(positionTracker, new CommandCoordinator("")), new CastlingGuard(positionTracker, calculatorFactory))
         calculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
     }
 

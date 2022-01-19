@@ -14,7 +14,7 @@ class PawnMoveCalculatorSpec extends BaseSpec {
 
     void setup() {
         positionTracker = new PositionTracker()
-        calculator = new PawnMoveCalculator(new EnPassantGuard(positionTracker, new CommandCoordinator()))
+        calculator = new PawnMoveCalculator(new EnPassantGuard(positionTracker, new CommandCoordinator("")))
     }
 
     def "a pawn can move one field forward"() {

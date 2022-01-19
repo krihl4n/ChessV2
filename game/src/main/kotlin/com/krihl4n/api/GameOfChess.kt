@@ -12,10 +12,10 @@ import com.krihl4n.guards.EnPassantGuard
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 
-class GameOfChess(private var gameId: String) {
+class GameOfChess(private val gameId: String) {
 
     private val positionTracker = PositionTracker()
-    private val commandCoordinator = CommandCoordinator()
+    private val commandCoordinator = CommandCoordinator(gameId)
     private val checkGuard = CheckGuard(positionTracker)
     private val calculatorFactory = CalculatorFactory()
     private val moveValidator = MoveValidator(PieceMoveCalculator(positionTracker, calculatorFactory), checkGuard)
@@ -24,9 +24,7 @@ class GameOfChess(private var gameId: String) {
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
     private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker)
 
-    private var pieceMoveListener: PiecePositionUpdate? = null
-
-    private var gameEventListener: GameEventListener? = null
+   // private var gameEventListener: GameEventListener? = null
 
     init {
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
@@ -47,9 +45,10 @@ class GameOfChess(private var gameId: String) {
     }
 
     fun move(from: String, to: String) {
-        if(game.performMove(from, to)) {
-            gameEventListener?.pieceMoved(this.gameId, from, to)
-        }
+        game.performMove(from, to)
+//        if(game.performMove(from, to)) {
+//            gameEventListener?.pieceMoved(this.gameId, from, to)
+//        }
     }
 
     fun undoMove() {
@@ -64,11 +63,8 @@ class GameOfChess(private var gameId: String) {
         return game.getFieldOccupationInfo()
     }
 
-    fun registerMoveListener(listener: PiecePositionUpdate) {
-        this.pieceMoveListener = listener
-    }
-
     fun registerGameEventListener(listener: GameEventListener) {
-        this.gameEventListener = listener
+       // this.gameEventListener = listener
+        commandCoordinator.registerGameEventListener(listener)
     }
 }

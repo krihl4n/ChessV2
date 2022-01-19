@@ -26,7 +26,7 @@ class GameEventsListenerTest extends Specification{
 
     def "should notify about basic move" (){
         given:
-            gameOfChess.setupChessboard()
+            gameOfChess.setupChessboard(null)
             gameOfChess.start()
 
         when:
@@ -38,10 +38,10 @@ class GameEventsListenerTest extends Specification{
 
     def "having two games, only one is notified about moving piece"() {
         given:
-            gameOfChess.setupChessboard()
+            gameOfChess.setupChessboard(null)
             gameOfChess.start()
         and:
-            secondGameOfChess.setupChessboard()
+            secondGameOfChess.setupChessboard(null)
             secondGameOfChess.start()
 
         when:

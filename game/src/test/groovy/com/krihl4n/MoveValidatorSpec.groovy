@@ -17,7 +17,7 @@ class MoveValidatorSpec extends BaseSpec {
     void setup() {
         CalculatorFactory calculatorFactory = new CalculatorFactory()
         positionTracker = new PositionTracker()
-        calculatorFactory.initCalculators(new EnPassantGuard(positionTracker, new CommandCoordinator()), new CastlingGuard(positionTracker, calculatorFactory))
+        calculatorFactory.initCalculators(new EnPassantGuard(positionTracker, new CommandCoordinator("")), new CastlingGuard(positionTracker, calculatorFactory))
         PieceMoveCalculator calculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
         moveValidator = new MoveValidator(calculator, new CheckGuard(positionTracker))
     }

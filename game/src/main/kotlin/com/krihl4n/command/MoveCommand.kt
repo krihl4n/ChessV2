@@ -1,5 +1,6 @@
 package com.krihl4n.command
 
+import com.krihl4n.api.PiecePositionUpdateDto
 import com.krihl4n.model.Move
 
 internal interface MoveCommand {
@@ -9,4 +10,6 @@ internal interface MoveCommand {
     fun undo()
 
     fun getMove(): Move
+
+    fun getPiecePositionUpdate(): PiecePositionUpdateDto?
 }

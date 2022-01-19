@@ -7,6 +7,8 @@ internal data class Field(val file: File, val rank: Rank) {
             throw IllegalArgumentException("$token is not a valid token")
     }
 
+    fun token() = file.token + rank.token
+
     override fun toString(): String {
         return "Field(${file.token}${rank.token})"
     }

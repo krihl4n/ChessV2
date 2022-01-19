@@ -24,7 +24,7 @@ class BaseGameSpec extends BaseSpec {
         positionTracker = new PositionTracker()
         CastlingGuard castlingGuard = new CastlingGuard(positionTracker, calculatorFactory)
         CheckGuard checkGuard = new CheckGuard(positionTracker)
-        CommandCoordinator commandCoordinator = new CommandCoordinator()
+        CommandCoordinator commandCoordinator = new CommandCoordinator("")
         commandCoordinator.registerObserver(castlingGuard)
         MoveValidator moveValidator = new MoveValidator(
                 new PieceMoveCalculator(positionTracker, calculatorFactory),
