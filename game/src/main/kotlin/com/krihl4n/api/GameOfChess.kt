@@ -65,11 +65,7 @@ class GameOfChess(private val gameId: String) {
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
             override fun positionsUpdated(update: PiecePositionUpdate) {
-                val dto = PiecePositionUpdateDto.from(update)
-                listener.pieceMoved(gameId, dto.primaryMove.from, dto.primaryMove.to)
-                dto.secondaryMove?.let {
-                    listener.pieceMoved(gameId, dto.secondaryMove.from, dto.secondaryMove.to)
-                }
+                listener.piecePositionUpdate(gameId, PiecePositionUpdateDto.from(update))
             }
         })
     }

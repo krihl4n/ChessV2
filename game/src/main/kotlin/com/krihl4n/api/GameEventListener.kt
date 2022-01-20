@@ -1,9 +1,10 @@
 package com.krihl4n.api
 
+import com.krihl4n.api.dto.PiecePositionUpdateDto
+
 interface GameEventListener {
 
-    fun pieceMoved(gameId: String, from: String, to: String)
-
+    fun piecePositionUpdate(sessionId: String, update: PiecePositionUpdateDto)
     // piece captured
     // pawn replaced by queen
     // undo actions

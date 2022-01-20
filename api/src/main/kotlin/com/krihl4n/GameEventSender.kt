@@ -1,6 +1,7 @@
 package com.krihl4n
 
 import com.krihl4n.api.GameEventListener
+import com.krihl4n.api.dto.PiecePositionUpdateDto
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessageType
@@ -12,12 +13,14 @@ class GameEventSender(
     private val simpMessagingTemplate: SimpMessagingTemplate
 ) : GameEventListener {
 
-    override fun pieceMoved(sessionId: String, from: String, to: String) {
+    override fun piecePositionUpdate(sessionId: String, update: PiecePositionUpdateDto) {
+        println("sending piece position update")
         simpMessagingTemplate.convertAndSendToUser(
             sessionId,
-            "/user/queue/moves",
-            Move(from, to),
-            prepareSessionIdHeader(sessionId))
+            "user/queue/piece-position-updates",
+            update,
+            prepareSessionIdHeader(sessionId)
+        )
     }
 
     private fun prepareSessionIdHeader(sessionId: String): MessageHeaders {

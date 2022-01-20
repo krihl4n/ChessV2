@@ -2,7 +2,10 @@ package com.krihl4n
 
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
+import com.krihl4n.api.dto.MoveDto
+import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
+import com.krihl4n.model.PiecePositionUpdate
 import spock.lang.Specification
 
 class GameEventsListenerTest extends Specification{
@@ -33,7 +36,10 @@ class GameEventsListenerTest extends Specification{
             gameOfChess.move("a2", "a3")
 
         then:
-            1 * listener.pieceMoved(GAME_ID, "a2", "a3")
+            1 * listener.piecePositionUpdate(GAME_ID,
+                    new PiecePositionUpdateDto(
+                            new MoveDto("a2", "a3"),
+                            null))
     }
 
     def "having two games, only one is notified about moving piece"() {
@@ -48,8 +54,14 @@ class GameEventsListenerTest extends Specification{
             secondGameOfChess.move("a2", "a3")
 
         then:
-            1 * secondListener.pieceMoved(SECOND_GAME_ID, "a2", "a3")
-            0 * listener.pieceMoved(GAME_ID, "a2", "a3")
+            1 * secondListener.piecePositionUpdate(SECOND_GAME_ID,
+                    new PiecePositionUpdateDto(
+                            new MoveDto("a2", "a3"),
+                            null))
+            0 * listener.piecePositionUpdate(GAME_ID,
+                    new PiecePositionUpdateDto(
+                            new MoveDto("a2", "a3"),
+                            null))
     }
 
     def "should notify about two moves when castling"() {
@@ -61,7 +73,9 @@ class GameEventsListenerTest extends Specification{
             gameOfChess.move("e1", "g1")
 
         then:
-            1 * listener.pieceMoved(GAME_ID, "e1", "g1")
-            1 * listener.pieceMoved(GAME_ID, "h1", "f1")
+            1 * listener.piecePositionUpdate(GAME_ID,
+                    new PiecePositionUpdateDto(
+                            new MoveDto("e1", "g1"),
+                            new MoveDto("h1", "f1")))
     }
 }
