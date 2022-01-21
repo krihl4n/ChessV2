@@ -19,3 +19,6 @@ game listeners
 * persistence
  mongo
  optimistic locking
+
+* bugs
+ move observer not notified when redoing the move, bug probably with right to castle

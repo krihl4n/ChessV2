@@ -129,4 +129,25 @@ class GameEventsListenerTest extends Specification{
                             null,
                             true))
     }
+
+    def "should send event when redoing a move"() {
+        given:
+            gameOfChess.setupChessboard(null)
+            gameOfChess.start()
+
+        and:
+            gameOfChess.move("a2", "a3")
+            gameOfChess.undoMove()
+
+        when:
+            gameOfChess.redoMove()
+
+        then:
+            1 * listener.piecePositionUpdate(GAME_ID,
+                    new PiecePositionUpdateDto(
+                            new MoveDto("a2", "a3"),
+                            null,
+                            null,
+                            false))
+    }
 }

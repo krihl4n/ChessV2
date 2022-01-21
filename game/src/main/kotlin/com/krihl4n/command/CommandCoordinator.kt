@@ -2,7 +2,7 @@ package com.krihl4n.command
 
 import com.krihl4n.model.Move
 
-internal class CommandCoordinator() {
+internal class CommandCoordinator {
 
     private val executedCommands = ArrayDeque<MoveCommand>()
     private val undidCommands = ArrayDeque<MoveCommand>()
@@ -45,6 +45,8 @@ internal class CommandCoordinator() {
         command.execute()
         undidCommands.removeLast()
         executedCommands.add(command) // redundant?
+
+        command.getPiecePositionUpdate()?.let { piecePositionUpdateListener?.positionsUpdated(it) }
     }
 
     fun getLastMove(): Move? {

@@ -14,6 +14,7 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
         when (command) {
             Command.START_GAME -> games[sessionId]?.start()
             Command.UNDO_MOVE -> games[sessionId]?.undoMove()
+            Command.REDO_MOVE -> games[sessionId]?.redoMove()
         }
     }
 
@@ -39,5 +40,5 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
 }
 
 enum class Command {
-    START_GAME, UNDO_MOVE
+    START_GAME, UNDO_MOVE, REDO_MOVE
 }
