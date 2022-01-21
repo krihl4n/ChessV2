@@ -4,6 +4,6 @@ class CastlingPieceSetup : PieceSetup {
 
     override fun get() = listOf(
         "e1 white king",
-        "h1 white rook "
+        "h1 white rook"
     )
 }

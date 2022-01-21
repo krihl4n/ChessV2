@@ -3,6 +3,7 @@ package com.krihl4n.command
 import com.krihl4n.CaptureTracker
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Move
+import com.krihl4n.model.PieceCapture
 import com.krihl4n.model.PiecePositionUpdate
 
 internal class StandardAttackMoveCommand(
@@ -11,6 +12,8 @@ internal class StandardAttackMoveCommand(
     private val captureTracker: CaptureTracker
 ) : MoveCommand {
 
+    var update: PiecePositionUpdate? = null
+
     override fun execute() {
         val capturedPiece =
             positionTracker.getPieceAt(move.to) ?: throw IllegalStateException("no piece at desired field")
@@ -18,6 +21,11 @@ internal class StandardAttackMoveCommand(
             throw IllegalArgumentException("cannot attack friendly pieces")
         captureTracker.pieceCaptured(capturedPiece, move.to)
         positionTracker.movePiece(move.from, move.to)
+
+        update = PiecePositionUpdate(
+            primaryMove = move,
+            pieceCapture = PieceCapture(move.to, capturedPiece)
+        )
     }
 
     override fun undo() {
@@ -33,7 +41,7 @@ internal class StandardAttackMoveCommand(
         return this.move
     }
 
-    override fun getPiecePositionUpdate(): PiecePositionUpdate {
-        return PiecePositionUpdate(move)
+    override fun getPiecePositionUpdate(): PiecePositionUpdate? {
+        return update
     }
 }

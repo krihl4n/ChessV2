@@ -3,9 +3,11 @@ package com.krihl4n
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.MoveDto
+import com.krihl4n.api.dto.PieceCaptureDto
+import com.krihl4n.api.dto.PieceDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
-import com.krihl4n.model.PiecePositionUpdate
+import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import spock.lang.Specification
 
 class GameEventsListenerTest extends Specification{
@@ -39,6 +41,7 @@ class GameEventsListenerTest extends Specification{
             1 * listener.piecePositionUpdate(GAME_ID,
                     new PiecePositionUpdateDto(
                             new MoveDto("a2", "a3"),
+                            null,
                             null))
     }
 
@@ -57,10 +60,12 @@ class GameEventsListenerTest extends Specification{
             1 * secondListener.piecePositionUpdate(SECOND_GAME_ID,
                     new PiecePositionUpdateDto(
                             new MoveDto("a2", "a3"),
+                            null,
                             null))
             0 * listener.piecePositionUpdate(GAME_ID,
                     new PiecePositionUpdateDto(
                             new MoveDto("a2", "a3"),
+                            null,
                             null))
     }
 
@@ -76,6 +81,27 @@ class GameEventsListenerTest extends Specification{
             1 * listener.piecePositionUpdate(GAME_ID,
                     new PiecePositionUpdateDto(
                             new MoveDto("e1", "g1"),
-                            new MoveDto("h1", "f1")))
+                            new MoveDto("h1", "f1"),
+                            null
+                    )
+            )
+    }
+
+    def "should notify about attacks"() {
+        given:
+            gameOfChess.setupChessboard(new SimpleAttackSetup())
+            gameOfChess.start()
+
+        when:
+            gameOfChess.move("c2", "d3")
+
+        then:
+            1 * listener.piecePositionUpdate(GAME_ID,
+                new PiecePositionUpdateDto(
+                        new MoveDto("c2", "d3"),
+                        null,
+                        new PieceCaptureDto("d3", new PieceDto("BLACK", "PAWN"))
+                )
+            )
     }
 }
