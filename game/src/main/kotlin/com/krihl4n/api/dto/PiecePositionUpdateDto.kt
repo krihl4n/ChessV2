@@ -5,7 +5,8 @@ import com.krihl4n.model.PiecePositionUpdate
 data class PiecePositionUpdateDto(
     val primaryMove: MoveDto,
     val secondaryMove: MoveDto? = null,
-    val pieceCapture: PieceCaptureDto? = null
+    val pieceCapture: PieceCaptureDto? = null,
+    val reverted: Boolean = false
 ) {
 
     companion object {
@@ -29,7 +30,8 @@ data class PiecePositionUpdateDto(
                             positionUpdate.pieceCapture.piece.type.name
                         )
                     )
-                }
+                },
+                reverted = positionUpdate.reverted
             )
         }
     }

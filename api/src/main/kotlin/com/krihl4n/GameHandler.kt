@@ -13,7 +13,7 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
     fun handleGameCommand(sessionId: String, command: Command) {
         when (command) {
             Command.START_GAME -> games[sessionId]?.start()
-            Command.UNDO_MOVE -> println("undo move")
+            Command.UNDO_MOVE -> games[sessionId]?.undoMove()
         }
     }
 
