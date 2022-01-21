@@ -17,6 +17,7 @@ game listeners
  //todo later on it will have to be send to specific user who can have multiple sessions
 
 * persistence
+ save played games to a file
  mongo
  optimistic locking
 
