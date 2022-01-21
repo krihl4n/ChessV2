@@ -6,12 +6,15 @@ import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import org.springframework.stereotype.Service
 
 @Service
-class GameHandler(val gameEventSender: GameEventSender) : ConnectionListener{
+class GameHandler(private val gameEventSender: GameEventSender) : ConnectionListener {
 
     private val games: MutableMap<String, GameOfChess> = mutableMapOf()
 
-    fun handleGameControlRequest(userId: String, request: String) {
-
+    fun handleGameCommand(sessionId: String, command: Command) {
+        when (command) {
+            Command.START_GAME -> games[sessionId]?.start()
+            Command.UNDO_MOVE -> println("undo move")
+        }
     }
 
     override fun connectionEstablished(sessionId: String) {
@@ -30,11 +33,11 @@ class GameHandler(val gameEventSender: GameEventSender) : ConnectionListener{
         games[sessionId]?.move(from, to)
     }
 
-    fun startGame(sessionId: String) {
-        games[sessionId]?.start()
-    }
-
-    fun getPositions(sessionId: String): List<FieldOccupationDto>?  {
+    fun getPositions(sessionId: String): List<FieldOccupationDto>? {
         return games[sessionId]?.getFieldOccupationInfo()
     }
+}
+
+enum class Command {
+    START_GAME, UNDO_MOVE
 }

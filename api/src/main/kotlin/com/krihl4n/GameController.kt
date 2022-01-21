@@ -27,16 +27,13 @@ class GameController (
 
     @MessageMapping("/game-controls")
     @Throws(Exception::class)
-    fun gameControls(@Payload controls: String, @Header("simpSessionId") sessionId: String) {
-        println(controls)
-        gameHandler.startGame(sessionId)
-        // todo response ?
+    fun gameControls(@Payload command: String, @Header("simpSessionId") sessionId: String) {
+        gameHandler.handleGameCommand(sessionId, Command.valueOf(command.uppercase()))
     }
 
     @MessageMapping("/fields-occupation")
     @Throws(Exception::class)
     fun fieldsOccupation(@Payload command: String, @Header("simpSessionId") sessionId: String) {
-        println(command)
         simpMessagingTemplate.convertAndSendToUser(
             sessionId,
             "/user/queue/fields-occupation",
