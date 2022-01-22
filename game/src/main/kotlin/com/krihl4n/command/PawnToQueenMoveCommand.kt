@@ -2,10 +2,11 @@ package com.krihl4n.command
 
 import com.krihl4n.CaptureTracker
 import com.krihl4n.PositionTracker
+import com.krihl4n.model.*
 import com.krihl4n.model.Move
 import com.krihl4n.model.Piece
+import com.krihl4n.model.PieceCapture
 import com.krihl4n.model.PiecePositionUpdate
-import com.krihl4n.model.Type
 
 internal class PawnToQueenMoveCommand(
     private val move: Move,
@@ -13,8 +14,13 @@ internal class PawnToQueenMoveCommand(
     private val captureTracker: CaptureTracker
     ) : MoveCommand {
 
+    private var killedPiece: Piece? = null
+
     override fun execute() {
-        positionTracker.getPieceAt(move.to)?.let { captureTracker.pieceCaptured(it, move.to) }
+        positionTracker.getPieceAt(move.to)?.let {
+            captureTracker.pieceCaptured(it, move.to)
+            killedPiece = it
+        }
         positionTracker.removePieceFromField(move.from)
         positionTracker.setPieceAtField(Piece(move.piece.color, Type.QUEEN), move.to)
     }
@@ -37,6 +43,10 @@ internal class PawnToQueenMoveCommand(
     }
 
     override fun getPiecePositionUpdate(): PiecePositionUpdate {
-        return PiecePositionUpdate(move)
+        return PiecePositionUpdate(
+            primaryMove = move,
+            convertToQueen = true,
+            pieceCapture = killedPiece?.let { PieceCapture(move.to, it) }
+        )
     }
 }

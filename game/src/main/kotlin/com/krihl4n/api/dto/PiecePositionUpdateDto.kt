@@ -6,6 +6,7 @@ data class PiecePositionUpdateDto(
     val primaryMove: MoveDto,
     val secondaryMove: MoveDto? = null,
     val pieceCapture: PieceCaptureDto? = null,
+    val convertToQueen: Boolean = false,
     val reverted: Boolean = false
 ) {
 
@@ -31,6 +32,7 @@ data class PiecePositionUpdateDto(
                         )
                     )
                 },
+                convertToQueen = positionUpdate.convertToQueen,
                 reverted = positionUpdate.reverted
             )
         }

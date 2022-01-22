@@ -8,6 +8,7 @@ import com.krihl4n.api.dto.PieceDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import com.krihl4n.api.pieceSetups.EnPassantSetup
+import com.krihl4n.api.pieceSetups.QueenConversionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import spock.lang.Specification
 
@@ -44,6 +45,7 @@ class GameEventsListenerTest extends Specification {
                         new MoveDto("a2", "a3"),
                         null,
                         null,
+                        false,
                         false))
     }
 
@@ -64,12 +66,14 @@ class GameEventsListenerTest extends Specification {
                         new MoveDto("a2", "a3"),
                         null,
                         null,
+                        false,
                         false))
         0 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
                         new MoveDto("a2", "a3"),
                         null,
                         null,
+                        false,
                         false))
     }
 
@@ -87,6 +91,7 @@ class GameEventsListenerTest extends Specification {
                         new MoveDto("e1", "g1"),
                         new MoveDto("h1", "f1"),
                         null,
+                        false,
                         false
                 )
         )
@@ -106,6 +111,7 @@ class GameEventsListenerTest extends Specification {
                         new MoveDto("c2", "d3"),
                         null,
                         new PieceCaptureDto("d3", new PieceDto("BLACK", "PAWN")),
+                        false,
                         false
                 )
         )
@@ -128,6 +134,7 @@ class GameEventsListenerTest extends Specification {
                         new MoveDto("a2", "a3"),
                         null,
                         null,
+                        false,
                         true))
     }
 
@@ -149,6 +156,7 @@ class GameEventsListenerTest extends Specification {
                         new MoveDto("a2", "a3"),
                         null,
                         null,
+                        false,
                         false))
     }
 
@@ -169,6 +177,47 @@ class GameEventsListenerTest extends Specification {
                         new MoveDto("e4", "d3"),
                         null,
                         new PieceCaptureDto("d4", new PieceDto("WHITE", "PAWN")),
+                        false,
+                        false
+                )
+        )
+    }
+
+    def "should notify about pawn to queen conversion"() {
+        given:
+        gameOfChess.setupChessboard(new QueenConversionSetup())
+        gameOfChess.start()
+
+        when:
+        gameOfChess.move("d7", "d8")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID,
+                new PiecePositionUpdateDto(
+                        new MoveDto("d7", "d8"),
+                        null,
+                        null,
+                        true,
+                        false
+                )
+        )
+    }
+
+    def "should notify about pawn to queen conversion and attack"() {
+        given:
+        gameOfChess.setupChessboard(new QueenConversionSetup())
+        gameOfChess.start()
+
+        when:
+        gameOfChess.move("d7", "e8")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID,
+                new PiecePositionUpdateDto(
+                        new MoveDto("d7", "e8"),
+                        null,
+                        new PieceCaptureDto("e8", new PieceDto("BLACK", "KNIGHT")),
+                        true,
                         false
                 )
         )

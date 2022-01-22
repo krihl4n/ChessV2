@@ -4,6 +4,7 @@ import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import com.krihl4n.api.pieceSetups.EnPassantSetup
+import com.krihl4n.api.pieceSetups.QueenConversionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import org.springframework.stereotype.Service
 
@@ -23,7 +24,7 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
     override fun connectionEstablished(sessionId: String) {
         println("Register a new game for $sessionId")
         games[sessionId] = GameOfChess(sessionId)
-        games[sessionId]?.setupChessboard(EnPassantSetup())
+        games[sessionId]?.setupChessboard(QueenConversionSetup())
         games[sessionId]?.registerGameEventListener(gameEventSender)
     }
 
