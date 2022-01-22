@@ -1,6 +1,7 @@
 package com.krihl4n.command
 
 import com.krihl4n.PositionTracker
+import com.krihl4n.api.dto.PieceCaptureDto
 import com.krihl4n.model.*
 
 internal class EnPassantAttackMoveCommand(
@@ -23,7 +24,13 @@ internal class EnPassantAttackMoveCommand(
     }
 
     override fun getPiecePositionUpdate(): PiecePositionUpdate {
-        return PiecePositionUpdate(move)
+        return PiecePositionUpdate(
+            primaryMove = move,
+            pieceCapture = PieceCapture(
+                field = findAttackedPawnLocation(),
+                piece = Piece(move.piece.color.opposite(), Type.PAWN)
+            )
+        )
     }
 
     private fun Color.opposite(): Color {

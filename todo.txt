@@ -23,3 +23,5 @@ game listeners
 
 * bugs
  move observer not notified when redoing the move, bug probably with right to castle
+
+* some persistent logs. logback?
