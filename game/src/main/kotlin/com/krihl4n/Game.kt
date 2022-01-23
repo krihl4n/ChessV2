@@ -1,6 +1,7 @@
 package com.krihl4n
 
 import com.krihl4n.api.dto.FieldOccupationDto
+import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.mappers.FieldsOccupationMapper
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.command.CommandCoordinator
@@ -8,10 +9,12 @@ import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 
-internal class Game(private val moveValidator: MoveValidator,
-                    private val commandCoordinator: CommandCoordinator,
-                    private val commandFactory: CommandFactory,
-                    private val positionTracker: PositionTracker) {
+internal class Game(
+    private val moveValidator: MoveValidator,
+    private val commandCoordinator: CommandCoordinator,
+    private val commandFactory: CommandFactory,
+    private val positionTracker: PositionTracker
+) {
 
     var gameInProgress = false
     var debugMode = false
@@ -40,7 +43,7 @@ internal class Game(private val moveValidator: MoveValidator,
         if (!gameInProgress)
             throw IllegalStateException("Game hasn't been started.")
 
-        if(positionTracker.isFieldEmpty(from)) {
+        if (positionTracker.isFieldEmpty(from)) {
             println("No piece at field $from")
             return false
         }
@@ -84,5 +87,13 @@ internal class Game(private val moveValidator: MoveValidator,
 
     fun disableDebugMode() {
         this.debugMode = false
+    }
+
+    fun getPossibleMoves(fieldToken: String): PossibleMovesDto {
+        val field = Field(fieldToken)
+        this.positionTracker.getPieceAt(field)?.let {
+            return PossibleMovesDto.from(field, moveValidator.getValidMoves(field, it.color))
+        }
+        return PossibleMovesDto.noMovesFrom(field)
     }
 }

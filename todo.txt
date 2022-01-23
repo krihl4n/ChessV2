@@ -20,7 +20,7 @@ game listeners
  save played games to a file
  mongo
  optimistic locking
- reversing moves will be a pain.. need to store commands? o_0
+ reversing moves will be a pain.. need to store commands? o_0 <== event sourcing
 
 * bugs
  move observer not notified when redoing the move, bug probably with right to castle

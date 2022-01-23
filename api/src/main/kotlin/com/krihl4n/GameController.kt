@@ -10,7 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
 
 @Controller
-class GameController (
+class GameController(
     private val gameHandler: GameHandler,
     private val simpMessagingTemplate: SimpMessagingTemplate,
 ) {
@@ -34,11 +34,27 @@ class GameController (
     @MessageMapping("/fields-occupation")
     @Throws(Exception::class)
     fun fieldsOccupation(@Payload command: String, @Header("simpSessionId") sessionId: String) {
-        simpMessagingTemplate.convertAndSendToUser(
-            sessionId,
-            "/user/queue/fields-occupation",
-            gameHandler.getPositions(sessionId),
-            prepareSessionIdHeader(sessionId))
+        gameHandler.getPositions(sessionId)?.let {
+            simpMessagingTemplate.convertAndSendToUser(
+                sessionId,
+                "/user/queue/fields-occupation",
+                it,
+                prepareSessionIdHeader(sessionId)
+            )
+        }
+    }
+
+    @MessageMapping("/possible-moves")
+    @Throws(Exception::class)
+    fun possibleMoves(@Payload field: String, @Header("simpSessionId") sessionId: String) {
+        gameHandler.getPossibleMoves(sessionId, field)?.let {
+            simpMessagingTemplate.convertAndSendToUser(
+                sessionId,
+                "/user/queue/possible-moves",
+                it,
+                prepareSessionIdHeader(sessionId)
+            )
+        }
     }
 
     private fun prepareSessionIdHeader(sessionId: String): MessageHeaders {

@@ -5,6 +5,7 @@ import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
+import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
@@ -68,5 +69,9 @@ class GameOfChess(private val gameId: String) {
                 listener.piecePositionUpdate(gameId, PiecePositionUpdateDto.from(update))
             }
         })
+    }
+
+    fun getPossibleMoves(field: String): PossibleMovesDto {
+        return game.getPossibleMoves(field)
     }
 }
