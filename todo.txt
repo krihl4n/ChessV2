@@ -11,7 +11,8 @@ game listeners
     possibly every instance of position tracker should be tied to separate instances of objects with state
     check mate
     stalemate
-
+    can king being in check castle?
+    resign
 
 * security, accounts etc
  //todo later on it will have to be send to specific user who can have multiple sessions
@@ -23,6 +24,34 @@ game listeners
  reversing moves will be a pain.. need to store commands? o_0 <== event sourcing
 
 * bugs
- move observer not notified when redoing the move, bug probably with right to castle
+** move observer not notified when redoing the move, bug probably with right to castle
+
+** en passant error
+ e2 e4
+ d2 d4
+ possible moves from d4: d5, d3
+ should be: d3
+
+** redo actions not cleared
+    move piece
+    undo
+    move another piece
+    redo
+    redo is performed
+
 
 * some persistent logs. logback?
+
+
+* game phases
+    * start
+    * finish
+    * check mate
+    * notify about checks
+
+* modes
+- free play
+- hot seat
+- pvp
+- vs computer with random moves
+

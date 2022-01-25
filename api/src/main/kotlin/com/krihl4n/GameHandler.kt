@@ -22,7 +22,7 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
     override fun connectionEstablished(sessionId: String) {
         println("Register a new game for $sessionId")
         games[sessionId] = GameOfChess(sessionId)
-        games[sessionId]?.setupChessboard(QueenConversionSetup())
+        games[sessionId]?.setupChessboard()
         games[sessionId]?.registerGameEventListener(gameEventSender)
     }
 
