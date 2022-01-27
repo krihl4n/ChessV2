@@ -8,6 +8,8 @@ import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
+import com.krihl4n.turns.FreeTurnPolicy
+import com.krihl4n.turns.TurnPolicy
 
 internal class Game(
     private val moveValidator: MoveValidator,
@@ -16,6 +18,8 @@ internal class Game(
     private val positionTracker: PositionTracker
 ) {
 
+    var turnPolicy: TurnPolicy = FreeTurnPolicy()
+
     var gameInProgress = false
     var debugMode = false
 
@@ -23,8 +27,15 @@ internal class Game(
         positionTracker.resetInitialGameSetup(pieceSetup)
     }
 
-    fun start() {
+    @JvmOverloads
+    fun start(gameMode: GameMode = GameMode.MOVE_FREELY) {
         gameInProgress = true
+
+        when (gameMode) {
+            GameMode.MOVE_FREELY -> this.turnPolicy = FreeTurnPolicy()
+            GameMode.ALTERNATE_PLAYERS -> TODO()
+        }
+
         if (debugMode) {
             println("Start game")
             DebugLogger.printChessboard(positionTracker)
@@ -49,6 +60,11 @@ internal class Game(
         }
 
         val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return false
+
+        if (!turnPolicy.moveAllowedBy(move.piece.color)) {
+            println("not the ${move.piece.color}'s turn")
+            return false
+        }
 
         if (!moveValidator.isMoveValid(move)) {
             println("$move is not valid")

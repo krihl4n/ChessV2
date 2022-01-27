@@ -1,7 +1,5 @@
-game listeners
 
 * player registration
-* cleanup api module
 
 * security
     https://www.baeldung.com/spring-security-websockets
@@ -42,7 +40,6 @@ game listeners
 
 * some persistent logs. logback?
 
-
 * game phases
     * start
     * finish
@@ -54,4 +51,12 @@ game listeners
 - hot seat
 - pvp
 - vs computer with random moves
+
+
+state machine
+
+WAITING FOR OPPONENT
+IN PROGRESS
+FINISHED
+
 
