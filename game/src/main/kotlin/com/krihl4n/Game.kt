@@ -8,8 +8,9 @@ import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
-import com.krihl4n.turns.FreeTurnPolicy
-import com.krihl4n.turns.TurnPolicy
+import com.krihl4n.turns.ActualGameMovePolicy
+import com.krihl4n.turns.FreeMovePolicy
+import com.krihl4n.turns.MovePolicy
 
 internal class Game(
     private val moveValidator: MoveValidator,
@@ -18,7 +19,7 @@ internal class Game(
     private val positionTracker: PositionTracker
 ) {
 
-    var turnPolicy: TurnPolicy = FreeTurnPolicy()
+    private var movePolicy: MovePolicy = FreeMovePolicy()
 
     var gameInProgress = false
     var debugMode = false
@@ -32,8 +33,12 @@ internal class Game(
         gameInProgress = true
 
         when (gameMode) {
-            GameMode.MOVE_FREELY -> this.turnPolicy = FreeTurnPolicy()
-            GameMode.ALTERNATE_PLAYERS -> TODO()
+            GameMode.MOVE_FREELY -> this.movePolicy = FreeMovePolicy()
+            GameMode.ACTUAL_GAME -> let {
+                val policy = ActualGameMovePolicy()
+                this.movePolicy = policy
+                this.commandCoordinator.registerObserver(policy)
+            }
         }
 
         if (debugMode) {
@@ -61,7 +66,7 @@ internal class Game(
 
         val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return false
 
-        if (!turnPolicy.moveAllowedBy(move.piece.color)) {
+        if (!movePolicy.moveAllowedBy(move.piece.color)) {
             println("not the ${move.piece.color}'s turn")
             return false
         }

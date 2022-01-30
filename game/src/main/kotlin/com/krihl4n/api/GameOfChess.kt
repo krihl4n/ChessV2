@@ -16,7 +16,6 @@ import com.krihl4n.guards.EnPassantGuard
 import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
-import com.krihl4n.turns.FreeTurnPolicy
 
 class GameOfChess(private val gameId: String) {
 

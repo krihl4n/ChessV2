@@ -2,5 +2,5 @@ package com.krihl4n
 
 enum class GameMode {
 
-    MOVE_FREELY, ALTERNATE_PLAYERS
+    MOVE_FREELY, ACTUAL_GAME
 }
