@@ -19,10 +19,10 @@ class GameSpec extends BaseGameSpec {
         game.start()
 
         when:
-        def result = game.performMove("a2", "a3")
+        game.performMove("a2", "a3")
 
         then:
-        result
+        noExceptionThrown()
     }
 
     def "can't perform move if game has been finished"() {
@@ -95,7 +95,7 @@ class GameSpec extends BaseGameSpec {
         positionTracker.setPieceAtField(aWhitePawn(), aField("a2"))
 
         when:
-        def result = game.performMove(aField("a2"), aField("b8"))
+        def result = game.performMove("a2", "b8")
 
         then:
         !result

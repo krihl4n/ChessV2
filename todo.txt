@@ -11,6 +11,9 @@
     stalemate
     can king being in check castle?
     resign
+    draw
+    user can choose a figure when pawn reaches the end
+    rematch
 
 * security, accounts etc
  //todo later on it will have to be send to specific user who can have multiple sessions

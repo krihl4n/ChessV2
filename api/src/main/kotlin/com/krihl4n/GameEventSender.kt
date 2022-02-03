@@ -14,7 +14,6 @@ class GameEventSender(
 ) : GameEventListener {
 
     override fun piecePositionUpdate(sessionId: String, update: PiecePositionUpdateDto) {
-        println("sending piece position update")
         simpMessagingTemplate.convertAndSendToUser(
             sessionId,
             "user/queue/piece-position-updates",

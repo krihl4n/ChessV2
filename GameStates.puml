@@ -1,0 +1,21 @@
+@startuml
+
+'scale 350 width
+[*] --> WaitingForPlayers : start()
+WaitingForPlayers --> InProgress: registerPlayers : beginGame()
+'WaitingForPlayers --> WaitingForPlayers: move : doNothing()
+WaitingForPlayers --> WaitingForPlayers: undo : doNothing()
+'WaitingForPlayers --> WaitingForPlayers: redo : doNothing()
+InProgress --> InProgress: move : performMove()
+InProgress --> InProgress: undo : performUndo()
+InProgress --> InProgress: redo : performRedo()
+InProgress --> Finished: checkMate: endGame()
+InProgress --> Finished: playerForfeited: endGame()
+'Finished --> Finished: move : doNothing()
+'Finished --> Finished: undo : doNothing()
+'Finished --> Finished: redo : doNothing()
+
+
+
+
+@enduml

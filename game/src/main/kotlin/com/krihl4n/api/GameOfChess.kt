@@ -39,7 +39,6 @@ class GameOfChess(private val gameId: String) {
     }
 
     fun start() {
-        game.enableDebugMode()
         game.start()
     }
 
