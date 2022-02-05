@@ -18,43 +18,43 @@ class BaseSpec extends Specification {
     }
 
     static def aWhitePawn() {
-        return new Piece(Color.WHITE, Type.PAWN)
+        return new Piece(Color.@WHITE, Type.PAWN)
     }
 
     static def aBlackPawn() {
-        return new Piece(Color.BLACK, Type.PAWN)
+        return new Piece(Color.@BLACK, Type.PAWN)
     }
 
     static def aWhiteRook() {
-        return new Piece(Color.WHITE, Type.ROOK)
+        return new Piece(Color.@WHITE, Type.ROOK)
     }
 
     static def aBlackRook() {
-        return new Piece(Color.BLACK, Type.ROOK)
+        return new Piece(Color.@BLACK, Type.ROOK)
     }
 
     static def aWhiteKing() {
-        return new Piece(Color.WHITE, Type.KING)
+        return new Piece(Color.@WHITE, Type.KING)
     }
 
     static def aBlackKing() {
-        return new Piece(Color.BLACK, Type.KING)
+        return new Piece(Color.@BLACK, Type.KING)
     }
 
     static def aWhiteKnight() {
-        return new Piece(Color.WHITE, Type.KNIGHT)
+        return new Piece(Color.@WHITE, Type.KNIGHT)
     }
 
     static def aBlackKnight() {
-        return new Piece(Color.BLACK, Type.KNIGHT)
+        return new Piece(Color.@BLACK, Type.KNIGHT)
     }
 
     static def aWhiteBishop() {
-        return new Piece(Color.WHITE, Type.BISHOP)
+        return new Piece(Color.@WHITE, Type.BISHOP)
     }
 
     static def aBlackQueen() {
-        return new Piece(Color.BLACK, Type.QUEEN)
+        return new Piece(Color.@BLACK, Type.QUEEN)
     }
 
     static def aField() {
