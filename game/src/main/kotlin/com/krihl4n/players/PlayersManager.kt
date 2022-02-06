@@ -4,22 +4,22 @@ import com.krihl4n.model.Color
 import java.lang.UnsupportedOperationException
 import kotlin.random.Random
 
-class PlayersFacade {
+class PlayersManager {
 
     private var player1Id: String? = null
     private var player2Id: String? = null
     private var player1: Player? = null
     private var player2: Player? = null
 
-    fun registerPlayer(id: String, colorPreference: Color?) {
+    fun registerPlayer(id: String, colorPreference: Color?): Boolean {
         if (player1 == null) {
             registerPlayerOne(colorPreference, id)
-            return
+            return false
         }
 
         if (player2 == null) {
             registerPlayerTwo(id)
-            return
+            return true
         }
 
         throw UnsupportedOperationException("cannot have more than 2 players")

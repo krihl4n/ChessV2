@@ -3,12 +3,12 @@ package com.krihl4n.players
 import com.krihl4n.model.Color
 import spock.lang.Specification
 
-class PlayersFacadeSpec extends Specification {
+class PlayersManagerSpec extends Specification {
 
-    PlayersFacade playersFacade
+    PlayersManager playersFacade
 
     void setup() {
-        playersFacade = new PlayersFacade()
+        playersFacade = new PlayersManager()
     }
 
     def "should register player with selected color"() {
@@ -72,5 +72,15 @@ class PlayersFacadeSpec extends Specification {
 
         then:
         thrown(UnsupportedOperationException)
+    }
+
+    def "should return true if player registration is complete"() {
+        when:
+        def isComplete1 = playersFacade.registerPlayer("player1", null)
+        def isComplete2 = playersFacade.registerPlayer("player2", null)
+
+        then:
+        !isComplete1
+        isComplete2
     }
 }
