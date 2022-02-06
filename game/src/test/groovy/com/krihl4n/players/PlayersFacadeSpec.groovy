@@ -61,4 +61,16 @@ class PlayersFacadeSpec extends Specification {
         then:
         thrown(IllegalArgumentException)
     }
+
+    def "cannot register more than 2 players"() {
+        given:
+        playersFacade.registerPlayer("player1", null)
+        playersFacade.registerPlayer("player2", null)
+
+        when:
+        playersFacade.registerPlayer("player3", null)
+
+        then:
+        thrown(UnsupportedOperationException)
+    }
 }

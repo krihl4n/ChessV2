@@ -1,6 +1,7 @@
 package com.krihl4n.players
 
 import com.krihl4n.model.Color
+import java.lang.UnsupportedOperationException
 import kotlin.random.Random
 
 class PlayersFacade {
@@ -12,26 +13,16 @@ class PlayersFacade {
 
     fun registerPlayer(id: String, colorPreference: Color?) {
         if (player1 == null) {
-            val color = colorPreference ?: getRandomColor()
-            player1Id = id
-            player1 = Player(id, color)
-
+            registerPlayerOne(colorPreference, id)
             return
         }
 
         if (player2 == null) {
-            if (player1Id == id) {
-                throw IllegalArgumentException("players cannot have same nicknames")
-            }
-            val color = player1?.color?.opposite() ?: throw IllegalStateException("cannot determine player one color")
-            player2Id = id
-            player2 = Player(id, color)
+            registerPlayerTwo(id)
             return
         }
-    }
 
-    private fun getRandomColor(): Color {
-        return Color.values()[Random.nextInt(0, 2)]
+        throw UnsupportedOperationException("cannot have more than 2 players")
     }
 
     fun getPlayer(id: String): Player? {
@@ -42,5 +33,24 @@ class PlayersFacade {
             return player2
 
         return null
+    }
+
+    private fun registerPlayerOne(colorPreference: Color?, id: String) {
+        val color = colorPreference ?: getRandomColor()
+        player1Id = id
+        player1 = Player(id, color)
+    }
+
+    private fun registerPlayerTwo(id: String) {
+        if (player1Id == id) {
+            throw IllegalArgumentException("players cannot have same ids")
+        }
+        val color = player1?.color?.opposite() ?: throw IllegalStateException("cannot determine player's color")
+        player2Id = id
+        player2 = Player(id, color)
+    }
+
+    private fun getRandomColor(): Color {
+        return Color.values()[Random.nextInt(0, 2)]
     }
 }
