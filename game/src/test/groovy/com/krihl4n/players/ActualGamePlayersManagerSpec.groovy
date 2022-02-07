@@ -3,12 +3,12 @@ package com.krihl4n.players
 import com.krihl4n.model.Color
 import spock.lang.Specification
 
-class PlayersManagerSpec extends Specification {
+class ActualGamePlayersManagerSpec extends Specification {
 
-    PlayersManager playersFacade
+    ActualGamePlayersManager playersFacade
 
     void setup() {
-        playersFacade = new PlayersManager()
+        playersFacade = new ActualGamePlayersManager()
     }
 
     def "should register player with selected color"() {

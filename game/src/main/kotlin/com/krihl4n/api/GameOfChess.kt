@@ -40,6 +40,7 @@ class GameOfChess(private val gameId: String) {
 
     fun start() {
         game.start()
+        game.registerPlayer("player", "WHITE")
     }
 
     fun finish() {

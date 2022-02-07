@@ -17,6 +17,7 @@ class GameSpec extends BaseGameSpec {
     def "can perform move when game is started"() {
         given:
         game.start()
+        game.registerPlayer("player", null)
 
         when:
         game.performMove("a2", "a3")
@@ -28,6 +29,7 @@ class GameSpec extends BaseGameSpec {
     def "can't perform move if game has been finished"() {
         given:
         game.start()
+        game.registerPlayer("player", null)
         game.finish()
 
         when:
@@ -40,6 +42,7 @@ class GameSpec extends BaseGameSpec {
     def "position tracker should be updated when move performed"() {
         given:
         game.start()
+        game.registerPlayer("player", null)
 
         when:
         game.performMove("a2", "a3")
@@ -51,6 +54,7 @@ class GameSpec extends BaseGameSpec {
     def "should return false if move couldn't be performed"() {
         given:
         game.start()
+        game.registerPlayer("player", null)
         positionTracker.removePieceFromField(aField("a2"))
 
         when:
@@ -63,6 +67,7 @@ class GameSpec extends BaseGameSpec {
     def "should undo move"() {
         given:
         game.start()
+        game.registerPlayer("player", null)
 
         when:
         game.performMove("a2", "a3")
@@ -76,6 +81,7 @@ class GameSpec extends BaseGameSpec {
     def "should redo move"() {
         given:
         game.start()
+        game.registerPlayer("player", null)
 
         when:
         game.performMove("a2", "a3")
@@ -91,6 +97,7 @@ class GameSpec extends BaseGameSpec {
     def "should not be able to perform illegal moves"() {
         given:
         game.start()
+        game.registerPlayer("player", null)
         and:
         positionTracker.setPieceAtField(aWhitePawn(), aField("a2"))
 

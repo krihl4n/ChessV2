@@ -4,6 +4,8 @@ class ActualGameModeSpec extends BaseGameSpec {
 
     void setup() {
         game.start(GameMode.ACTUAL_GAME)
+        game.registerPlayer("player1", null)
+        game.registerPlayer("player2", null)
     }
 
     def "black pieces cannot start the game"() {

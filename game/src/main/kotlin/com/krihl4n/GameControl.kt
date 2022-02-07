@@ -6,8 +6,12 @@ import com.krihl4n.api.mappers.FieldsOccupationMapper
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.command.CommandFactory
+import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
+import com.krihl4n.players.ActualGamePlayersManager
+import com.krihl4n.players.FreeMovePlayersManager
+import com.krihl4n.players.PlayersManager
 import com.krihl4n.turns.ActualGameMovePolicy
 import com.krihl4n.turns.FreeMovePolicy
 import com.krihl4n.turns.MovePolicy
@@ -16,10 +20,12 @@ internal class GameControl(
     private val moveValidator: MoveValidator,
     private val commandCoordinator: CommandCoordinator,
     private val commandFactory: CommandFactory,
-    private val positionTracker: PositionTracker) {
+    private val positionTracker: PositionTracker
+) {
 
 
     private var movePolicy: MovePolicy = FreeMovePolicy()
+    private var playersManager: PlayersManager = FreeMovePlayersManager()
 
     fun setupChessboard(pieceSetup: PieceSetup?) {
         positionTracker.resetInitialGameSetup(pieceSetup)
@@ -28,15 +34,23 @@ internal class GameControl(
     @JvmOverloads
     fun start(gameMode: GameMode = GameMode.MOVE_FREELY) {
         when (gameMode) {
-            GameMode.MOVE_FREELY -> this.movePolicy = FreeMovePolicy()
+            GameMode.MOVE_FREELY -> {
+                this.movePolicy = FreeMovePolicy()
+                this.playersManager = FreeMovePlayersManager()
+            }
             GameMode.ACTUAL_GAME -> let {
                 val policy = ActualGameMovePolicy()
                 this.movePolicy = policy
                 this.commandCoordinator.registerObserver(policy)
+                this.playersManager = ActualGamePlayersManager()
             }
         }
 
         DebugLogger.printChessboard(positionTracker)
+    }
+
+    fun registerPlayer(playerId: String, colorPreference: String?): Boolean {
+        return this.playersManager.registerPlayer(playerId, colorPreference?.let { Color.of(it) })
     }
 
     fun finish() {

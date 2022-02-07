@@ -8,6 +8,7 @@ class CheckSpec extends BaseGameSpec {
 
     void setup() {
         game.start()
+        game.registerPlayer("player", null)
     }
 
     def "king should escape from check"() {
@@ -112,12 +113,12 @@ class CheckSpec extends BaseGameSpec {
 
     def "check test with full piece setup" () {
         given:
-        positionTracker.resetInitialGameSetup()
+        positionTracker.resetInitialGameSetup(null)
 
         when:
         performMove("a2 a3")
 
         then:
-        assertSinglePosition(new Piece(Color.WHITE, Type.PAWN), "a3")
+        assertSinglePosition(new Piece(Color.@WHITE, Type.PAWN), "a3")
     }
 }

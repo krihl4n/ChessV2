@@ -4,6 +4,7 @@ class EnPassantSpec extends BaseGameSpec {
 
     void setup() {
         game.start()
+        game.registerPlayer("player", null)
     }
 
     def "en passant not possible if enemy pawn didn't move"() {

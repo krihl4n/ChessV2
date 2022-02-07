@@ -38,8 +38,16 @@ internal class Game(
         gameState.start(this, gameMode)
     }
 
+    fun registerPlayer(playerId: String, colorPreference: String?) {
+        gameState.registerPlayer(this, playerId, colorPreference)
+    }
+
     override fun executeStart(gameMode: GameMode) {
         gameControl.start(gameMode)
+    }
+
+    override fun executeRegisterPlayer(playerId: String, colorPreference: String?): Boolean {
+        return gameControl.registerPlayer(playerId, colorPreference)
     }
 
     override fun executeFinish() {
