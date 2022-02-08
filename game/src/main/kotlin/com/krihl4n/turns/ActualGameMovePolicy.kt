@@ -3,13 +3,15 @@ package com.krihl4n.turns
 import com.krihl4n.command.MoveObserver
 import com.krihl4n.model.Color
 import com.krihl4n.model.Move
+import com.krihl4n.players.PlayersManager
 
-internal class ActualGameMovePolicy: MovePolicy, MoveObserver {
+internal class ActualGameMovePolicy(private val playersManager: PlayersManager) : MovePolicy, MoveObserver {
 
     private var colorAllowedToMove = Color.WHITE
 
-    override fun moveAllowedBy(color: Color): Boolean {
-        return color == colorAllowedToMove
+    override fun moveAllowedBy(playerId: String): Boolean {
+        println(playersManager.getPlayer(playerId))
+        return playersManager.getPlayer(playerId)?.color == colorAllowedToMove
     }
 
     override fun movePerformed(move: Move) {

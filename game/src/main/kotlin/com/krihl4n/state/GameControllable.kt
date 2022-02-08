@@ -12,7 +12,7 @@ interface GameControllable {
 
     fun executeFinish()
 
-    fun executePerformMove(from: String, to: String)
+    fun executePerformMove(playerId: String, from: String, to: String)
 
     fun executeUndo()
 

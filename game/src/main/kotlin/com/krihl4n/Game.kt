@@ -54,8 +54,8 @@ internal class Game(
         gameControl.finish()
     }
 
-    override fun executePerformMove(from: String, to: String) {
-        gameControl.performMove(from, to)
+    override fun executePerformMove(playerId: String, from: String, to: String) {
+        gameControl.performMove(playerId, from, to)
     }
 
     override fun executeUndo() {
@@ -70,8 +70,8 @@ internal class Game(
         gameState.forfeit(this)
     }
 
-    fun performMove(from: String, to: String) {
-        gameState.move(this, from, to)
+    fun performMove(playerId: String, from: String, to: String) {
+        gameState.move(this, playerId, from, to)
     }
 
     fun undoMove() {

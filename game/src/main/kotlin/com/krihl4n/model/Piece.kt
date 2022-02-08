@@ -18,7 +18,7 @@ enum class Color {
 
     companion object {
         fun of(colorString: String): Color {
-            return if (colorString == "white") WHITE
+            return if (colorString.lowercase() == "white") WHITE
             else BLACK
         }
     }

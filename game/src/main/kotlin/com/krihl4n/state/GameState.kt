@@ -22,7 +22,7 @@ enum class GameState : State {
             throw IllegalStateException("Game not started yet")
         }
 
-        override fun move(gameControllable: GameControllable, from: String, to: String) {
+        override fun move(gameControllable: GameControllable, playerId: String, from: String, to: String) {
             throw IllegalStateException("Game not started yet")
         }
 
@@ -54,7 +54,7 @@ enum class GameState : State {
             }
         }
 
-        override fun move(gameControllable: GameControllable, from: String, to: String) {
+        override fun move(gameControllable: GameControllable, playerId: String, from: String, to: String) {
             throw IllegalStateException("Cannot move, waiting for players")
         }
 
@@ -84,8 +84,8 @@ enum class GameState : State {
             throw IllegalStateException("Cannot register if game in progress")
         }
 
-        override fun move(gameControllable: GameControllable, from: String, to: String) {
-            gameControllable.executePerformMove(from, to)
+        override fun move(gameControllable: GameControllable, playerId: String, from: String, to: String) {
+            gameControllable.executePerformMove(playerId, from, to)
         }
 
         override fun undo(gameControllable: GameControllable) {
@@ -114,7 +114,7 @@ enum class GameState : State {
             throw IllegalStateException("Cannot register if the game is finished")
         }
 
-        override fun move(gameControllable: GameControllable, from: String, to: String) {
+        override fun move(gameControllable: GameControllable, playerId: String, from: String, to: String) {
             throw IllegalStateException("Cannot move if the game is finished")
         }
 
@@ -136,7 +136,7 @@ interface State {
 
     fun registerPlayer(gameControllable: GameControllable, playerId: String, colorPreference: String?)
 
-    fun move(gameControllable: GameControllable, from: String, to: String)
+    fun move(gameControllable: GameControllable, playerId: String, from: String, to: String)
 
     fun undo(gameControllable: GameControllable)
 

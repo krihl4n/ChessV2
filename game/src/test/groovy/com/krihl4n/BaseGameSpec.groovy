@@ -37,8 +37,12 @@ class BaseGameSpec extends BaseSpec {
     }
 
     def performMove(String move) {
+        performMove("player", move)
+    }
+
+    def performMove(String player, String move) {
         String[] tokens = move.split(' ')
-        game.performMove(tokens[0], tokens[1])
+        game.performMove(player, tokens[0], tokens[1])
     }
 
     def undoMove() {
@@ -146,8 +150,8 @@ class BaseGameSpec extends BaseSpec {
 
     private static Color determineColor(String token) {
         switch (token) {
-            case "w": return Color.WHITE
-            case "b": return Color.BLACK
+            case "w": return Color.@WHITE
+            case "b": return Color.@BLACK
         }
         throw new IllegalArgumentException("cannot determine color")
     }

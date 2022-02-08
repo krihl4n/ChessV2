@@ -20,4 +20,8 @@ class Player(val id: String, val color: Color) {
         result = 31 * result + color.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "Player(id='$id', color=$color)"
+    }
 }

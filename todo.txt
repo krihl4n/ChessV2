@@ -15,6 +15,7 @@
     user can choose a figure when pawn reaches the end
     rematch
     insufficient material results in a draw
+    when pawn reaches the end, it can change to chosen
 
 * security, accounts etc
  //todo later on it will have to be send to specific user who can have multiple sessions

@@ -8,7 +8,7 @@ class GameSpec extends BaseGameSpec {
 
     def "can't perform move if game not started"() {
         when:
-        game.performMove("a2", "a3")
+        game.performMove("player","a2", "a3")
 
         then:
         thrown(IllegalStateException)
@@ -20,7 +20,7 @@ class GameSpec extends BaseGameSpec {
         game.registerPlayer("player", null)
 
         when:
-        game.performMove("a2", "a3")
+        game.performMove("player","a2", "a3")
 
         then:
         noExceptionThrown()
@@ -33,7 +33,7 @@ class GameSpec extends BaseGameSpec {
         game.finish()
 
         when:
-        game.performMove("a2", "a3")
+        game.performMove("player","a2", "a3")
 
         then:
         thrown(IllegalStateException)
@@ -45,7 +45,7 @@ class GameSpec extends BaseGameSpec {
         game.registerPlayer("player", null)
 
         when:
-        game.performMove("a2", "a3")
+        game.performMove("player","a2", "a3")
 
         then:
         assertPositions("wp_a3")
@@ -58,7 +58,7 @@ class GameSpec extends BaseGameSpec {
         positionTracker.removePieceFromField(aField("a2"))
 
         when:
-        def result = game.performMove("a2", "a3")
+        def result = game.performMove("player","a2", "a3")
 
         then:
         !result
@@ -70,7 +70,7 @@ class GameSpec extends BaseGameSpec {
         game.registerPlayer("player", null)
 
         when:
-        game.performMove("a2", "a3")
+        game.performMove("player","a2", "a3")
         and:
         game.undoMove()
 
@@ -84,7 +84,7 @@ class GameSpec extends BaseGameSpec {
         game.registerPlayer("player", null)
 
         when:
-        game.performMove("a2", "a3")
+        game.performMove("player","a2", "a3")
         and:
         game.undoMove()
         and:
@@ -102,7 +102,7 @@ class GameSpec extends BaseGameSpec {
         positionTracker.setPieceAtField(aWhitePawn(), aField("a2"))
 
         when:
-        def result = game.performMove("a2", "b8")
+        def result = game.performMove("player","a2", "b8")
 
         then:
         !result

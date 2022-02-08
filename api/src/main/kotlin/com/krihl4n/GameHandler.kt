@@ -32,7 +32,7 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
     }
 
     fun move(sessionId: String, from: String, to: String) {
-        games[sessionId]?.move(from, to)
+        games[sessionId]?.move(sessionId, from, to)
     }
 
     fun getPositions(sessionId: String): List<FieldOccupationDto>? {

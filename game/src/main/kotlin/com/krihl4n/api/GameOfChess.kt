@@ -47,8 +47,8 @@ class GameOfChess(private val gameId: String) {
         game.finish()
     }
 
-    fun move(from: String, to: String) {
-        game.performMove(from, to)
+    fun move(playerId: String, from: String, to: String) {
+        game.performMove(playerId, from, to)
     }
 
     fun undoMove() {

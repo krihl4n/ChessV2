@@ -4,8 +4,8 @@ class ActualGameModeSpec extends BaseGameSpec {
 
     void setup() {
         game.start(GameMode.ACTUAL_GAME)
-        game.registerPlayer("player1", null)
-        game.registerPlayer("player2", null)
+        game.registerPlayer("player1", "WHITE")
+        game.registerPlayer("player2", "BLACK")
     }
 
     def "black pieces cannot start the game"() {
@@ -13,7 +13,7 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         when:
-        performMove("d7 d6")
+        performMove("player2", "d7 d6")
 
         then:
         assertPositions("wp_d2 bp_d7")
@@ -24,10 +24,10 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         and:
-        performMove("d2 d3")
+        performMove("player1", "d2 d3")
 
         when:
-        performMove("d7 d6")
+        performMove("player2", "d7 d6")
 
         then:
         assertPositions("wp_d3 bp_d6")
@@ -38,10 +38,10 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         and:
-        performMove("d2 d3")
+        performMove("player1", "d2 d3")
 
         when:
-        performMove("d3 d4")
+        performMove("player1", "d3 d4")
 
         then:
         assertPositions("wp_d3 bp_d7")
@@ -52,12 +52,12 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         and:
-        performMove("d2 d3")
-        performMove("d7 d6")
+        performMove("player1", "d2 d3")
+        performMove("player2", "d7 d6")
 
         when:
         game.undoMove()
-        performMove("d7 d5")
+        performMove("player2", "d7 d5")
 
         then:
         assertPositions("wp_d3 bp_d5")
@@ -68,11 +68,11 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         and:
-        performMove("d2 d3")
+        performMove("player1", "d2 d3")
         game.undoMove()
 
         when:
-        performMove("d2 d3")
+        performMove("player1", "d2 d3")
 
         then:
         assertPositions("wp_d3 bp_d7")

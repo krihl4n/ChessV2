@@ -37,7 +37,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start()
 
         when:
-        gameOfChess.move("a2", "a3")
+        gameOfChess.move("player","a2", "a3")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -58,7 +58,7 @@ class GameEventsListenerTest extends Specification {
         secondGameOfChess.start()
 
         when:
-        secondGameOfChess.move("a2", "a3")
+        secondGameOfChess.move("player","a2", "a3")
 
         then:
         1 * secondListener.piecePositionUpdate(SECOND_GAME_ID,
@@ -83,7 +83,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start()
 
         when:
-        gameOfChess.move("e1", "g1")
+        gameOfChess.move("player","e1", "g1")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -103,7 +103,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start()
 
         when:
-        gameOfChess.move("c2", "d3")
+        gameOfChess.move("player","c2", "d3")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -123,7 +123,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start()
 
         and:
-        gameOfChess.move("a2", "a3")
+        gameOfChess.move("player","a2", "a3")
 
         when:
         gameOfChess.undoMove()
@@ -144,7 +144,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start()
 
         and:
-        gameOfChess.move("a2", "a3")
+        gameOfChess.move("player","a2", "a3")
         gameOfChess.undoMove()
 
         when:
@@ -166,10 +166,10 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start()
 
         and:
-        gameOfChess.move("d2", "d4")
+        gameOfChess.move("player","d2", "d4")
 
         when:
-        gameOfChess.move("e4", "d3")
+        gameOfChess.move("player","e4", "d3")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -189,7 +189,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start()
 
         when:
-        gameOfChess.move("d7", "d8")
+        gameOfChess.move("player","d7", "d8")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -209,7 +209,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start()
 
         when:
-        gameOfChess.move("d7", "e8")
+        gameOfChess.move("player","d7", "e8")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,

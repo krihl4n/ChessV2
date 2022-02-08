@@ -39,10 +39,10 @@ internal class GameControl(
                 this.playersManager = FreeMovePlayersManager()
             }
             GameMode.ACTUAL_GAME -> let {
-                val policy = ActualGameMovePolicy()
+                this.playersManager = ActualGamePlayersManager()
+                val policy = ActualGameMovePolicy(playersManager)
                 this.movePolicy = policy
                 this.commandCoordinator.registerObserver(policy)
-                this.playersManager = ActualGamePlayersManager()
             }
         }
 
@@ -57,11 +57,11 @@ internal class GameControl(
         // todo
     }
 
-    fun performMove(from: String, to: String) {
-        this.performMove(Field(from), Field(to))
+    fun performMove(playerId: String, from: String, to: String) {
+        this.performMove(playerId, Field(from), Field(to))
     }
 
-    fun performMove(from: Field, to: Field) {
+    fun performMove(playerId: String, from: Field, to: Field) {
         if (positionTracker.isFieldEmpty(from)) {
             println("No piece at field $from")
             return
@@ -69,7 +69,7 @@ internal class GameControl(
 
         val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return
 
-        if (!movePolicy.moveAllowedBy(move.piece.color)) {
+        if (!movePolicy.moveAllowedBy(playerId)) {
             println("not the ${move.piece.color}'s turn")
             return
         }
