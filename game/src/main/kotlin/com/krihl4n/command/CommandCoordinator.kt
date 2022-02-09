@@ -8,14 +8,14 @@ internal class CommandCoordinator {
     private val undidCommands = ArrayDeque<MoveCommand>()
 
     private val moveObservers = mutableSetOf<MoveObserver>()
-    private var piecePositionUpdateListener: PiecePositionUpdateListener? = null
+    private var piecePositionUpdateListeners = mutableListOf<PiecePositionUpdateListener>()
 
     fun registerObserver(moveObserver: MoveObserver) {
         this.moveObservers.add(moveObserver)
     }
 
     fun registerPiecePositionUpdateListener(listener: PiecePositionUpdateListener) {
-        this.piecePositionUpdateListener = listener
+        this.piecePositionUpdateListeners.add(listener)
     }
 
     fun execute(command: MoveCommand) {
@@ -23,7 +23,7 @@ internal class CommandCoordinator {
         executedCommands.add(command)
 
         moveObservers.forEach { it.movePerformed(command.getMove()) }
-        command.getPiecePositionUpdate()?.let { piecePositionUpdateListener?.positionsUpdated(it) }
+        command.getPiecePositionUpdate()?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it) }}
     }
 
     fun undo() {
@@ -35,7 +35,7 @@ internal class CommandCoordinator {
         undidCommands.add(command)
 
         moveObservers.forEach { it.moveUndid(command.getMove()) }
-        command.getPiecePositionUpdate()?.let { piecePositionUpdateListener?.positionsUpdated(it.reverted()) }
+        command.getPiecePositionUpdate()?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it) }}
     }
 
     fun redo() {
@@ -46,7 +46,7 @@ internal class CommandCoordinator {
         undidCommands.removeLast()
         executedCommands.add(command) // redundant?
 
-        command.getPiecePositionUpdate()?.let { piecePositionUpdateListener?.positionsUpdated(it) }
+        command.getPiecePositionUpdate()?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it) }}
     }
 
     fun getLastMove(): Move? {

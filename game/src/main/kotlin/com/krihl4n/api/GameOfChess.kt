@@ -1,6 +1,7 @@
 package com.krihl4n.api
 
 import com.krihl4n.Game
+import com.krihl4n.GameMode
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.FieldOccupationDto
@@ -38,9 +39,11 @@ class GameOfChess(private val gameId: String) {
         game.setupChessboard(pieceSetup)
     }
 
-    fun start() {
-        game.start()
-        game.registerPlayer("player", "WHITE")
+    fun start(playerId: String?) {
+        game.start(GameMode.ACTUAL_GAME)
+        game.registerPlayer(playerId ?: "player1", "WHITE")
+        game.registerPlayer("player2", "BLACK")
+        registerGameEventListener(ComputerPlayer(this, "player2"))
     }
 
     fun finish() {
