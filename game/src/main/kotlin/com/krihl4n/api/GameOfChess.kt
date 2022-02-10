@@ -43,7 +43,7 @@ class GameOfChess(private val gameId: String) {
         game.start(GameMode.ACTUAL_GAME)
         game.registerPlayer(playerId ?: "player1", "WHITE")
         game.registerPlayer("player2", "BLACK")
-        registerGameEventListener(ComputerPlayer(this, "player2"))
+        registerGameEventListener(ComputerPlayer(this, "player2", "BLACK"))
     }
 
     fun finish() {
