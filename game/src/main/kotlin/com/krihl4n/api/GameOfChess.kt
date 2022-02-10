@@ -5,6 +5,7 @@ import com.krihl4n.GameMode
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.FieldOccupationDto
+import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.PieceSetup
@@ -39,11 +40,20 @@ class GameOfChess(private val gameId: String) {
         game.setupChessboard(pieceSetup)
     }
 
-    fun start(playerId: String?) {
-        game.start(GameMode.ACTUAL_GAME)
-        game.registerPlayer(playerId ?: "player1", "WHITE")
-        game.registerPlayer("player2", "BLACK")
-        registerGameEventListener(ComputerPlayer(this, "player2", "BLACK"))
+    fun start(playerId: String?, mode: GameModeDto) {
+        when (mode) {
+            GameModeDto.FREE_MOVE -> {
+                game.start(GameMode.MOVE_FREELY)
+                game.registerPlayer("player1", null)
+            }
+            GameModeDto.HOT_SEAT -> TODO()
+            GameModeDto.VS_COMPUTER -> {
+                game.start(GameMode.ACTUAL_GAME)
+                game.registerPlayer(playerId ?: "player1", "WHITE")
+                game.registerPlayer("player2", "BLACK")
+                registerGameEventListener(ComputerPlayer(this, "player2", "BLACK"))
+            }
+        }
     }
 
     fun finish() {
