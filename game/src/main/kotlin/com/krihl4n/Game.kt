@@ -75,11 +75,11 @@ internal class Game(
     }
 
     fun undoMove() {
-        gameControl.undoMove()
+        gameState.undo(this)
     }
 
     fun redoMove() {
-        gameControl.redoMove()
+        gameState.redo(this)
     }
 
     fun getFieldOccupationInfo(): List<FieldOccupationDto> {

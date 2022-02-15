@@ -35,7 +35,7 @@ internal class CommandCoordinator {
         undidCommands.add(command)
 
         moveObservers.forEach { it.moveUndid(command.getMove()) }
-        command.getPiecePositionUpdate()?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it) }}
+        command.getPiecePositionUpdate()?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it.reverted()) }}
     }
 
     fun redo() {
