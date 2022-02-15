@@ -1,6 +1,6 @@
 package com.krihl4n.turns
 
-import com.krihl4n.command.MoveObserver
+import com.krihl4n.moveCommands.MoveObserver
 import com.krihl4n.model.Color
 import com.krihl4n.model.Move
 import com.krihl4n.players.PlayersManager

@@ -2,7 +2,7 @@ package com.krihl4n.guards
 
 
 import com.krihl4n.PositionTracker
-import com.krihl4n.command.CommandCoordinator
+import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.model.*
 import com.krihl4n.moveCalculators.PossibleMove
 

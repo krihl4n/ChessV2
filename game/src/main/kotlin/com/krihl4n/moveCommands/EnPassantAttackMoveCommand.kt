@@ -1,7 +1,6 @@
-package com.krihl4n.command
+package com.krihl4n.moveCommands
 
 import com.krihl4n.PositionTracker
-import com.krihl4n.api.dto.PieceCaptureDto
 import com.krihl4n.model.*
 
 internal class EnPassantAttackMoveCommand(

@@ -1,7 +1,5 @@
 package com.krihl4n
 
-import com.krihl4n.command.CommandCoordinator
-import com.krihl4n.command.CommandFactory
 import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.guards.CheckGuard
 import com.krihl4n.guards.EnPassantGuard
@@ -11,6 +9,8 @@ import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import com.krihl4n.moveCommands.CommandCoordinator
+import com.krihl4n.moveCommands.CommandFactory
 import spock.lang.Subject
 
 class BaseGameSpec extends BaseSpec {

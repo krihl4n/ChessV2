@@ -2,6 +2,7 @@ package com.krihl4n
 
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
+import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PieceCaptureDto
 import com.krihl4n.api.dto.PieceDto
@@ -10,7 +11,6 @@ import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import com.krihl4n.api.pieceSetups.EnPassantSetup
 import com.krihl4n.api.pieceSetups.QueenConversionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
-import spock.lang.Ignore
 import spock.lang.Specification
 
 class GameEventsListenerTest extends Specification {
@@ -35,7 +35,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about basic move"() {
         given:
         gameOfChess.setupChessboard(null)
-        gameOfChess.start("player")
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
 
         when:
         gameOfChess.move("player","a2", "a3")
@@ -53,10 +53,10 @@ class GameEventsListenerTest extends Specification {
     def "having two games, only one is notified about moving piece"() {
         given:
         gameOfChess.setupChessboard(null)
-        gameOfChess.start("player")
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
         and:
         secondGameOfChess.setupChessboard(null)
-        secondGameOfChess.start("player")
+        secondGameOfChess.start("player", GameModeDto.FREE_MOVE)
 
         when:
         secondGameOfChess.move("player","a2", "a3")
@@ -81,7 +81,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about two moves when castling"() {
         given:
         gameOfChess.setupChessboard(new CastlingPieceSetup())
-        gameOfChess.start("player")
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
 
         when:
         gameOfChess.move("player","e1", "g1")
@@ -101,7 +101,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about attacks"() {
         given:
         gameOfChess.setupChessboard(new SimpleAttackSetup())
-        gameOfChess.start("player")
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
 
         when:
         gameOfChess.move("player","c2", "d3")
@@ -118,11 +118,10 @@ class GameEventsListenerTest extends Specification {
         )
     }
 
-    @Ignore("Should be fixed by enabling free mode on GameOfChess")
     def "should notify when undoing basic move"() {
         given:
         gameOfChess.setupChessboard(null)
-        gameOfChess.start("player")
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
 
         and:
         gameOfChess.move("player","a2", "a3")
@@ -143,7 +142,7 @@ class GameEventsListenerTest extends Specification {
     def "should send event when redoing a move"() {
         given:
         gameOfChess.setupChessboard(null)
-        gameOfChess.start("player")
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
 
         and:
         gameOfChess.move("player","a2", "a3")
@@ -162,11 +161,10 @@ class GameEventsListenerTest extends Specification {
                         false))
     }
 
-    @Ignore("Should be fixed by enabling free mode on GameOfChess")
     def "should notify about en passant capture"() {
         given:
         gameOfChess.setupChessboard(new EnPassantSetup())
-        gameOfChess.start("player")
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
 
         and:
         gameOfChess.move("player","d2", "d4")
@@ -189,7 +187,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about pawn to queen conversion"() {
         given:
         gameOfChess.setupChessboard(new QueenConversionSetup())
-        gameOfChess.start("player")
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
 
         when:
         gameOfChess.move("player","d7", "d8")
@@ -209,7 +207,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about pawn to queen conversion and attack"() {
         given:
         gameOfChess.setupChessboard(new QueenConversionSetup())
-        gameOfChess.start("player")
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
 
         when:
         gameOfChess.move("player","d7", "e8")

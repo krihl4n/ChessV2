@@ -1,7 +1,7 @@
 package com.krihl4n.guards
 
 import com.krihl4n.PositionTracker
-import com.krihl4n.command.MoveObserver
+import com.krihl4n.moveCommands.MoveObserver
 import com.krihl4n.model.*
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator

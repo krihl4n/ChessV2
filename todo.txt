@@ -17,6 +17,8 @@
     insufficient material results in a draw
     when pawn reaches the end, it can change to chosen
 
+* undoing in actual game
+
 * security, accounts etc
  //todo later on it will have to be send to specific user who can have multiple sessions
 

@@ -1,12 +1,14 @@
-package com.krihl4n.api
+package com.krihl4n.opponent
 
+import com.krihl4n.api.GameEventListener
+import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import kotlin.random.Random
 import java.util.Timer
 import kotlin.concurrent.schedule
 
-class ComputerPlayer(private val game: GameOfChess, private val playerId: String, private val playerColor: String) :
+class ComputerOpponent(private val game: GameOfChess, private val playerId: String, private val playerColor: String) :
     GameEventListener {
 
     override fun piecePositionUpdate(sessionId: String, update: PiecePositionUpdateDto) {

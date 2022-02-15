@@ -9,9 +9,10 @@ import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.command.CommandCoordinator
-import com.krihl4n.command.CommandFactory
-import com.krihl4n.command.PiecePositionUpdateListener
+import com.krihl4n.moveCommands.CommandCoordinator
+import com.krihl4n.moveCommands.CommandFactory
+import com.krihl4n.moveCommands.PiecePositionUpdateListener
+import com.krihl4n.opponent.ComputerOpponent
 import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.guards.CheckGuard
 import com.krihl4n.guards.EnPassantGuard
@@ -51,7 +52,7 @@ class GameOfChess(private val gameId: String) {
                 game.start(GameMode.ACTUAL_GAME)
                 game.registerPlayer(playerId ?: "player1", "WHITE")
                 game.registerPlayer("player2", "BLACK")
-                registerGameEventListener(ComputerPlayer(this, "player2", "BLACK"))
+                registerGameEventListener(ComputerOpponent(this, "player2", "BLACK"))
             }
         }
     }

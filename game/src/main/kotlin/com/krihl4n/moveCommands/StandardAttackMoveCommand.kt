@@ -1,4 +1,4 @@
-package com.krihl4n.command
+package com.krihl4n.moveCommands
 
 import com.krihl4n.CaptureTracker
 import com.krihl4n.PositionTracker

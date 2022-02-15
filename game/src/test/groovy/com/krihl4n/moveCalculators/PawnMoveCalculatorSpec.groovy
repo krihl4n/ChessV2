@@ -2,8 +2,8 @@ package com.krihl4n.moveCalculators
 
 import com.krihl4n.BaseSpec
 import com.krihl4n.PositionTracker
-import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.guards.EnPassantGuard
+import com.krihl4n.moveCommands.CommandCoordinator
 import spock.lang.Subject
 
 class PawnMoveCalculatorSpec extends BaseSpec {

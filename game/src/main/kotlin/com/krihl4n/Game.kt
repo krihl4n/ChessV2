@@ -3,8 +3,8 @@ package com.krihl4n
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.command.CommandCoordinator
-import com.krihl4n.command.CommandFactory
+import com.krihl4n.moveCommands.CommandCoordinator
+import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.state.GameControllable
 import com.krihl4n.state.GameState
 import com.krihl4n.state.State

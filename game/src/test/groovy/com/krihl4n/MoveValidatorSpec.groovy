@@ -1,11 +1,11 @@
 package com.krihl4n
 
-import com.krihl4n.command.CommandCoordinator
 import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.guards.CheckGuard
 import com.krihl4n.guards.EnPassantGuard
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import com.krihl4n.moveCommands.CommandCoordinator
 import spock.lang.Subject
 
 class MoveValidatorSpec extends BaseSpec {

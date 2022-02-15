@@ -4,8 +4,8 @@ import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.mappers.FieldsOccupationMapper
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.command.CommandCoordinator
-import com.krihl4n.command.CommandFactory
+import com.krihl4n.moveCommands.CommandCoordinator
+import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
