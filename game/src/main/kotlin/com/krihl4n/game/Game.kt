@@ -2,8 +2,6 @@ package com.krihl4n.game
 
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
-import com.krihl4n.api.dto.FieldOccupationDto
-import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
@@ -33,35 +31,21 @@ internal class Game(
     }
 
     @JvmOverloads
-    fun start(gameMode: GameMode = GameMode.MOVE_FREELY) {
-        gameState.start(this, gameControl, gameMode)
-    }
+    fun start(gameMode: GameMode = GameMode.MOVE_FREELY) = gameState.start(this, gameControl, gameMode)
 
-    fun registerPlayer(playerId: String, colorPreference: String?) {
+    fun registerPlayer(playerId: String, colorPreference: String?) =
         gameState.registerPlayer(this, gameControl, playerId, colorPreference)
-    }
 
-    fun finish() {
-        gameState.forfeit(this, gameControl)
-    }
+    fun finish() = gameState.forfeit(this, gameControl)
 
-    fun performMove(playerId: String, from: String, to: String) {
+    fun performMove(playerId: String, from: String, to: String) =
         gameState.move(this, gameControl, playerId, from, to)
-    }
 
-    fun undoMove() {
-        gameState.undo(this, gameControl)
-    }
+    fun undoMove() = gameState.undo(this, gameControl)
 
-    fun redoMove() {
-        gameState.redo(this, gameControl)
-    }
+    fun redoMove() = gameState.redo(this, gameControl)
 
-    fun getFieldOccupationInfo(): List<FieldOccupationDto> {
-        return gameControl.getFieldOccupationInfo()
-    }
+    fun getFieldOccupationInfo() = gameControl.getFieldOccupationInfo()
 
-    fun getPossibleMoves(fieldToken: String): PossibleMovesDto {
-        return gameControl.getPossibleMoves(fieldToken)
-    }
+    fun getPossibleMoves(fieldToken: String) = gameControl.getPossibleMoves(fieldToken)
 }

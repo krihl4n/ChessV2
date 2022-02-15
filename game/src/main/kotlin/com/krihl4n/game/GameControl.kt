@@ -3,7 +3,6 @@ package com.krihl4n.game
 import com.krihl4n.DebugLogger
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
-import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.mappers.FieldsOccupationMapper
 import com.krihl4n.api.pieceSetups.PieceSetup
@@ -29,39 +28,7 @@ internal class GameControl(
     private var movePolicy: MovePolicy = FreeMovePolicy()
     private var playersManager: PlayersManager = FreeMovePlayersManager()
 
-    fun setupChessboard(pieceSetup: PieceSetup?) {
-        positionTracker.resetInitialGameSetup(pieceSetup)
-    }
-
-    @JvmOverloads
-    fun start(gameMode: GameMode = GameMode.MOVE_FREELY) {
-        when (gameMode) {
-            GameMode.MOVE_FREELY -> {
-                this.movePolicy = FreeMovePolicy()
-                this.playersManager = FreeMovePlayersManager()
-            }
-            GameMode.ACTUAL_GAME -> let {
-                this.playersManager = ActualGamePlayersManager()
-                val policy = ActualGameMovePolicy(playersManager)
-                this.movePolicy = policy
-                this.commandCoordinator.registerObserver(policy)
-            }
-        }
-
-        DebugLogger.printChessboard(positionTracker)
-    }
-
-    fun registerPlayer(playerId: String, colorPreference: String?): Boolean {
-        return this.playersManager.registerPlayer(playerId, colorPreference?.let { Color.of(it) })
-    }
-
-    fun finish() {
-        // todo
-    }
-
-    fun performMove(playerId: String, from: String, to: String) {
-        this.performMove(playerId, Field(from), Field(to))
-    }
+    fun setupChessboard(pieceSetup: PieceSetup?) = positionTracker.resetInitialGameSetup(pieceSetup)
 
     fun performMove(playerId: String, from: Field, to: Field) {
         if (positionTracker.isFieldEmpty(from)) {
@@ -89,20 +56,9 @@ internal class GameControl(
         }
 
         DebugLogger.printChessboard(positionTracker)
-        return
     }
 
-    fun undoMove() {
-        commandCoordinator.undo()
-    }
-
-    fun redoMove() {
-        commandCoordinator.redo()
-    }
-
-    fun getFieldOccupationInfo(): List<FieldOccupationDto> {
-        return FieldsOccupationMapper.from(positionTracker.getPositionsOfAllPieces())
-    }
+    fun getFieldOccupationInfo() = FieldsOccupationMapper.from(positionTracker.getPositionsOfAllPieces())
 
     fun getPossibleMoves(fieldToken: String): PossibleMovesDto {
         val field = Field(fieldToken)
@@ -113,26 +69,31 @@ internal class GameControl(
     }
 
     override fun executeStart(gameMode: GameMode) {
-        start(gameMode)
+        when (gameMode) {
+            GameMode.MOVE_FREELY -> {
+                this.movePolicy = FreeMovePolicy()
+                this.playersManager = FreeMovePlayersManager()
+            }
+            GameMode.ACTUAL_GAME -> let {
+                this.playersManager = ActualGamePlayersManager()
+                val policy = ActualGameMovePolicy(playersManager)
+                this.movePolicy = policy
+                this.commandCoordinator.registerObserver(policy)
+            }
+        }
+
+        DebugLogger.printChessboard(positionTracker)
     }
 
-    override fun executeRegisterPlayer(playerId: String, colorPreference: String?): Boolean {
-        return registerPlayer(playerId, colorPreference)
-    }
+    override fun executeRegisterPlayer(playerId: String, colorPreference: String?) =
+        this.playersManager.registerPlayer(playerId, colorPreference?.let { Color.of(it) })
 
-    override fun executeFinish() {
-        finish()
-    }
+    override fun executeFinish() {}// todo
 
-    override fun executePerformMove(playerId: String, from: String, to: String) {
-        performMove(playerId, from, to)
-    }
+    override fun executePerformMove(playerId: String, from: String, to: String) =
+        this.performMove(playerId, Field(from), Field(to))
 
-    override fun executeUndo() {
-        undoMove()
-    }
+    override fun executeUndo() = commandCoordinator.undo()
 
-    override fun executeRedo() {
-        redoMove()
-    }
+    override fun executeRedo() = commandCoordinator.redo()
 }
