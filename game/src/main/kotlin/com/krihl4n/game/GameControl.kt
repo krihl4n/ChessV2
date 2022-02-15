@@ -24,7 +24,7 @@ internal class GameControl(
     private val commandCoordinator: CommandCoordinator,
     private val commandFactory: CommandFactory,
     private val positionTracker: PositionTracker
-) {
+) : GameCommand {
 
     private var movePolicy: MovePolicy = FreeMovePolicy()
     private var playersManager: PlayersManager = FreeMovePlayersManager()
@@ -110,5 +110,29 @@ internal class GameControl(
             return PossibleMovesDto.from(field, moveValidator.getValidMoves(field, it.color))
         }
         return PossibleMovesDto.noMovesFrom(field)
+    }
+
+    override fun executeStart(gameMode: GameMode) {
+        start(gameMode)
+    }
+
+    override fun executeRegisterPlayer(playerId: String, colorPreference: String?): Boolean {
+        return registerPlayer(playerId, colorPreference)
+    }
+
+    override fun executeFinish() {
+        finish()
+    }
+
+    override fun executePerformMove(playerId: String, from: String, to: String) {
+        performMove(playerId, from, to)
+    }
+
+    override fun executeUndo() {
+        undoMove()
+    }
+
+    override fun executeRedo() {
+        redoMove()
     }
 }

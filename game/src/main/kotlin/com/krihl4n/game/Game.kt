@@ -13,7 +13,7 @@ internal class Game(
     commandCoordinator: CommandCoordinator,
     commandFactory: CommandFactory,
     positionTracker: PositionTracker
-) : GameCommand {
+) : StateHolder {
 
     private var gameState: State = GameState.UNINITIALIZED
 
@@ -34,51 +34,27 @@ internal class Game(
 
     @JvmOverloads
     fun start(gameMode: GameMode = GameMode.MOVE_FREELY) {
-        gameState.start(this, gameMode)
+        gameState.start(this, gameControl, gameMode)
     }
 
     fun registerPlayer(playerId: String, colorPreference: String?) {
-        gameState.registerPlayer(this, playerId, colorPreference)
-    }
-
-    override fun executeStart(gameMode: GameMode) {
-        gameControl.start(gameMode)
-    }
-
-    override fun executeRegisterPlayer(playerId: String, colorPreference: String?): Boolean {
-        return gameControl.registerPlayer(playerId, colorPreference)
-    }
-
-    override fun executeFinish() {
-        gameControl.finish()
-    }
-
-    override fun executePerformMove(playerId: String, from: String, to: String) {
-        gameControl.performMove(playerId, from, to)
-    }
-
-    override fun executeUndo() {
-        gameControl.undoMove()
-    }
-
-    override fun executeRedo() {
-        gameControl.redoMove()
+        gameState.registerPlayer(this, gameControl, playerId, colorPreference)
     }
 
     fun finish() {
-        gameState.forfeit(this)
+        gameState.forfeit(this, gameControl)
     }
 
     fun performMove(playerId: String, from: String, to: String) {
-        gameState.move(this, playerId, from, to)
+        gameState.move(this, gameControl, playerId, from, to)
     }
 
     fun undoMove() {
-        gameState.undo(this)
+        gameState.undo(this, gameControl)
     }
 
     fun redoMove() {
-        gameState.redo(this)
+        gameState.redo(this, gameControl)
     }
 
     fun getFieldOccupationInfo(): List<FieldOccupationDto> {
