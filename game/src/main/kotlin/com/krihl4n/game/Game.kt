@@ -1,22 +1,21 @@
-package com.krihl4n
+package com.krihl4n.game
 
+import com.krihl4n.MoveValidator
+import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
-import com.krihl4n.state.GameControllable
-import com.krihl4n.state.GameState
-import com.krihl4n.state.State
 
 internal class Game(
     moveValidator: MoveValidator,
     commandCoordinator: CommandCoordinator,
     commandFactory: CommandFactory,
     positionTracker: PositionTracker
-) : GameControllable {
+) : GameCommand {
 
-    var gameState: State = GameState.UNINITIALIZED
+    private var gameState: State = GameState.UNINITIALIZED
 
     override fun setState(state: State) {
         this.gameState = state

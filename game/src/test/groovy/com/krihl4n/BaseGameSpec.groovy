@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.game.Game
 import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.guards.CheckGuard
 import com.krihl4n.guards.EnPassantGuard

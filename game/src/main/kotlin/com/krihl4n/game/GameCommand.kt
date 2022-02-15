@@ -1,8 +1,6 @@
-package com.krihl4n.state
+package com.krihl4n.game
 
-import com.krihl4n.GameMode
-
-interface GameControllable {
+interface GameCommand {
 
     fun setState(state: State)
 

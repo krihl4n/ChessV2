@@ -1,7 +1,7 @@
 package com.krihl4n.api
 
-import com.krihl4n.Game
-import com.krihl4n.GameMode
+import com.krihl4n.game.Game
+import com.krihl4n.game.GameMode
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.FieldOccupationDto

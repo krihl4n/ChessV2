@@ -1,5 +1,7 @@
 package com.krihl4n
 
+import com.krihl4n.game.GameMode
+
 class ActualGameModeSpec extends BaseGameSpec {
 
     void setup() {

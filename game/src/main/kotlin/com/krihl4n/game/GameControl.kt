@@ -1,5 +1,8 @@
-package com.krihl4n
+package com.krihl4n.game
 
+import com.krihl4n.DebugLogger
+import com.krihl4n.MoveValidator
+import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.mappers.FieldsOccupationMapper
@@ -22,7 +25,6 @@ internal class GameControl(
     private val commandFactory: CommandFactory,
     private val positionTracker: PositionTracker
 ) {
-
 
     private var movePolicy: MovePolicy = FreeMovePolicy()
     private var playersManager: PlayersManager = FreeMovePlayersManager()
