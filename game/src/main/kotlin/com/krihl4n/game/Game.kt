@@ -10,8 +10,9 @@ internal class Game(
     moveValidator: MoveValidator,
     commandCoordinator: CommandCoordinator,
     commandFactory: CommandFactory,
-    positionTracker: PositionTracker
-) : StateHolder {
+    positionTracker: PositionTracker,
+    gameResult: GameResult
+) : StateHolder, GameResultObserver {
 
     private var gameState: State = GameState.UNINITIALIZED
 
@@ -25,6 +26,12 @@ internal class Game(
         commandFactory,
         positionTracker
     )
+
+    init {
+        gameResult.registerObserver(this)
+    }
+
+    fun isGameFinished() = gameState == GameState.FINISHED
 
     fun setupChessboard(pieceSetup: PieceSetup?) {
         gameControl.setupChessboard(pieceSetup)
@@ -48,4 +55,8 @@ internal class Game(
     fun getFieldOccupationInfo() = gameControl.getFieldOccupationInfo()
 
     fun getPossibleMoves(fieldToken: String) = gameControl.getPossibleMoves(fieldToken)
+
+    override fun gameFinished() {
+        gameState.gameFinished(this)
+    }
 }

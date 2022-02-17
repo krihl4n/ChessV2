@@ -9,9 +9,6 @@ import com.krihl4n.moveCalculators.PossibleMove
 internal class MoveValidator(private val pieceMoveCalculator: PieceMoveCalculator, private val checkGuard: CheckGuard) {
 
     fun isMoveValid(move: Move) : Boolean {
-//        val possibleMoves = pieceMoveCalculator.findMoves(move.from)
-//        val filteredMoves = filterMoves(move.piece.color, possibleMoves)
-
         return getValidMoves(move.from, move.piece.color)
             .stream()
             .anyMatch { it.from == move.from && it.to == move.to }

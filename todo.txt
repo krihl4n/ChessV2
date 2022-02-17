@@ -9,13 +9,12 @@
     possibly every instance of position tracker should be tied to separate instances of objects with state
     check mate
     stalemate
-    can king being in check castle?
     resign
     draw
     user can choose a figure when pawn reaches the end
     rematch
     insufficient material results in a draw
-    when pawn reaches the end, it can change to chosen
+    when pawn reaches the end, it can change to chosen figure
 
 * undoing in actual game
 
@@ -59,11 +58,9 @@
 - pvp
 - vs computer with random moves
 
+- play computer vs computer
 
-state machine
+FEN notation maybe?
+https://www.youtube.com/watch?v=U4ogK0MIzqk&ab_channel=SebastianLague
 
-WAITING FOR OPPONENT
-IN PROGRESS
-FINISHED
-
-
+maybe pieces should remember their positions? or maybe not

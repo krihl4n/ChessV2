@@ -30,10 +30,6 @@ internal class CheckGuard(private val positionTracker: PositionTracker) {
             .firstOrNull()
     }
 
-    private fun Color.opposite(): Color {
-        return if (this == Color.WHITE) Color.BLACK else Color.WHITE
-    }
-
     private fun isFieldUnderAttackByColor(
         field: Field,
         color: Color,

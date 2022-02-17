@@ -38,6 +38,10 @@ enum class GameState : State {
         override fun redo(stateHolder: StateHolder, gameCommand: GameCommand) {
             throw IllegalStateException("Game not started yet")
         }
+
+        override fun gameFinished(stateHolder: StateHolder) {
+            stateHolder.setState(FINISHED)
+        }
     },
     WAITING_FOR_PLAYERS {
         override fun start(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
@@ -77,6 +81,10 @@ enum class GameState : State {
         override fun redo(stateHolder: StateHolder, gameCommand: GameCommand) {
             throw IllegalStateException("Cannot move, waiting for players")
         }
+
+        override fun gameFinished(stateHolder: StateHolder) {
+            stateHolder.setState(FINISHED)
+        }
     },
     IN_PROGRESS {
         override fun start(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
@@ -113,6 +121,10 @@ enum class GameState : State {
 
         override fun redo(stateHolder: StateHolder, gameCommand: GameCommand) {
             gameCommand.executeRedo()
+        }
+
+        override fun gameFinished(stateHolder: StateHolder) {
+            stateHolder.setState(FINISHED)
         }
     },
     FINISHED {
@@ -151,6 +163,10 @@ enum class GameState : State {
         override fun redo(stateHolder: StateHolder, gameCommand: GameCommand) {
             throw IllegalStateException("Cannot move if the game is finished")
         }
+
+        override fun gameFinished(stateHolder: StateHolder) {
+            // do nothing?
+        }
     }
 }
 
@@ -162,4 +178,5 @@ interface State {
     fun move(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, from: String, to: String)
     fun undo(stateHolder: StateHolder, gameCommand: GameCommand)
     fun redo(stateHolder: StateHolder, gameCommand: GameCommand)
+    fun gameFinished(stateHolder: StateHolder)
 }

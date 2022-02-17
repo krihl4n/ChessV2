@@ -1,6 +1,7 @@
 package com.krihl4n
 
 import com.krihl4n.game.Game
+import com.krihl4n.game.GameResult
 import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.guards.CheckGuard
 import com.krihl4n.guards.EnPassantGuard
@@ -27,12 +28,15 @@ class BaseGameSpec extends BaseSpec {
         CheckGuard checkGuard = new CheckGuard(positionTracker)
         CommandCoordinator commandCoordinator = new CommandCoordinator()
         commandCoordinator.registerObserver(castlingGuard)
+        PieceMoveCalculator pieceMoveCalculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
         MoveValidator moveValidator = new MoveValidator(
-                new PieceMoveCalculator(positionTracker, calculatorFactory),
+                pieceMoveCalculator,
                 checkGuard
         )
         CommandFactory commandFactory = new CommandFactory(positionTracker)
-        game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker)
+        GameResult gameResult = new GameResult(positionTracker, pieceMoveCalculator)
+        commandCoordinator.registerObserver(gameResult)
+        game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResult)
         EnPassantGuard enPassantGuard = new EnPassantGuard(positionTracker, commandCoordinator)
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
     }

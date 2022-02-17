@@ -1,6 +1,5 @@
 package com.krihl4n.guards
 
-
 import com.krihl4n.PositionTracker
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.model.*
