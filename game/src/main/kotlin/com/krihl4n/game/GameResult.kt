@@ -1,61 +1,39 @@
 package com.krihl4n.game
 
-import com.krihl4n.PositionTracker
-import com.krihl4n.guards.CheckEvaluator
-import com.krihl4n.model.*
-import com.krihl4n.model.Move
-import com.krihl4n.moveCalculators.PieceMoveCalculator
-import com.krihl4n.moveCalculators.PossibleMove
-import com.krihl4n.moveCommands.MoveObserver
+class GameResult(val result: Result, val reason: ResultReason) {
 
-internal class GameResult(
-    val positionTracker: PositionTracker,
-    val moveCalculator: PieceMoveCalculator,
-    private val checkEvaluator: CheckEvaluator
-) :
-    MoveObserver {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-    private val resultObservers = mutableListOf<GameResultObserver>()
+        other as GameResult
 
-    override fun movePerformed(move: Move) {
-        if (isKingChecked(move.piece.color.opposite())) {
-            if(!isThereASavingMove(move.piece.color.opposite())){
-                println("check-mate!")
-                notifyGameFinished()
-            }
-        }
+        if (result != other.result) return false
+        if (reason != other.reason) return false
+
+        return true
     }
 
-    override fun moveUndid(move: Move) {
-        // todo
+    override fun hashCode(): Int {
+        var result1 = result.hashCode()
+        result1 = 31 * result1 + reason.hashCode()
+        return result1
     }
 
-    fun isGameFinished(): Boolean {  // maybe not needed
-        return false
+    override fun toString(): String {
+        return "GameResult(result=$result, reason=$reason)"
     }
+}
 
-    private fun isThereASavingMove(color: Color): Boolean {
-        return positionTracker.getPositionsOfAllPieces()
-            .filter { it.value.color == color }
-            .flatMap { moveCalculator.findMoves(it.key) }
-            .firstOrNull {
-                !checkEvaluator.isKingCheckedAfterMove(
-                    moveCalculator,
-                    color,
-                    PossibleMove(it.from, it.to)
-                )
-            } != null
-    }
+enum class Result{
+    WHITES_WON,
+    BLACKS_WON,
+    DRAW
+}
 
-    fun registerObserver(observer: GameResultObserver) {
-        resultObservers.add(observer)
-    }
-
-    private fun notifyGameFinished() {
-        resultObservers.forEach { it.gameFinished() }
-    }
-
-    private fun isKingChecked(color: Color): Boolean {
-        return checkEvaluator.isKingChecked(color, this.moveCalculator)
-    }
+enum class ResultReason{
+    CHECK_MATE,
+    FORFEIT,
+    STALEMATE,
+    INSUFFICIENT_MATERIAL
 }
