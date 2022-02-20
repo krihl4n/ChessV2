@@ -11,7 +11,7 @@ internal class Game(
     commandCoordinator: CommandCoordinator,
     commandFactory: CommandFactory,
     positionTracker: PositionTracker,
-    gameResult: GameResult
+    private val gameResultEvaluator: GameResultEvaluator
 ) : StateHolder, GameResultObserver {
 
     private var gameState: State = GameState.UNINITIALIZED
@@ -28,10 +28,12 @@ internal class Game(
     )
 
     init {
-        gameResult.registerObserver(this)
+        gameResultEvaluator.registerObserver(this)
     }
 
     fun isGameFinished() = gameState == GameState.FINISHED
+
+    fun getResult() = gameResultEvaluator.getGameResult()
 
     fun setupChessboard(pieceSetup: PieceSetup?) {
         gameControl.setupChessboard(pieceSetup)

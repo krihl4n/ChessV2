@@ -1,5 +1,9 @@
 package com.krihl4n
 
+import com.krihl4n.game.GameResult
+import com.krihl4n.game.Result
+import com.krihl4n.game.ResultReason
+
 class GameEndingMovesSpec extends BaseGameSpec {
 
     void setup() {
@@ -16,6 +20,7 @@ class GameEndingMovesSpec extends BaseGameSpec {
 
         then:
         game.isGameFinished()
+        game.getResult() == new GameResult(Result.WHITES_WON, ResultReason.CHECK_MATE)
     }
 
     def "should be able to save with king escape"() {
@@ -86,6 +91,7 @@ class GameEndingMovesSpec extends BaseGameSpec {
 
         and:
         game.isGameFinished()
+        game.getResult() == new GameResult(Result.BLACKS_WON, ResultReason.CHECK_MATE)
     }
 
     def "check mate delivered with castling"() {
@@ -100,5 +106,6 @@ class GameEndingMovesSpec extends BaseGameSpec {
 
         and:
         game.isGameFinished()
+        game.getResult() == new GameResult(Result.WHITES_WON, ResultReason.CHECK_MATE)
     }
 }

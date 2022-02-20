@@ -9,7 +9,7 @@ import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.game.GameResult
+import com.krihl4n.game.GameResultEvaluator
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.moveCommands.PiecePositionUpdateListener
@@ -32,8 +32,8 @@ class GameOfChess(private val gameId: String) {
     private val commandFactory = CommandFactory(positionTracker)
     private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
-    private val gameResult = GameResult(positionTracker, moveCalculator, checkEvaluator)
-    private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResult)
+    private val gameResultEvaluator = GameResultEvaluator(positionTracker, moveCalculator, checkEvaluator)
+    private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResultEvaluator)
 
     init {
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
