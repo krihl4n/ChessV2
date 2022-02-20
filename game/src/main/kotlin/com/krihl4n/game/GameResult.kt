@@ -1,11 +1,9 @@
 package com.krihl4n.game
 
 import com.krihl4n.PositionTracker
-import com.krihl4n.guards.CheckGuard
+import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.model.*
-import com.krihl4n.model.Field
 import com.krihl4n.model.Move
-import com.krihl4n.model.Piece
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCalculators.PossibleMove
 import com.krihl4n.moveCommands.MoveObserver
@@ -13,7 +11,7 @@ import com.krihl4n.moveCommands.MoveObserver
 internal class GameResult(
     val positionTracker: PositionTracker,
     val moveCalculator: PieceMoveCalculator,
-    val checkGuard: CheckGuard
+    private val checkEvaluator: CheckEvaluator
 ) :
     MoveObserver {
 
@@ -41,7 +39,7 @@ internal class GameResult(
             .filter { it.value.color == color }
             .flatMap { moveCalculator.findMoves(it.key) }
             .firstOrNull {
-                !checkGuard.isKingCheckedAfterMove(
+                !checkEvaluator.isKingCheckedAfterMove(
                     moveCalculator,
                     color,
                     PossibleMove(it.from, it.to)
@@ -58,27 +56,6 @@ internal class GameResult(
     }
 
     private fun isKingChecked(color: Color): Boolean {
-        val kingPosition: Field = findKingPosition(color) ?: return false
-        return isFieldUnderAttackByColor(
-            kingPosition,
-            color.opposite()
-        )
-    }
-
-    private fun findKingPosition(color: Color): Field? {
-        return positionTracker.getPositionsOfAllPieces()
-            .filter { it.value == Piece(color, Type.KING) }
-            .map { it.key }
-            .firstOrNull()
-    }
-
-    private fun isFieldUnderAttackByColor(
-        field: Field,
-        color: Color
-    ): Boolean {
-        return positionTracker.getPositionsOfAllPieces()
-            .filter { it.value.color == color }
-            .flatMap { moveCalculator.findMoves(it.key) }
-            .any { it.to == field }
+        return checkEvaluator.isKingChecked(color, this.moveCalculator)
     }
 }

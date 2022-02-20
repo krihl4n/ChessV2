@@ -5,7 +5,7 @@ import com.krihl4n.model.*
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCalculators.PossibleMove
 
-internal class CheckGuard(private val positionTracker: PositionTracker) {
+internal class CheckEvaluator(private val positionTracker: PositionTracker) {
 
     fun isKingCheckedAfterMove(
         moveCalculator: PieceMoveCalculator,

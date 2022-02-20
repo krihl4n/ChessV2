@@ -3,7 +3,7 @@ package com.krihl4n
 import com.krihl4n.game.Game
 import com.krihl4n.game.GameResult
 import com.krihl4n.guards.CastlingGuard
-import com.krihl4n.guards.CheckGuard
+import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.guards.EnPassantGuard
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
@@ -25,7 +25,7 @@ class BaseGameSpec extends BaseSpec {
         CalculatorFactory calculatorFactory = new CalculatorFactory()
         positionTracker = new PositionTracker()
         CastlingGuard castlingGuard = new CastlingGuard(positionTracker, calculatorFactory)
-        CheckGuard checkGuard = new CheckGuard(positionTracker)
+        CheckEvaluator checkGuard = new CheckEvaluator(positionTracker)
         CommandCoordinator commandCoordinator = new CommandCoordinator()
         commandCoordinator.registerObserver(castlingGuard)
         PieceMoveCalculator pieceMoveCalculator = new PieceMoveCalculator(positionTracker, calculatorFactory)

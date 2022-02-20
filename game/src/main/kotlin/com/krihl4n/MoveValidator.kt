@@ -1,12 +1,12 @@
 package com.krihl4n
-import com.krihl4n.guards.CheckGuard
+import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCalculators.PossibleMove
 
-internal class MoveValidator(private val pieceMoveCalculator: PieceMoveCalculator, private val checkGuard: CheckGuard) {
+internal class MoveValidator(private val pieceMoveCalculator: PieceMoveCalculator, private val checkEvaluator: CheckEvaluator) {
 
     fun isMoveValid(move: Move) : Boolean {
         return getValidMoves(move.from, move.piece.color)
@@ -28,7 +28,7 @@ internal class MoveValidator(private val pieceMoveCalculator: PieceMoveCalculato
         movingColor: Color,
         possibleMoves: Set<PossibleMove>,
     ): Set<PossibleMove> {
-        return possibleMoves.filter { !checkGuard.isKingCheckedAfterMove(moveCalculator, movingColor, it) }.toSet()
+        return possibleMoves.filter { !checkEvaluator.isKingCheckedAfterMove(moveCalculator, movingColor, it) }.toSet()
     }
 
     // // todo do not need to filter if its a finishing move
