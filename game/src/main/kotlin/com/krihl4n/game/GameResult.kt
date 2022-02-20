@@ -1,22 +1,30 @@
 package com.krihl4n.game
 
 import com.krihl4n.PositionTracker
+import com.krihl4n.guards.CheckGuard
 import com.krihl4n.model.*
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 import com.krihl4n.model.Piece
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import com.krihl4n.moveCalculators.PossibleMove
 import com.krihl4n.moveCommands.MoveObserver
 
-internal class GameResult(val positionTracker: PositionTracker, val moveCalculator: PieceMoveCalculator) :
+internal class GameResult(
+    val positionTracker: PositionTracker,
+    val moveCalculator: PieceMoveCalculator,
+    val checkGuard: CheckGuard
+) :
     MoveObserver {
 
     private val resultObservers = mutableListOf<GameResultObserver>()
 
     override fun movePerformed(move: Move) {
         if (isKingChecked(move.piece.color.opposite())) {
-            // check if mate, not just check
-            notifyGameFinished()
+            if(!isThereASavingMove(move.piece.color.opposite())){
+                println("check-mate!")
+                notifyGameFinished()
+            }
         }
     }
 
@@ -26,6 +34,19 @@ internal class GameResult(val positionTracker: PositionTracker, val moveCalculat
 
     fun isGameFinished(): Boolean {  // maybe not needed
         return false
+    }
+
+    private fun isThereASavingMove(color: Color): Boolean {
+        return positionTracker.getPositionsOfAllPieces()
+            .filter { it.value.color == color }
+            .flatMap { moveCalculator.findMoves(it.key) }
+            .firstOrNull {
+                !checkGuard.isKingCheckedAfterMove(
+                    moveCalculator,
+                    color,
+                    PossibleMove(it.from, it.to)
+                )
+            } != null
     }
 
     fun registerObserver(observer: GameResultObserver) {

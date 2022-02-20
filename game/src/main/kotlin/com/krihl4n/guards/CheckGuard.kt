@@ -23,6 +23,16 @@ internal class CheckGuard(private val positionTracker: PositionTracker) {
             newTracker)
     }
 
+    fun isKingChecked(color: Color, moveCalculator: PieceMoveCalculator): Boolean {
+        val kingPosition: Field = findKingPosition(color, this.positionTracker) ?: return false
+        return isFieldUnderAttackByColor(
+            kingPosition,
+            color.opposite(),
+            moveCalculator,
+            this.positionTracker
+        )
+    }
+
     private fun findKingPosition(color: Color, positionTracker: PositionTracker): Field? {
         return positionTracker.getPositionsOfAllPieces()
             .filter { it.value == Piece(color, Type.KING) }

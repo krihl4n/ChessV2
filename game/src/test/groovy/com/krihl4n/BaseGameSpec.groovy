@@ -34,7 +34,7 @@ class BaseGameSpec extends BaseSpec {
                 checkGuard
         )
         CommandFactory commandFactory = new CommandFactory(positionTracker)
-        GameResult gameResult = new GameResult(positionTracker, pieceMoveCalculator)
+        GameResult gameResult = new GameResult(positionTracker, pieceMoveCalculator, checkGuard)
         commandCoordinator.registerObserver(gameResult)
         game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResult)
         EnPassantGuard enPassantGuard = new EnPassantGuard(positionTracker, commandCoordinator)
