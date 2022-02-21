@@ -1,15 +1,16 @@
 package com.krihl4n.game
 
+import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.model.*
 import com.krihl4n.model.Move
 import com.krihl4n.moveCalculators.PieceMoveCalculator
-import com.krihl4n.moveCalculators.PossibleMove
 import com.krihl4n.moveCommands.MoveObserver
 
 internal class GameResultEvaluator(
     val positionTracker: PositionTracker,
+    private val moveValidator: MoveValidator,
     val moveCalculator: PieceMoveCalculator,
     private val checkEvaluator: CheckEvaluator
 ) :
@@ -20,10 +21,10 @@ internal class GameResultEvaluator(
 
     override fun movePerformed(move: Move) {
         if (isKingChecked(move.piece.color.opposite())) {
-            if(!isThereASavingMove(move.piece.color.opposite())){
+            if (!isThereASavingMove(move.piece.color.opposite())) {
                 println("check-mate!")
                 this.result = move.piece.color.let {
-                    if(it == Color.WHITE){
+                    if (it == Color.WHITE) {
                         GameResult(Result.WHITES_WON, ResultReason.CHECK_MATE)
                     } else {
                         GameResult(Result.BLACKS_WON, ResultReason.CHECK_MATE)
@@ -31,7 +32,17 @@ internal class GameResultEvaluator(
                 }
                 notifyGameFinished()
             }
+        } else if (noMoreValidMovesFor(move.piece.color.opposite())) {
+            this.result = GameResult(Result.DRAW, ResultReason.STALEMATE)
+            notifyGameFinished()
         }
+    }
+
+    private fun noMoreValidMovesFor(color: Color): Boolean {
+        return positionTracker.getPositionsOfAllPieces()
+            .filter { it.value.color == color }
+            .map { moveValidator.getValidMoves(it.key, color) }
+            .all { it.isEmpty() }
     }
 
     override fun moveUndid(move: Move) {
@@ -47,12 +58,12 @@ internal class GameResultEvaluator(
     private fun isThereASavingMove(color: Color): Boolean {
         return positionTracker.getPositionsOfAllPieces()
             .filter { it.value.color == color }
-            .flatMap { moveCalculator.findMoves(it.key) }
+            .flatMap { moveValidator.getValidMoves(it.key, color) }
             .firstOrNull {
                 !checkEvaluator.isKingCheckedAfterMove(
                     moveCalculator,
                     color,
-                    PossibleMove(it.from, it.to)
+                    it
                 )
             } != null
     }

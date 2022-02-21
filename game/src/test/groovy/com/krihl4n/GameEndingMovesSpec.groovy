@@ -7,6 +7,7 @@ import com.krihl4n.game.ResultReason
 class GameEndingMovesSpec extends BaseGameSpec {
 
     void setup() {
+        gameCanBeFinished()
         game.start()
         game.registerPlayer("player", null)
     }
@@ -107,5 +108,20 @@ class GameEndingMovesSpec extends BaseGameSpec {
         and:
         game.isGameFinished()
         game.getResult() == new GameResult(Result.WHITES_WON, ResultReason.CHECK_MATE)
+    }
+
+    def "stalemate should result in a draw"() {
+        given:
+        setupPieces("wk_f6 wb_g7 bk_h7")
+
+        when:
+        performMove("f6 f7")
+
+        then:
+        assertPositions("wk_f7 wb_g7 bk_h7")
+
+        and:
+        game.isGameFinished()
+        game.getResult() == new GameResult(Result.DRAW, ResultReason.STALEMATE)
     }
 }

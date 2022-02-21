@@ -32,7 +32,7 @@ class GameOfChess(private val gameId: String) {
     private val commandFactory = CommandFactory(positionTracker)
     private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
-    private val gameResultEvaluator = GameResultEvaluator(positionTracker, moveCalculator, checkEvaluator)
+    private val gameResultEvaluator = GameResultEvaluator(positionTracker, moveValidator, moveCalculator, checkEvaluator)
     private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResultEvaluator)
 
     init {

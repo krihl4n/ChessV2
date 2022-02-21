@@ -20,13 +20,15 @@ class BaseGameSpec extends BaseSpec {
     @Subject
     Game game
     PositionTracker positionTracker
+    CommandCoordinator commandCoordinator
+    GameResultEvaluator gameResult
 
     void setup() {
         CalculatorFactory calculatorFactory = new CalculatorFactory()
         positionTracker = new PositionTracker()
         CastlingGuard castlingGuard = new CastlingGuard(positionTracker, calculatorFactory)
         CheckEvaluator checkGuard = new CheckEvaluator(positionTracker)
-        CommandCoordinator commandCoordinator = new CommandCoordinator()
+        commandCoordinator = new CommandCoordinator()
         commandCoordinator.registerObserver(castlingGuard)
         PieceMoveCalculator pieceMoveCalculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
         MoveValidator moveValidator = new MoveValidator(
@@ -34,11 +36,14 @@ class BaseGameSpec extends BaseSpec {
                 checkGuard
         )
         CommandFactory commandFactory = new CommandFactory(positionTracker)
-        GameResultEvaluator gameResult = new GameResultEvaluator(positionTracker, pieceMoveCalculator, checkGuard)
-        commandCoordinator.registerObserver(gameResult)
+        gameResult = new GameResultEvaluator(positionTracker, moveValidator, pieceMoveCalculator, checkGuard)
         game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResult)
         EnPassantGuard enPassantGuard = new EnPassantGuard(positionTracker, commandCoordinator)
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
+    }
+
+    void gameCanBeFinished() {
+        commandCoordinator.registerObserver(gameResult)
     }
 
     def performMove(String move) {
