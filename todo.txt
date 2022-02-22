@@ -7,14 +7,16 @@
 * game rules
     capture tracker on en passant?
     possibly every instance of position tracker should be tied to separate instances of objects with state
-    check mate
-    stalemate
     resign
     draw
     user can choose a figure when pawn reaches the end
     rematch
     insufficient material results in a draw
     when pawn reaches the end, it can change to chosen figure
+    https://en.wikipedia.org/wiki/Threefold_repetition
+    https://en.wikipedia.org/wiki/Fifty-move_rule
+    https://www.europechess.org/dead-position/ <-- advanced cases
+    timer
 
 * undoing in actual game
 

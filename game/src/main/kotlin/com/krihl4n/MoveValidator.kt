@@ -1,4 +1,5 @@
 package com.krihl4n
+
 import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
@@ -30,7 +31,4 @@ internal class MoveValidator(private val pieceMoveCalculator: PieceMoveCalculato
     ): Set<PossibleMove> {
         return possibleMoves.filter { !checkEvaluator.isKingCheckedAfterMove(moveCalculator, movingColor, it) }.toSet()
     }
-
-    // // todo do not need to filter if its a finishing move
-    //  (implementing check mate should force to do it
 }

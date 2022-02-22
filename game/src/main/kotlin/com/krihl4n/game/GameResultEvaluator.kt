@@ -5,13 +5,11 @@ import com.krihl4n.PositionTracker
 import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.model.*
 import com.krihl4n.model.Move
-import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCommands.MoveObserver
 
 internal class GameResultEvaluator(
     val positionTracker: PositionTracker,
     private val moveValidator: MoveValidator,
-    val moveCalculator: PieceMoveCalculator,
     private val checkEvaluator: CheckEvaluator
 ) :
     MoveObserver {
@@ -61,9 +59,8 @@ internal class GameResultEvaluator(
             .flatMap { moveValidator.getValidMoves(it.key, color) }
             .firstOrNull {
                 !checkEvaluator.isKingCheckedAfterMove(
-                    moveCalculator,
-                    color,
-                    it
+                    color = color,
+                    possibleMove = it
                 )
             } != null
     }
@@ -77,6 +74,6 @@ internal class GameResultEvaluator(
     }
 
     private fun isKingChecked(color: Color): Boolean {
-        return checkEvaluator.isKingChecked(color, this.moveCalculator)
+        return checkEvaluator.isKingChecked(color)
     }
 }

@@ -25,14 +25,14 @@ class GameOfChess(private val gameId: String) {
 
     private val positionTracker = PositionTracker()
     private val commandCoordinator = CommandCoordinator()
-    private val checkEvaluator = CheckEvaluator(positionTracker)
     private val calculatorFactory = CalculatorFactory()
     private val moveCalculator = PieceMoveCalculator(positionTracker, calculatorFactory)
+    private val checkEvaluator = CheckEvaluator(positionTracker, moveCalculator)
     private val moveValidator = MoveValidator(moveCalculator, checkEvaluator)
     private val commandFactory = CommandFactory(positionTracker)
     private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
-    private val gameResultEvaluator = GameResultEvaluator(positionTracker, moveValidator, moveCalculator, checkEvaluator)
+    private val gameResultEvaluator = GameResultEvaluator(positionTracker, moveValidator, checkEvaluator)
     private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResultEvaluator)
 
     init {

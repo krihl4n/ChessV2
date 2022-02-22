@@ -27,16 +27,16 @@ class BaseGameSpec extends BaseSpec {
         CalculatorFactory calculatorFactory = new CalculatorFactory()
         positionTracker = new PositionTracker()
         CastlingGuard castlingGuard = new CastlingGuard(positionTracker, calculatorFactory)
-        CheckEvaluator checkGuard = new CheckEvaluator(positionTracker)
         commandCoordinator = new CommandCoordinator()
         commandCoordinator.registerObserver(castlingGuard)
         PieceMoveCalculator pieceMoveCalculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
+        CheckEvaluator checkGuard = new CheckEvaluator(positionTracker, pieceMoveCalculator)
         MoveValidator moveValidator = new MoveValidator(
                 pieceMoveCalculator,
                 checkGuard
         )
         CommandFactory commandFactory = new CommandFactory(positionTracker)
-        gameResult = new GameResultEvaluator(positionTracker, moveValidator, pieceMoveCalculator, checkGuard)
+        gameResult = new GameResultEvaluator(positionTracker, moveValidator, checkGuard)
         game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResult)
         EnPassantGuard enPassantGuard = new EnPassantGuard(positionTracker, commandCoordinator)
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)

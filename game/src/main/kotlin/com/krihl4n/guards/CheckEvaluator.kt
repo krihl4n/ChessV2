@@ -5,10 +5,10 @@ import com.krihl4n.model.*
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCalculators.PossibleMove
 
-internal class CheckEvaluator(private val positionTracker: PositionTracker) {
+internal class CheckEvaluator(private val positionTracker: PositionTracker, private val moveCalculator: PieceMoveCalculator) {
 
     fun isKingCheckedAfterMove(
-        moveCalculator: PieceMoveCalculator,
+        moveCalculator: PieceMoveCalculator = this.moveCalculator,
         color: Color,
         possibleMove: PossibleMove,
     ): Boolean {
@@ -23,7 +23,7 @@ internal class CheckEvaluator(private val positionTracker: PositionTracker) {
             newTracker)
     }
 
-    fun isKingChecked(color: Color, moveCalculator: PieceMoveCalculator): Boolean {
+    fun isKingChecked(color: Color): Boolean {
         val kingPosition: Field = findKingPosition(color, this.positionTracker) ?: return false
         return isFieldUnderAttackByColor(
             kingPosition,

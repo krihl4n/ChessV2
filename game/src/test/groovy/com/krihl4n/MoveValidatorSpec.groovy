@@ -19,7 +19,7 @@ class MoveValidatorSpec extends BaseSpec {
         positionTracker = new PositionTracker()
         calculatorFactory.initCalculators(new EnPassantGuard(positionTracker, new CommandCoordinator()), new CastlingGuard(positionTracker, calculatorFactory))
         PieceMoveCalculator calculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
-        moveValidator = new MoveValidator(calculator, new CheckEvaluator(positionTracker))
+        moveValidator = new MoveValidator(calculator, new CheckEvaluator(positionTracker, calculator))
     }
 
     def "should allow not allow performing illegal moves"() {
