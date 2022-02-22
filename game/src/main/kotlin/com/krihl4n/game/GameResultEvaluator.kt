@@ -33,7 +33,20 @@ internal class GameResultEvaluator(
         } else if (noMoreValidMovesFor(move.piece.color.opposite())) {
             this.result = GameResult(Result.DRAW, ResultReason.STALEMATE)
             notifyGameFinished()
+        } else if (insufficientMaterial()) {
+            this.result = GameResult(Result.DRAW, ResultReason.DEAD_POSITION)
+            notifyGameFinished()
         }
+    }
+
+    private fun insufficientMaterial(): Boolean {
+        val piecesLeft = positionTracker.getPositionsOfAllPieces().map { it.value }
+
+        if (piecesLeft.size == 2 && piecesLeft[0].type == Type.KING && piecesLeft[1].type == Type.KING)
+            return true
+
+        // todo remaining cases
+        return false
     }
 
     private fun noMoreValidMovesFor(color: Color): Boolean {

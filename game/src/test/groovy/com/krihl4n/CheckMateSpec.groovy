@@ -4,7 +4,7 @@ import com.krihl4n.game.GameResult
 import com.krihl4n.game.Result
 import com.krihl4n.game.ResultReason
 
-class GameEndingMovesSpec extends BaseGameSpec {
+class CheckMateSpec extends BaseGameSpec {
 
     void setup() {
         gameCanBeFinished()

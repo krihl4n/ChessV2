@@ -35,5 +35,5 @@ enum class ResultReason{
     CHECK_MATE,
     FORFEIT,
     STALEMATE,
-    INSUFFICIENT_MATERIAL
+    DEAD_POSITION
 }
