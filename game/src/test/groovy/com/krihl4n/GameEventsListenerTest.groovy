@@ -3,10 +3,12 @@ package com.krihl4n
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.GameModeDto
+import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PieceCaptureDto
 import com.krihl4n.api.dto.PieceDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
+import com.krihl4n.api.pieceSetups.AboutToCheckMateSetup
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import com.krihl4n.api.pieceSetups.EnPassantSetup
 import com.krihl4n.api.pieceSetups.QueenConversionSetup
@@ -221,6 +223,20 @@ class GameEventsListenerTest extends Specification {
                         true,
                         false
                 )
+        )
+    }
+
+    def "should notify about game end after check mate"() {
+        given:
+        gameOfChess.setupChessboard(new AboutToCheckMateSetup())
+        gameOfChess.start("player", GameModeDto.FREE_MOVE)
+
+        when:
+        gameOfChess.move("player", "h2", "h1")
+
+        then:
+        1 * listener.gameStateUpdate(GAME_ID,
+            new GameStateUpdateDto("FINISHED", "CHECK_MATE")
         )
     }
 }
