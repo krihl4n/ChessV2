@@ -3,6 +3,7 @@ package com.krihl4n.game
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.pieceSetups.PieceSetup
+import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
 
@@ -16,8 +17,11 @@ internal class Game(
 
     private var gameState: State = GameState.UNINITIALIZED
 
+    private val gameStateListeners = mutableListOf<GameStateUpdateListener>()
+
     override fun setState(state: State) {
         this.gameState = state
+        gameStateListeners.forEach {it.gameStateUpdated(GameStateUpdate(state.toString()))}
     }
 
     private val gameControl: GameControl = GameControl(
@@ -60,5 +64,9 @@ internal class Game(
 
     override fun gameFinished() {
         gameState.gameFinished(this)
+    }
+
+    fun registerGameStateUpdateListener(gameStateUpdateListener: GameStateUpdateListener) {
+        gameStateListeners.add(gameStateUpdateListener)
     }
 }
