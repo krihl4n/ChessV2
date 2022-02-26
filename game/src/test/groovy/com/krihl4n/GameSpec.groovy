@@ -30,7 +30,7 @@ class GameSpec extends BaseGameSpec {
         given:
         game.start()
         game.registerPlayer("player", null)
-        game.finish()
+        game.resign("player")
 
         when:
         game.performMove("player","a2", "a3")

@@ -8,7 +8,7 @@ enum class GameState : State {
             gameCommand.executeStart(gameMode)
         }
 
-        override fun forfeit(stateHolder: StateHolder, gameCommand: GameCommand) {
+        override fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
             throw IllegalStateException("Game not started yet")
         }
 
@@ -48,7 +48,7 @@ enum class GameState : State {
             throw IllegalStateException("Cannot start, waiting for players")
         }
 
-        override fun forfeit(stateHolder: StateHolder, gameCommand: GameCommand) {
+        override fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
             throw IllegalStateException("Cannot forfeit, waiting for players")
         }
 
@@ -91,9 +91,9 @@ enum class GameState : State {
             println("Game already started")
         }
 
-        override fun forfeit(stateHolder: StateHolder, gameCommand: GameCommand) {
+        override fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
             stateHolder.setState(FINISHED)
-            gameCommand.executeFinish()
+            gameCommand.executeResign(playerId)
         }
 
         override fun registerPlayer(
@@ -133,7 +133,7 @@ enum class GameState : State {
             gameCommand.executeStart(gameMode)
         }
 
-        override fun forfeit(stateHolder: StateHolder, gameCommand: GameCommand) {
+        override fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
             //do nothing
         }
 
@@ -173,7 +173,7 @@ enum class GameState : State {
 interface State {
 
     fun start(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode)
-    fun forfeit(stateHolder: StateHolder, gameCommand: GameCommand)
+    fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String)
     fun registerPlayer(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, colorPreference: String?)
     fun move(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, from: String, to: String)
     fun undo(stateHolder: StateHolder, gameCommand: GameCommand)

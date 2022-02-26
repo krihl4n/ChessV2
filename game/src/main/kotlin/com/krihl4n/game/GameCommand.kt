@@ -6,7 +6,7 @@ interface GameCommand {
 
     fun executeRegisterPlayer(playerId: String, colorPreference: String?): Boolean
 
-    fun executeFinish()
+    fun executeResign(playerId: String)
 
     fun executePerformMove(playerId: String, from: String, to: String)
 

@@ -28,7 +28,8 @@ internal class Game(
         moveValidator,
         commandCoordinator,
         commandFactory,
-        positionTracker
+        positionTracker,
+        gameResultEvaluator
     )
 
     init {
@@ -49,7 +50,7 @@ internal class Game(
     fun registerPlayer(playerId: String, colorPreference: String?) =
         gameState.registerPlayer(this, gameControl, playerId, colorPreference)
 
-    fun finish() = gameState.forfeit(this, gameControl)
+    fun resign(playerId: String) = gameState.resign(this, gameControl, playerId)
 
     fun performMove(playerId: String, from: String, to: String) =
         gameState.move(this, gameControl, playerId, from, to)

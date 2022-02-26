@@ -22,7 +22,8 @@ internal class GameControl(
     private val moveValidator: MoveValidator,
     private val commandCoordinator: CommandCoordinator,
     private val commandFactory: CommandFactory,
-    private val positionTracker: PositionTracker
+    private val positionTracker: PositionTracker,
+    private val gameResultEvaluator: GameResultEvaluator
 ) : GameCommand {
 
     private var movePolicy: MovePolicy = FreeMovePolicy()
@@ -88,7 +89,11 @@ internal class GameControl(
     override fun executeRegisterPlayer(playerId: String, colorPreference: String?) =
         this.playersManager.registerPlayer(playerId, colorPreference?.let { Color.of(it) })
 
-    override fun executeFinish() {}// todo
+    override fun executeResign(playerId: String) {
+        val resigningPlayerColor = playersManager.getPlayer(playerId)?.color
+            ?: throw IllegalStateException("Unable to determine resigning player's color")
+        this.gameResultEvaluator.resign(resigningPlayerColor)
+    }
 
     override fun executePerformMove(playerId: String, from: String, to: String) =
         this.performMove(playerId, Field(from), Field(to))

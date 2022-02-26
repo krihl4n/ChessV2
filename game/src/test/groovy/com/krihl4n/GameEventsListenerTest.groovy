@@ -299,4 +299,17 @@ class GameEventsListenerTest extends Specification {
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
         1 * listener.gameFinished(GAME_ID, new GameResultDto("DRAW", "DEAD_POSITION"))
     }
+
+    def "should notify about loss after player resigned"() {
+        given:
+        gameOfChess.setupChessboard(null)
+        gameOfChess.start("player", FREE_MOVE)
+
+        when:
+        gameOfChess.resign("player")
+
+        then:
+        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
+        1 * listener.gameFinished(GAME_ID, new GameResultDto("BLACK_PLAYER_WON", "PLAYER_RESIGNED"))
+    }
 }

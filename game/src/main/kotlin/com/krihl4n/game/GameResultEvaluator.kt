@@ -2,6 +2,8 @@ package com.krihl4n.game
 
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
+import com.krihl4n.game.Result.*
+import com.krihl4n.game.ResultReason.*
 import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.model.*
 import com.krihl4n.model.Move
@@ -11,8 +13,7 @@ internal class GameResultEvaluator(
     val positionTracker: PositionTracker,
     private val moveValidator: MoveValidator,
     private val checkEvaluator: CheckEvaluator
-) :
-    MoveObserver {
+) : MoveObserver {
 
     private val resultObservers = mutableListOf<GameResultObserver>()
     private var result: GameResult? = null
@@ -23,18 +24,18 @@ internal class GameResultEvaluator(
                 println("check-mate!")
                 this.result = move.piece.color.let {
                     if (it == Color.WHITE) {
-                        GameResult(Result.WHITE_PLAYER_WON, ResultReason.CHECK_MATE)
+                        GameResult(WHITE_PLAYER_WON, CHECK_MATE)
                     } else {
-                        GameResult(Result.BLACK_PLAYER_WON, ResultReason.CHECK_MATE)
+                        GameResult(BLACK_PLAYER_WON, CHECK_MATE)
                     }
                 }
                 notifyGameFinished()
             }
         } else if (noMoreValidMovesFor(move.piece.color.opposite())) {
-            this.result = GameResult(Result.DRAW, ResultReason.STALEMATE)
+            this.result = GameResult(DRAW, STALEMATE)
             notifyGameFinished()
         } else if (insufficientMaterial()) {
-            this.result = GameResult(Result.DRAW, ResultReason.DEAD_POSITION)
+            this.result = GameResult(DRAW, DEAD_POSITION)
             notifyGameFinished()
         }
     }
@@ -64,6 +65,14 @@ internal class GameResultEvaluator(
 
     fun isGameFinished(): Boolean {  // maybe not needed
         return false
+    }
+
+    fun resign(resigningPlayerColor: Color) {
+        when (resigningPlayerColor) {
+            Color.WHITE -> this.result = GameResult(BLACK_PLAYER_WON, PLAYER_RESIGNED)
+            Color.BLACK -> this.result = GameResult(WHITE_PLAYER_WON, PLAYER_RESIGNED)
+        }
+        notifyGameFinished()
     }
 
     private fun isThereASavingMove(color: Color): Boolean {

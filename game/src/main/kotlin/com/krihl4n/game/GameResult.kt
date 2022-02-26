@@ -10,7 +10,7 @@ enum class Result{
 
 enum class ResultReason{
     CHECK_MATE,
-    FORFEIT,
     STALEMATE,
-    DEAD_POSITION
+    DEAD_POSITION,
+    PLAYER_RESIGNED
 }

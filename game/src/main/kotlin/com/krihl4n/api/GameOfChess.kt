@@ -59,8 +59,8 @@ class GameOfChess(private val gameId: String) {
         }
     }
 
-    fun finish() {
-        game.finish()
+    fun resign(playerId: String) {
+        game.resign(playerId)
     }
 
     fun move(playerId: String, from: String, to: String) {
