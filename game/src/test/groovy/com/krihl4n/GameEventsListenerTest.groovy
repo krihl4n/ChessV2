@@ -12,6 +12,7 @@ import com.krihl4n.api.pieceSetups.AboutToCheckMateSetup
 import com.krihl4n.api.pieceSetups.AboutToStalemateSetup
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import com.krihl4n.api.pieceSetups.EnPassantSetup
+import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.api.pieceSetups.QueenConversionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import spock.lang.Specification
@@ -43,7 +44,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start("player", FREE_MOVE)
 
         when:
-        gameOfChess.move("player","a2", "a3")
+        gameOfChess.move("player", "a2", "a3")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -64,7 +65,7 @@ class GameEventsListenerTest extends Specification {
         secondGameOfChess.start("player", FREE_MOVE)
 
         when:
-        secondGameOfChess.move("player","a2", "a3")
+        secondGameOfChess.move("player", "a2", "a3")
 
         then:
         1 * secondListener.piecePositionUpdate(SECOND_GAME_ID,
@@ -89,7 +90,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start("player", FREE_MOVE)
 
         when:
-        gameOfChess.move("player","e1", "g1")
+        gameOfChess.move("player", "e1", "g1")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -109,7 +110,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start("player", FREE_MOVE)
 
         when:
-        gameOfChess.move("player","c2", "d3")
+        gameOfChess.move("player", "c2", "d3")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -129,7 +130,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start("player", FREE_MOVE)
 
         and:
-        gameOfChess.move("player","a2", "a3")
+        gameOfChess.move("player", "a2", "a3")
 
         when:
         gameOfChess.undoMove()
@@ -150,7 +151,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start("player", FREE_MOVE)
 
         and:
-        gameOfChess.move("player","a2", "a3")
+        gameOfChess.move("player", "a2", "a3")
         gameOfChess.undoMove()
 
         when:
@@ -172,10 +173,10 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start("player", FREE_MOVE)
 
         and:
-        gameOfChess.move("player","d2", "d4")
+        gameOfChess.move("player", "d2", "d4")
 
         when:
-        gameOfChess.move("player","e4", "d3")
+        gameOfChess.move("player", "e4", "d3")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -195,7 +196,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start("player", FREE_MOVE)
 
         when:
-        gameOfChess.move("player","d7", "d8")
+        gameOfChess.move("player", "d7", "d8")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -215,7 +216,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.start("player", FREE_MOVE)
 
         when:
-        gameOfChess.move("player","d7", "e8")
+        gameOfChess.move("player", "d7", "e8")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -229,7 +230,7 @@ class GameEventsListenerTest extends Specification {
         )
     }
 
-    def "should notify about game end after check mate"() {
+    def "should notify about game end after check mate by white player"() {
         given:
         gameOfChess.setupChessboard(new AboutToCheckMateSetup())
         gameOfChess.start("player", FREE_MOVE)
@@ -242,7 +243,29 @@ class GameEventsListenerTest extends Specification {
         1 * listener.gameFinished(GAME_ID, new GameResultDto("WHITE_PLAYER_WON", "CHECK_MATE"))
     }
 
-    def "should notify about game end after stalemate"() {
+    def "should notify about game end after check mate by black player"() {
+        given:
+        gameOfChess.setupChessboard(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white king",
+                        "g2 black rook",
+                        "h2 black rook"
+                ]
+            }
+        })
+        gameOfChess.start("player", FREE_MOVE)
+
+        when:
+        gameOfChess.move("player", "h2", "h1")
+
+        then:
+        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
+        1 * listener.gameFinished(GAME_ID, new GameResultDto("BLACK_PLAYER_WON", "CHECK_MATE"))
+    }
+
+    def "should notify about draw due to after stalemate"() {
         given:
         gameOfChess.setupChessboard(new AboutToStalemateSetup())
         gameOfChess.start("player", FREE_MOVE)
@@ -253,5 +276,27 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
         1 * listener.gameFinished(GAME_ID, new GameResultDto("DRAW", "STALEMATE"))
+    }
+
+    def "should notify about draw due to dead position"() {
+        given:
+        gameOfChess.setupChessboard(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white king",
+                        "g2 black king",
+                        "a2 black bishop"
+                ]
+            }
+        })
+        gameOfChess.start("player", FREE_MOVE)
+
+        when:
+        gameOfChess.move("player", "a1", "a2")
+
+        then:
+        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
+        1 * listener.gameFinished(GAME_ID, new GameResultDto("DRAW", "DEAD_POSITION"))
     }
 }
