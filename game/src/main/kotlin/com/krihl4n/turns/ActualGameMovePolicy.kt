@@ -9,9 +9,9 @@ internal class ActualGameMovePolicy(private val playersManager: PlayersManager) 
 
     private var colorAllowedToMove = Color.WHITE
 
-    override fun moveAllowedBy(playerId: String): Boolean {
-        println(playersManager.getPlayer(playerId))
-        return playersManager.getPlayer(playerId)?.color == colorAllowedToMove
+    override fun moveAllowedBy(playerId: String, move: Move): Boolean {
+        val playerColor = playersManager.getPlayer(playerId)?.color
+        return playerColor == colorAllowedToMove && playerColor == move.piece.color
     }
 
     override fun movePerformed(move: Move) {

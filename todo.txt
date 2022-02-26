@@ -1,13 +1,9 @@
-
-* player registration
-
 * security
     https://www.baeldung.com/spring-security-websockets
 
 * game rules
     capture tracker on en passant?
     possibly every instance of position tracker should be tied to separate instances of objects with state
-    resign
     draw
     user can choose a figure when pawn reaches the end
     rematch
@@ -45,20 +41,12 @@
     redo
     redo is performed
 
-
 * some persistent logs. logback?
-
-* game phases
-    * start
-    * finish
-    * check mate
-    * notify about checks
 
 * modes
 - free play
 - hot seat
 - pvp
-- vs computer with random moves
 
 - play computer vs computer
 

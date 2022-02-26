@@ -39,8 +39,8 @@ internal class GameControl(
 
         val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return
 
-        if (!movePolicy.moveAllowedBy(playerId)) {
-            println("not the ${move.piece.color}'s turn. player id: $playerId")
+        if (!movePolicy.moveAllowedBy(playerId, move)) {
+            println("it's not player's $playerId turn")
             return
         }
 

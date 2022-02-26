@@ -1,6 +1,8 @@
 package com.krihl4n.turns
 
-interface MovePolicy {
+import com.krihl4n.model.Move
 
-    fun moveAllowedBy(playerId: String): Boolean
+internal interface MovePolicy {
+
+    fun moveAllowedBy(playerId: String, move: Move): Boolean
 }

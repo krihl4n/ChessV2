@@ -1,8 +1,10 @@
 package com.krihl4n.turns
 
-class FreeMovePolicy: MovePolicy {
+import com.krihl4n.model.Move
 
-    override fun moveAllowedBy(playerId: String): Boolean {
+internal class FreeMovePolicy: MovePolicy {
+
+    override fun moveAllowedBy(playerId: String, move: Move): Boolean {
         return true
     }
 }

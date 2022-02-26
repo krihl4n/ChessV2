@@ -79,4 +79,19 @@ class ActualGameModeSpec extends BaseGameSpec {
         then:
         assertPositions("wp_d3 bp_d7")
     }
+
+    def "white player shouldn't be able to move black pieces"() {
+        given:
+        setupPieces("wp_a2 bp_a7")
+
+        and:
+        performMove("player1","a2 a3")
+        performMove("player2","a7 a6")
+
+        when:
+        performMove("player1", "a6 a5")
+
+        then:
+        assertPositions("wp_a3 bp_a6")
+    }
 }
