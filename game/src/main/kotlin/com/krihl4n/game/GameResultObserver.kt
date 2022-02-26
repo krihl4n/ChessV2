@@ -2,5 +2,5 @@ package com.krihl4n.game
 
 interface GameResultObserver {
 
-    fun gameFinished()
+    fun gameFinished(result: GameResult)
 }

@@ -2,6 +2,7 @@ package com.krihl4n.opponent
 
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
+import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.dto.PossibleMovesDto
@@ -24,6 +25,10 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
     }
 
     override fun gameStateUpdate(sessionId: String, update: GameStateUpdateDto) {
+        // do nothing?
+    }
+
+    override fun gameFinished(sessionId: String, result: GameResultDto) {
         // do nothing?
     }
 

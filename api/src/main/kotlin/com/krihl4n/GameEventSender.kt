@@ -1,6 +1,7 @@
 package com.krihl4n
 
 import com.krihl4n.api.GameEventListener
+import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import org.springframework.messaging.MessageHeaders
@@ -28,6 +29,15 @@ class GameEventSender(
             sessionId,
             "/user/queue/game-state-updates",
             update,
+            prepareSessionIdHeader(sessionId)
+        )
+    }
+
+    override fun gameFinished(sessionId: String, result: GameResultDto) {
+        simpMessagingTemplate.convertAndSendToUser(
+            sessionId,
+            "/user/queue/game-result",
+            result,
             prepareSessionIdHeader(sessionId)
         )
     }

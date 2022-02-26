@@ -62,7 +62,7 @@ internal class Game(
 
     fun getPossibleMoves(fieldToken: String) = gameControl.getPossibleMoves(fieldToken)
 
-    override fun gameFinished() {
+    override fun gameFinished(result: GameResult) {
         gameState.gameFinished(this)
     }
 

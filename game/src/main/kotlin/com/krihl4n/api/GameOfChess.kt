@@ -1,13 +1,12 @@
 package com.krihl4n.api
 
-import com.krihl4n.game.Game
-import com.krihl4n.game.GameMode
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.*
 import com.krihl4n.api.pieceSetups.PieceSetup
+import com.krihl4n.game.*
+import com.krihl4n.game.Game
 import com.krihl4n.game.GameResultEvaluator
-import com.krihl4n.game.GameStateUpdateListener
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.moveCommands.PiecePositionUpdateListener
@@ -87,12 +86,24 @@ class GameOfChess(private val gameId: String) {
             }
         })
 
-        game.registerGameStateUpdateListener(object: GameStateUpdateListener {
+        game.registerGameStateUpdateListener(object : GameStateUpdateListener {
             override fun gameStateUpdated(update: GameStateUpdate) {
-                listener.gameStateUpdate(gameId, GameStateUpdateDto(
-                    gameState = update.gameState,
-                    stateChangeReason = update.updateReason?.toString()
-                ))
+                listener.gameStateUpdate(
+                    gameId, GameStateUpdateDto(
+                        gameState = update.gameState
+                    )
+                )
+            }
+        })
+
+        gameResultEvaluator.registerObserver(object : GameResultObserver {
+            override fun gameFinished(result: GameResult) {
+                listener.gameFinished(
+                    gameId, GameResultDto(
+                        result = result.result.toString(),
+                        reason = result.reason.toString()
+                    )
+                )
             }
         })
     }

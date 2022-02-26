@@ -23,9 +23,9 @@ internal class GameResultEvaluator(
                 println("check-mate!")
                 this.result = move.piece.color.let {
                     if (it == Color.WHITE) {
-                        GameResult(Result.WHITES_WON, ResultReason.CHECK_MATE)
+                        GameResult(Result.WHITE_PLAYER_WON, ResultReason.CHECK_MATE)
                     } else {
-                        GameResult(Result.BLACKS_WON, ResultReason.CHECK_MATE)
+                        GameResult(Result.BLACK_PLAYER_WON, ResultReason.CHECK_MATE)
                     }
                 }
                 notifyGameFinished()
@@ -83,7 +83,7 @@ internal class GameResultEvaluator(
     }
 
     private fun notifyGameFinished() {
-        resultObservers.forEach { it.gameFinished() }
+        this.result?.let { result -> resultObservers.forEach { it.gameFinished(result) } }
     }
 
     private fun isKingChecked(color: Color): Boolean {

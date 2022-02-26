@@ -21,7 +21,7 @@ class CheckMateSpec extends BaseGameSpec {
 
         then:
         game.isGameFinished()
-        game.getResult() == new GameResult(Result.WHITES_WON, ResultReason.CHECK_MATE)
+        game.getResult() == new GameResult(Result.WHITE_PLAYER_WON, ResultReason.CHECK_MATE)
     }
 
     def "should be able to save with king escape"() {
@@ -92,7 +92,7 @@ class CheckMateSpec extends BaseGameSpec {
 
         and:
         game.isGameFinished()
-        game.getResult() == new GameResult(Result.BLACKS_WON, ResultReason.CHECK_MATE)
+        game.getResult() == new GameResult(Result.BLACK_PLAYER_WON, ResultReason.CHECK_MATE)
     }
 
     def "check mate delivered with castling"() {
@@ -107,7 +107,7 @@ class CheckMateSpec extends BaseGameSpec {
 
         and:
         game.isGameFinished()
-        game.getResult() == new GameResult(Result.WHITES_WON, ResultReason.CHECK_MATE)
+        game.getResult() == new GameResult(Result.WHITE_PLAYER_WON, ResultReason.CHECK_MATE)
     }
 
     def "stalemate should result in a draw"() {
