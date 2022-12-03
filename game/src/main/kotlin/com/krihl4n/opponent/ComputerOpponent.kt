@@ -20,7 +20,10 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
         }
 
         Timer("ScheduleMove", false).schedule(1000) {
-            performRandomMove()
+            val attacked = attackIfPossible()
+            if(!attacked) {
+                performRandomMove()
+            }
         }
     }
 
@@ -30,6 +33,32 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
 
     override fun gameFinished(sessionId: String, result: GameResultDto) {
         // do nothing?
+    }
+
+    private fun attackIfPossible(): Boolean{
+        val positions = getPositionsOfPiecesOfColor(playerColor)
+        val opponentPositions = getPositionsOfPiecesOfColor(oppositeColorOf(playerColor))
+        while (positions.isNotEmpty()) {
+            val field = getRandomField(positions)
+            val possibleMoves = getPossibleMovesFrom(field)
+            if (noMovesAvailable(possibleMoves)) {
+                positions.remove(field)
+                continue
+            } else {
+                for(dst in possibleMoves.to) {
+                    if(opponentPositions.contains(dst)) {
+                        game.move(playerId, field, dst)
+                        return true
+                    }
+                }
+                positions.remove(field)
+            }
+        }
+        return false
+    }
+
+    private fun oppositeColorOf(color: String): String {
+        return if(color.lowercase() == "white") "black" else "white"
     }
 
     private fun performRandomMove() {
@@ -59,8 +88,8 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
             .first { it.field == update.primaryMove.to }
             .piece?.color
 
-    private fun getPositionsOfPiecesOfColor(playerColor: String) = game.getFieldOccupationInfo()
-        .filter { it.piece != null && it.piece.color == playerColor }
+    private fun getPositionsOfPiecesOfColor(playerColor: String): MutableList<String> = game.getFieldOccupationInfo()
+        .filter { it.piece != null && it.piece.color.lowercase() == playerColor.lowercase() }
         .map { it.field }
         .toMutableList()
 }
