@@ -17,33 +17,32 @@ internal object DebugLogger {
         //for ( i = 8; i > 0; i--) {
         for( i in 8 downTo 1 step 1) {
             chessboard +=
-                i.toString() + "  | " + getPiece("a" + i, piecePositions) + " |" +
-                        " " + getPiece("b" + i, piecePositions) + " |" +
-                        " " + getPiece("c" + i, piecePositions) + " |" +
-                        " " + getPiece("d" + i, piecePositions) + " |" +
-                        " " + getPiece("e" + i, piecePositions) + " |" +
-                        " " + getPiece("f" + i, piecePositions) + " |" +
-                        " " + getPiece("g" + i, piecePositions) + " |" +
-                        " " + getPiece("h" + i, piecePositions) + " |" +
+                i.toString() + "  | " + getPiece("a$i", piecePositions) + " |" +
+                        " " + getPiece("b$i", piecePositions) + " |" +
+                        " " + getPiece("c$i", piecePositions) + " |" +
+                        " " + getPiece("d$i", piecePositions) + " |" +
+                        " " + getPiece("e$i", piecePositions) + " |" +
+                        " " + getPiece("f$i", piecePositions) + " |" +
+                        " " + getPiece("g$i", piecePositions) + " |" +
+                        " " + getPiece("h$i", piecePositions) + " |" +
                         "\n"
             chessboard += "    ---- ---- ---- ---- ---- ---- ---- ----\n"
         }
 
         chessboard += "     a    b    c    d    e    f    g    h"
-        println(chessboard)
+        println("\n" + chessboard)
     }
 
     private fun getPiece(field: String, piecePositions: Map<String, String>): String {
-        val piece = piecePositions[field]
-        if (piece == null) return "  " else return piece
+        return piecePositions[field] ?: "  "
     }
 
     private fun getPositionsFromTracker(mapFromTracker: Map<Field, Piece> ):  Map<String, String> {
         val map = mutableMapOf<String, String>()
-        mapFromTracker.forEach { k, v ->
+        mapFromTracker.forEach { (k, v) ->
             val stringVal = k.toString()
             val stripped = stringVal.substring(stringVal.indexOf('(') + 1, stringVal.indexOf(')'))
-            map.put(stripped, determineToken(v.color) + determineToken(v.type))
+            map[stripped] = determineToken(v.color) + determineToken(v.type)
         }
         return map
     }
