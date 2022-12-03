@@ -6,6 +6,7 @@ import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.dto.PossibleMovesDto
+import com.krihl4n.game.GameState
 import kotlin.random.Random
 import java.util.Timer
 import kotlin.concurrent.schedule
@@ -13,6 +14,13 @@ import kotlin.concurrent.schedule
 class ComputerOpponent(private val game: GameOfChess, private val playerId: String, private val playerColor: String) :
     GameEventListener {
 
+    init {
+        if(playerColor.lowercase() == "white") {
+            Timer("ScheduleMove", false).schedule(1000) {
+                performRandomMove()
+            }
+        }
+    }
     override fun piecePositionUpdate(sessionId: String, update: PiecePositionUpdateDto) {
 
         if (determineColorOfPieceThatMoved(update) == playerColor) {
@@ -28,7 +36,7 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
     }
 
     override fun gameStateUpdate(sessionId: String, update: GameStateUpdateDto) {
-        // do nothing?
+        println(update)
     }
 
     override fun gameFinished(sessionId: String, result: GameResultDto) {

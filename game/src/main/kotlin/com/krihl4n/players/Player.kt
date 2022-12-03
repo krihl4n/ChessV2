@@ -2,7 +2,7 @@ package com.krihl4n.players
 
 import com.krihl4n.model.Color
 
-class Player(val id: String, val color: Color) {
+class Player(val id: String, val color: Color) { // todo data class?
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

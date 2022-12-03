@@ -47,9 +47,10 @@ internal class Game(
     @JvmOverloads
     fun start(gameMode: GameMode = GameMode.MOVE_FREELY) = gameState.start(this, gameControl, gameMode)
 
-    fun registerPlayer(playerId: String, colorPreference: String?) =
+    fun registerPlayer(playerId: String, colorPreference: String? = null) =
         gameState.registerPlayer(this, gameControl, playerId, colorPreference)
 
+    fun fetchPlayer(playerId: String) = gameControl.fetchPlayer(playerId)
     fun resign(playerId: String) = gameState.resign(this, gameControl, playerId)
 
     fun performMove(playerId: String, from: String, to: String) =

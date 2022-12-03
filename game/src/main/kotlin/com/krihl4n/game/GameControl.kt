@@ -13,6 +13,7 @@ import com.krihl4n.model.Field
 import com.krihl4n.model.Move
 import com.krihl4n.players.ActualGamePlayersManager
 import com.krihl4n.players.FreeMovePlayersManager
+import com.krihl4n.players.Player
 import com.krihl4n.players.PlayersManager
 import com.krihl4n.turns.ActualGameMovePolicy
 import com.krihl4n.turns.FreeMovePolicy
@@ -88,6 +89,9 @@ internal class GameControl(
 
     override fun executeRegisterPlayer(playerId: String, colorPreference: String?) =
         this.playersManager.registerPlayer(playerId, colorPreference?.let { Color.of(it) })
+
+    override fun fetchPlayer(playerId: String): Player? =
+        this.playersManager.getPlayer(playerId)
 
     override fun executeResign(playerId: String) {
         val resigningPlayerColor = playersManager.getPlayer(playerId)?.color

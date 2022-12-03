@@ -18,6 +18,7 @@ import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import java.lang.RuntimeException
 
 class GameOfChess(private val gameId: String) {
 
@@ -43,7 +44,7 @@ class GameOfChess(private val gameId: String) {
         game.setupChessboard(pieceSetup)
     }
 
-    fun start(playerId: String?, mode: GameModeDto) {
+    fun start(playerId: String?, mode: GameModeDto, colorPreference: String? = null) {
         when (mode) {
             GameModeDto.FREE_MOVE -> {
                 game.start(GameMode.MOVE_FREELY)
@@ -52,9 +53,10 @@ class GameOfChess(private val gameId: String) {
             GameModeDto.HOT_SEAT -> TODO()
             GameModeDto.VS_COMPUTER -> {
                 game.start(GameMode.ACTUAL_GAME)
-                game.registerPlayer(playerId ?: "player1", "WHITE")
-                game.registerPlayer("player2", "BLACK")
-                registerGameEventListener(ComputerOpponent(this, "player2", "BLACK"))
+                game.registerPlayer(playerId ?: "player1", colorPreference)
+                game.registerPlayer("player2")
+                val computerColor = game.fetchPlayer("player2")?.color ?: throw RuntimeException("cannot determine opponent color")
+                registerGameEventListener(ComputerOpponent(this, "player2", computerColor.toString()))
             }
         }
     }
