@@ -3,8 +3,8 @@ package com.krihl4n
 class CapturesSpec extends BaseGameSpec {
 
     void setup() {
-        game.start()
-        game.registerPlayer("player", null)
+        game.initialize()
+        game.playerReady("player", null)
     }
 
     def "should perform attack"() {

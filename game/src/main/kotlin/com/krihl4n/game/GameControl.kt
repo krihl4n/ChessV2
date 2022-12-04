@@ -70,7 +70,7 @@ internal class GameControl(
         return PossibleMovesDto.noMovesFrom(field)
     }
 
-    override fun executeStart(gameMode: GameMode) {
+    override fun executeInitNewGame(gameMode: GameMode) {
         when (gameMode) {
             GameMode.MOVE_FREELY -> {
                 this.movePolicy = FreeMovePolicy()
@@ -87,7 +87,7 @@ internal class GameControl(
         DebugLogger.printChessboard(positionTracker)
     }
 
-    override fun executeRegisterPlayer(playerId: String, colorPreference: String?) =
+    override fun executePlayerReady(playerId: String, colorPreference: String?) =
         this.playersManager.registerPlayer(playerId, colorPreference?.let { Color.of(it) })
 
     override fun fetchPlayer(playerId: String): Player? =

@@ -3,16 +3,16 @@ package com.krihl4n.game
 enum class GameState : State {
 
     UNINITIALIZED {
-        override fun start(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
             stateHolder.setState(WAITING_FOR_PLAYERS)
-            gameCommand.executeStart(gameMode)
+            gameCommand.executeInitNewGame(gameMode)
         }
 
         override fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
             throw IllegalStateException("Game not started yet")
         }
 
-        override fun registerPlayer(
+        override fun playerReady(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
             playerId: String,
@@ -44,7 +44,7 @@ enum class GameState : State {
         }
     },
     WAITING_FOR_PLAYERS {
-        override fun start(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
             throw IllegalStateException("Cannot start, waiting for players")
         }
 
@@ -52,13 +52,13 @@ enum class GameState : State {
             throw IllegalStateException("Cannot forfeit, waiting for players")
         }
 
-        override fun registerPlayer(
+        override fun playerReady(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
             playerId: String,
             colorPreference: String?
         ) {
-            val allPlayersRegistered = gameCommand.executeRegisterPlayer(playerId, colorPreference)
+            val allPlayersRegistered = gameCommand.executePlayerReady(playerId, colorPreference)
             if (allPlayersRegistered) {
                 stateHolder.setState(IN_PROGRESS)
             }
@@ -87,7 +87,7 @@ enum class GameState : State {
         }
     },
     IN_PROGRESS {
-        override fun start(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
             println("Game already started")
         }
 
@@ -96,7 +96,7 @@ enum class GameState : State {
             gameCommand.executeResign(playerId)
         }
 
-        override fun registerPlayer(
+        override fun playerReady(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
             playerId: String,
@@ -128,16 +128,16 @@ enum class GameState : State {
         }
     },
     FINISHED {
-        override fun start(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
             stateHolder.setState(IN_PROGRESS)
-            gameCommand.executeStart(gameMode)
+            gameCommand.executeInitNewGame(gameMode)
         }
 
         override fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
             //do nothing
         }
 
-        override fun registerPlayer(
+        override fun playerReady(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
             playerId: String,
@@ -172,9 +172,9 @@ enum class GameState : State {
 
 interface State {
 
-    fun start(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode)
+    fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode)
     fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String)
-    fun registerPlayer(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, colorPreference: String?)
+    fun playerReady(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, colorPreference: String?)
     fun move(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, from: String, to: String)
     fun undo(stateHolder: StateHolder, gameCommand: GameCommand)
     fun redo(stateHolder: StateHolder, gameCommand: GameCommand)

@@ -7,8 +7,8 @@ import com.krihl4n.model.Type
 class CheckSpec extends BaseGameSpec {
 
     void setup() {
-        game.start()
-        game.registerPlayer("player", null)
+        game.initialize()
+        game.playerReady("player", null)
     }
 
     def "king should escape from check"() {

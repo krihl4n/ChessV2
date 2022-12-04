@@ -5,9 +5,9 @@ import com.krihl4n.game.GameMode
 class ActualGameModeSpec extends BaseGameSpec {
 
     void setup() {
-        game.start(GameMode.ACTUAL_GAME)
-        game.registerPlayer("player1", "WHITE")
-        game.registerPlayer("player2", "BLACK")
+        game.initialize(GameMode.ACTUAL_GAME)
+        game.playerReady("player1", "WHITE")
+        game.playerReady("player2", "BLACK")
     }
 
     def "black pieces cannot start the game"() {

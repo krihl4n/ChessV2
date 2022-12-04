@@ -3,8 +3,8 @@ package com.krihl4n
 class CastlingSpec extends BaseGameSpec {
 
     void setup() {
-        game.start()
-        game.registerPlayer("player", null)
+        game.initialize()
+        game.playerReady("player", null)
     }
 
     def "basic castling #type"() {

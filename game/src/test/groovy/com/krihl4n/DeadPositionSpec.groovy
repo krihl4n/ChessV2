@@ -8,8 +8,8 @@ class DeadPositionSpec extends BaseGameSpec {
 
     void setup() {
         gameCanBeFinished()
-        game.start()
-        game.registerPlayer("player", null)
+        game.initialize()
+        game.playerReady("player", null)
     }
 
     def "dead position when just two kings left"() {

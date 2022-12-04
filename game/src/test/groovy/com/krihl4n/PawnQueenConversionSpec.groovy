@@ -3,8 +3,8 @@ package com.krihl4n
 class PawnQueenConversionSpec extends BaseGameSpec {
 
     void setup() {
-        game.start()
-        game.registerPlayer("player", null)
+        game.initialize()
+        game.playerReady("player", null)
     }
 
     def "when pawn reaches the end it converts to a queen"() {

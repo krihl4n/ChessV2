@@ -44,17 +44,17 @@ class GameOfChess(private val gameId: String) {
         game.setupChessboard(pieceSetup)
     }
 
-    fun start(playerId: String?, mode: GameModeDto, colorPreference: String? = null) {
+    fun requestNewGame(playerId: String?, mode: GameModeDto, colorPreference: String? = null) {
         when (mode) {
             GameModeDto.FREE_MOVE -> {
-                game.start(GameMode.MOVE_FREELY)
-                game.registerPlayer("player1", null)
+                game.initialize(GameMode.MOVE_FREELY)
+                game.playerReady("player1", null)
             }
             GameModeDto.HOT_SEAT -> TODO()
             GameModeDto.VS_COMPUTER -> {
-                game.start(GameMode.ACTUAL_GAME)
-                game.registerPlayer(playerId ?: "player1", colorPreference)
-                game.registerPlayer("player2")
+                game.initialize(GameMode.ACTUAL_GAME)
+                game.playerReady(playerId ?: "player1", colorPreference)
+                game.playerReady("player2")
                 val computerColor = game.fetchPlayer("player2")?.color ?: throw RuntimeException("cannot determine opponent color")
                 registerGameEventListener(ComputerOpponent(this, "player2", computerColor.toString()))
             }

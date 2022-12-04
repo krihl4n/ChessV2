@@ -31,10 +31,10 @@ class GameController(
         gameHandler.handleGameCommand(sessionId, Command.valueOf(command.uppercase()))
     }
 
-    @MessageMapping("/start-new-game")
+    @MessageMapping("/start-new-game") // request-new-game
     @Throws(Exception::class)
     fun startNewGame(@Payload startGameRequest: StartGameRequest, @Header("simpSessionId") sessionId: String) {
-        gameHandler.startNewGame(sessionId, startGameRequest)
+        gameHandler.requestNewGame(sessionId, startGameRequest)
     }
 
     @MessageMapping("/fields-occupation")

@@ -3,8 +3,8 @@ package com.krihl4n
 class EnPassantSpec extends BaseGameSpec {
 
     void setup() {
-        game.start()
-        game.registerPlayer("player", null)
+        game.initialize()
+        game.playerReady("player", null)
     }
 
     def "en passant not possible if enemy pawn didn't move"() {
