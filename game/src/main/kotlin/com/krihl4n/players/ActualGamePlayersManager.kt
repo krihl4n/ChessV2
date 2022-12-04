@@ -4,7 +4,7 @@ import com.krihl4n.model.Color
 import java.lang.UnsupportedOperationException
 import kotlin.random.Random
 
-class ActualGamePlayersManager: PlayersManager {
+class ActualGamePlayersManager : PlayersManager {
 
     private var player1Id: String? = null
     private var player2Id: String? = null
@@ -35,6 +35,10 @@ class ActualGamePlayersManager: PlayersManager {
         return null
     }
 
+    override fun getPlayerOne() = player1 ?: throw NoPlayerException()
+
+    override fun getPlayerTwo() = player2 ?: throw NoPlayerException()
+
     private fun registerPlayerOne(colorPreference: Color?, id: String) {
         val color = colorPreference ?: getRandomColor()
         player1Id = id
@@ -54,3 +58,5 @@ class ActualGamePlayersManager: PlayersManager {
         return Color.values()[Random.nextInt(0, 2)]
     }
 }
+
+class NoPlayerException : RuntimeException()

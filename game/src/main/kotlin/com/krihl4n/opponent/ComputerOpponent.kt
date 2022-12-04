@@ -2,11 +2,7 @@ package com.krihl4n.opponent
 
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
-import com.krihl4n.api.dto.GameResultDto
-import com.krihl4n.api.dto.GameStateUpdateDto
-import com.krihl4n.api.dto.PiecePositionUpdateDto
-import com.krihl4n.api.dto.PossibleMovesDto
-import com.krihl4n.game.GameState
+import com.krihl4n.api.dto.*
 import kotlin.random.Random
 import java.util.Timer
 import kotlin.concurrent.schedule
@@ -19,7 +15,7 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
             Timer("ScheduleMove", false).schedule(1000) {
                 performRandomMove()
             }
-        }
+        } // todo move to gameStarted handler?
     }
     override fun piecePositionUpdate(sessionId: String, update: PiecePositionUpdateDto) {
 
@@ -37,6 +33,10 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
 
     override fun gameStateUpdate(sessionId: String, update: GameStateUpdateDto) {
         println(update)
+    }
+
+    override fun gameStarted(sessionId: String, gameInfo: GameInfoDto) {
+        TODO("Not yet implemented")
     }
 
     override fun gameFinished(sessionId: String, result: GameResultDto) {

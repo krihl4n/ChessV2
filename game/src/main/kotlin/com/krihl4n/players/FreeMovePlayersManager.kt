@@ -14,4 +14,8 @@ class FreeMovePlayersManager : PlayersManager {
     }
 
     override fun getPlayer(id: String) = player
+
+    override fun getPlayerOne() = player ?: throw NoPlayerException()
+
+    override fun getPlayerTwo() = player ?: throw NoPlayerException()
 }

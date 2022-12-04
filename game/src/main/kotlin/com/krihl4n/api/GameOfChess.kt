@@ -3,6 +3,7 @@ package com.krihl4n.api
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.*
+import com.krihl4n.api.dto.PieceDto.Companion.from
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.game.*
 import com.krihl4n.game.Game
@@ -54,9 +55,9 @@ class GameOfChess(private val gameId: String) {
             GameModeDto.VS_COMPUTER -> {
                 game.initialize(GameMode.ACTUAL_GAME)
                 game.playerReady(playerId ?: "player1", colorPreference)
-                game.playerReady("player2")
-                val computerColor = game.fetchPlayer("player2")?.color ?: throw RuntimeException("cannot determine opponent color")
-                registerGameEventListener(ComputerOpponent(this, "player2", computerColor.toString()))
+                game.playerReady("computer")
+                val computerColor = game.fetchPlayer("computer")?.color ?: throw RuntimeException("cannot determine opponent color")
+                registerGameEventListener(ComputerOpponent(this, "computer", computerColor.toString()))
             }
         }
     }
@@ -95,6 +96,17 @@ class GameOfChess(private val gameId: String) {
                         gameState = update.gameState
                     )
                 )
+
+                if(update.gameState == "IN_PROGRESS") {
+                    listener.gameStarted(
+                        gameId,
+                        GameInfoDto(
+                            mode = GameModeDto.VS_COMPUTER.toString(), // todo other modes
+                            player1 = PlayerDto.from(game.fetchPlayerOne()),
+                            player2 = PlayerDto.from(game.fetchPlayerTwo())
+                        )
+                    )
+                }
             }
         })
 

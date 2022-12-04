@@ -6,4 +6,6 @@ interface PlayersManager {
 
     fun registerPlayer(id: String, colorPreference: Color?): Boolean
     fun getPlayer(id: String): Player?
+    fun getPlayerOne(): Player
+    fun getPlayerTwo(): Player
 }

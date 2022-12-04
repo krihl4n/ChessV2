@@ -52,6 +52,10 @@ internal class Game(
 
     fun fetchPlayer(playerId: String) = gameControl.fetchPlayer(playerId)
 
+    fun fetchPlayerOne() = gameControl.fetchPlayerOne()
+
+    fun fetchPlayerTwo() = gameControl.fetchPlayerTwo()
+
     fun resign(playerId: String) = gameState.resign(this, gameControl, playerId)
 
     fun performMove(playerId: String, from: String, to: String) =

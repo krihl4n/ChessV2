@@ -1,6 +1,7 @@
 package com.krihl4n
 
 import com.krihl4n.api.GameEventListener
+import com.krihl4n.api.dto.GameInfoDto
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
@@ -29,6 +30,15 @@ class GameEventSender(
             sessionId,
             "/user/queue/game-state-updates",
             update,
+            prepareSessionIdHeader(sessionId)
+        )
+    }
+
+    override fun gameStarted(sessionId: String, gameInfo: GameInfoDto) {
+        simpMessagingTemplate.convertAndSendToUser(
+            sessionId,
+            "/user/queue/game-started",
+            gameInfo,
             prepareSessionIdHeader(sessionId)
         )
     }
