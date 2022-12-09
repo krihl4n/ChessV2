@@ -22,7 +22,7 @@ class GameController(
     @Throws(Exception::class)
     fun move(@Payload move: Move, @Header("simpSessionId") sessionId: String) {
         println(move)
-        gameHandler.move(sessionId, move.from, move.to)
+        gameHandler.move(sessionId, move.playerId, move.from, move.to)
     }
 
     @MessageMapping("/game-controls")
