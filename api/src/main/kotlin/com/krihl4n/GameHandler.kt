@@ -36,7 +36,7 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
     }
 
     fun requestNewGame(sessionId: String, request: StartGameRequest) {
-        games[sessionId]?.requestNewGame(request.playerId, fromCommand(START_VS_COMPUTER.toString()), request.colorPreference)
+        games[sessionId]?.requestNewGame(request.playerId, fromCommand(request.mode), request.colorPreference)
     }
     fun move(sessionId: String, playerId: String, from: String, to: String) {
         games[sessionId]?.move(playerId, from, to)

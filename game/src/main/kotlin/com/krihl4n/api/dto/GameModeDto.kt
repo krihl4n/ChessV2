@@ -2,16 +2,15 @@ package com.krihl4n.api.dto
 
 enum class GameModeDto {
 
-    FREE_MOVE, HOT_SEAT, VS_COMPUTER;
+    TEST_MODE, HOT_SEAT, VS_COMPUTER, VS_FRIEND;
 
     companion object {
-        fun fromCommand(cmd: String): GameModeDto {
-            return if (cmd.lowercase().endsWith("hot_seat")) {
-                HOT_SEAT
-            } else if (cmd.lowercase().endsWith("vs_computer")) {
-                VS_COMPUTER
-            } else {
-                FREE_MOVE
+        fun fromCommand(mode: String): GameModeDto {
+            return when (mode.lowercase()) {
+                "hot_seat" -> HOT_SEAT
+                "vs_computer" -> VS_COMPUTER
+                "vs_friend" -> VS_FRIEND
+                else -> TEST_MODE
             }
         }
     }
