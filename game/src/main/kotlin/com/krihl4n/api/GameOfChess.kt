@@ -48,14 +48,14 @@ class GameOfChess(private val gameId: String) {
         println("Request new game: $mode")
         when (mode) {
             GameModeDto.TEST_MODE -> {
-                game.initialize(GameMode.MOVE_FREELY)
+                game.initialize(mode)
                 game.playerReady("player1", colorPreference)
             }
             GameModeDto.HOT_SEAT -> {
                 // todo
             }
             GameModeDto.VS_COMPUTER -> {
-                game.initialize(GameMode.ACTUAL_GAME)
+                game.initialize(mode)
                 game.playerReady(playerId ?: "player1", colorPreference)
                 game.playerReady("computer")
                 val computerColor = game.fetchPlayer("computer")?.color ?: throw RuntimeException("cannot determine opponent color")
@@ -106,7 +106,7 @@ class GameOfChess(private val gameId: String) {
                     listener.gameStarted(
                         gameId,
                         GameInfoDto(
-                            mode = GameModeDto.VS_COMPUTER.toString(), // todo other modes
+                            mode = update.gameMode?.toString() ?: "",
                             player1 = PlayerDto.from(game.fetchPlayerOne()),
                             player2 = PlayerDto.from(game.fetchPlayerTwo())
                         )

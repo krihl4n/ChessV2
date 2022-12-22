@@ -1,10 +1,11 @@
 package com.krihl4n.game
 
+import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.players.Player
 
 interface GameCommand {
 
-    fun executeInitNewGame(gameMode: GameMode = GameMode.MOVE_FREELY)
+    fun executeInitNewGame(gameMode: GameModeDto = GameModeDto.TEST_MODE)
 
     fun executePlayerReady(playerId: String, colorPreference: String?): Boolean
 
@@ -13,6 +14,8 @@ interface GameCommand {
     fun fetchPlayerOne(): Player
 
     fun fetchPlayerTwo(): Player
+
+    fun fetchGameMode(): GameModeDto?
 
     fun executeResign(playerId: String)
 

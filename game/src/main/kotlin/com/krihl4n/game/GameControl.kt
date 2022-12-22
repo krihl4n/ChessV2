@@ -3,6 +3,7 @@ package com.krihl4n.game
 import com.krihl4n.DebugLogger
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
+import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.mappers.FieldsOccupationMapper
 import com.krihl4n.api.pieceSetups.PieceSetup
@@ -29,6 +30,7 @@ internal class GameControl(
 
     private var movePolicy: MovePolicy = FreeMovePolicy()
     private var playersManager: PlayersManager = FreeMovePlayersManager()
+    private var gameMode: GameModeDto? = null
 
     fun setupChessboard(pieceSetup: PieceSetup?) = positionTracker.resetInitialGameSetup(pieceSetup)
 
@@ -70,20 +72,18 @@ internal class GameControl(
         return PossibleMovesDto.noMovesFrom(field)
     }
 
-    override fun executeInitNewGame(gameMode: GameMode) {
-        when (gameMode) {
-            GameMode.MOVE_FREELY -> {
-                this.movePolicy = FreeMovePolicy()
-                this.playersManager = FreeMovePlayersManager()
-            }
-            GameMode.ACTUAL_GAME -> let {
-                this.playersManager = ActualGamePlayersManager()
-                val policy = ActualGameMovePolicy(playersManager)
-                this.movePolicy = policy
-                this.commandCoordinator.registerObserver(policy)
-            }
+    override fun executeInitNewGame(gameMode: GameModeDto) {
+        if (gameMode == GameModeDto.TEST_MODE) {
+            this.movePolicy = FreeMovePolicy()
+            this.playersManager = FreeMovePlayersManager()
+        } else {
+            this.playersManager = ActualGamePlayersManager()
+            val policy = ActualGameMovePolicy(playersManager)
+            this.movePolicy = policy
+            this.commandCoordinator.registerObserver(policy)
         }
 
+        this.gameMode = gameMode
         DebugLogger.printChessboard(positionTracker)
     }
 
@@ -98,6 +98,8 @@ internal class GameControl(
 
     override fun fetchPlayerTwo(): Player =
         this.playersManager.getPlayerTwo()
+
+    override fun fetchGameMode(): GameModeDto? = this.gameMode
 
     override fun executeResign(playerId: String) {
         val resigningPlayerColor = playersManager.getPlayer(playerId)?.color

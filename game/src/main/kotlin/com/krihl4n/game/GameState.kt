@@ -1,9 +1,11 @@
 package com.krihl4n.game
 
+import com.krihl4n.api.dto.GameModeDto
+
 enum class GameState : State {
 
     UNINITIALIZED {
-        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
             stateHolder.setState(WAITING_FOR_PLAYERS)
             gameCommand.executeInitNewGame(gameMode)
         }
@@ -44,7 +46,7 @@ enum class GameState : State {
         }
     },
     WAITING_FOR_PLAYERS {
-        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
             throw IllegalStateException("Cannot start, waiting for players")
         }
 
@@ -60,7 +62,7 @@ enum class GameState : State {
         ) {
             val allPlayersRegistered = gameCommand.executePlayerReady(playerId, colorPreference)
             if (allPlayersRegistered) {
-                stateHolder.setState(IN_PROGRESS)
+                stateHolder.setState(IN_PROGRESS, gameCommand.fetchGameMode())
             }
         }
 
@@ -87,7 +89,7 @@ enum class GameState : State {
         }
     },
     IN_PROGRESS {
-        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
             println("Game already started")
         }
 
@@ -128,8 +130,8 @@ enum class GameState : State {
         }
     },
     FINISHED {
-        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
-            stateHolder.setState(IN_PROGRESS)
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
+            stateHolder.setState(IN_PROGRESS, gameMode = gameMode)
             gameCommand.executeInitNewGame(gameMode)
         }
 
@@ -172,7 +174,7 @@ enum class GameState : State {
 
 interface State {
 
-    fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode)
+    fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto)
     fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String)
     fun playerReady(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, colorPreference: String?)
     fun move(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, from: String, to: String)
