@@ -51,9 +51,6 @@ class GameOfChess(private val gameId: String) {
                 game.initialize(mode)
                 game.playerReady("player1", colorPreference)
             }
-            GameModeDto.HOT_SEAT -> {
-                // todo
-            }
             GameModeDto.VS_COMPUTER -> {
                 game.initialize(mode)
                 game.playerReady(playerId ?: "player1", colorPreference)

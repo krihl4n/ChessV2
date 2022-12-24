@@ -14,9 +14,6 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
 
     fun handleGameCommand(sessionId: String, command: Command) {
         when (command) {
-           // START_FREE_MODE -> games[sessionId]?.start(sessionId, fromCommand(START_FREE_MODE.toString()))
-           // START_HOT_SEAT -> games[sessionId]?.start(sessionId, fromCommand(START_HOT_SEAT.toString()))
-          //  START_VS_COMPUTER -> games[sessionId]?.start(sessionId, fromCommand(START_VS_COMPUTER.toString()))
             UNDO_MOVE -> games[sessionId]?.undoMove()
             REDO_MOVE -> games[sessionId]?.redoMove()
             RESIGN -> games[sessionId]?.resign(sessionId)
@@ -52,5 +49,5 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
 }
 
 enum class Command {
-    START_FREE_MODE, START_HOT_SEAT, START_VS_COMPUTER, UNDO_MOVE, REDO_MOVE, RESIGN
+    UNDO_MOVE, REDO_MOVE, RESIGN
 }
