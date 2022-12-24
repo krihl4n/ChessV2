@@ -78,3 +78,5 @@ Move(playerId=player1, from=e2, to=e4)
     ---- ---- ---- ---- ---- ---- ---- ----
      a    b    c    d    e    f    g    h
 Move(piece=Piece(color=BLACK, type=PAWN), from=Field(d7), to=Field(e3)) is not valid
+
+probably en passant - related issue
