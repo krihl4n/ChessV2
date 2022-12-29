@@ -5,7 +5,7 @@ import kotlin.math.abs
 internal data class File(private val fileToken: String) {
 
     private val allowedTokens = arrayOf("a", "b", "c", "d", "e", "f", "g", "h")
-    val token = fileToken.toLowerCase()
+    val token = fileToken.lowercase()
 
     init {
         validateToken(token)
