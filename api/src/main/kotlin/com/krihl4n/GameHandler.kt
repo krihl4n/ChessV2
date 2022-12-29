@@ -33,8 +33,12 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
     }
 
     fun requestNewGame(sessionId: String, request: StartGameRequest) {
+        games[sessionId] = GameOfChess(sessionId)
+        games[sessionId]?.setupChessboard()
+        games[sessionId]?.registerGameEventListener(gameEventSender)
         games[sessionId]?.requestNewGame(request.playerId, fromCommand(request.mode), request.colorPreference)
     }
+
     fun move(sessionId: String, playerId: String, from: String, to: String) {
         games[sessionId]?.move(playerId, from, to)
     }

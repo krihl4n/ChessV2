@@ -103,6 +103,7 @@ class GameOfChess(private val gameId: String) {
                     listener.gameStarted(
                         gameId,
                         GameInfoDto(
+                            gameId = "1",
                             mode = update.gameMode?.toString() ?: "",
                             player1 = PlayerDto.from(game.fetchPlayerOne()),
                             player2 = PlayerDto.from(game.fetchPlayerTwo())

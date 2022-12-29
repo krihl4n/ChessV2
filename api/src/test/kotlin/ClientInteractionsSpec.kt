@@ -1,14 +1,31 @@
 import com.krihl4n.GameEventSender
 import com.krihl4n.GameHandler
+import com.krihl4n.StartGameRequest
+import com.krihl4n.api.dto.GameInfoDto
+import com.krihl4n.api.dto.PlayerDto
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldNotBe
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
 
 class ClientInteractionsSpec : ShouldSpec({
-    val eventSender = mockk<GameEventSender>()
+    val eventSender = mockk<GameEventSender>(relaxed = true)
     val gameHandler = GameHandler(eventSender)
 
-    should("should run") {
-        gameHandler shouldNotBe(null)
+    should("notify player 1 that game has started when playing vs computer") {
+        val gameInfoCaptor = slot<GameInfoDto>()
+        every { eventSender.gameStarted(any(), capture(gameInfoCaptor)) } returns Unit
+
+        gameHandler.requestNewGame("1234", StartGameRequest("player1", "vs_computer", "white"))
+
+        verify{eventSender.gameStarted("1234", any())}
+        val capturedGameInfo = gameInfoCaptor.captured
+        assertNotEquals("1234", capturedGameInfo.gameId)
+        assertEquals("VS_COMPUTER", capturedGameInfo.mode)
+        assertEquals(PlayerDto("player1", "WHITE"), capturedGameInfo.player1)
+        assertEquals(PlayerDto("computer", "BLACK"), capturedGameInfo.player2)
     }
 })
