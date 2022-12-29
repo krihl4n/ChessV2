@@ -40,4 +40,10 @@ class ClientInteractionsSpec : ShouldSpec({
 
         assertNotEquals(gameInfoCaptor1.captured.gameId, gameInfoCaptor2.captured.gameId)
     }
+
+    should("return game id") {
+        val gameId = gameHandler.requestNewGame("1234", StartGameRequest("player1", "vs_computer", "white"))
+
+        assertNotEquals("", gameId)
+    }
 })

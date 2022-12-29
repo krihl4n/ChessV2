@@ -6,6 +6,7 @@ import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
 import com.krihl4n.api.dto.PossibleMovesDto
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class GameHandler(private val gameEventSender: GameEventSender) : ConnectionListener {
@@ -32,11 +33,12 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
         games.remove(sessionId)
     }
 
-    fun requestNewGame(sessionId: String, request: StartGameRequest) {
+    fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         games[sessionId] = GameOfChess(sessionId)
         games[sessionId]?.setupChessboard()
         games[sessionId]?.registerGameEventListener(gameEventSender)
         games[sessionId]?.requestNewGame(request.playerId, fromCommand(request.mode), request.colorPreference)
+        return UUID.randomUUID().toString()
     }
 
     fun move(sessionId: String, playerId: String, from: String, to: String) {
