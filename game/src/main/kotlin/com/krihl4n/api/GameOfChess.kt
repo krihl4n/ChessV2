@@ -19,6 +19,7 @@ import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import java.lang.RuntimeException
+import java.util.*
 
 class GameOfChess(private val gameId: String) {
 
@@ -103,7 +104,7 @@ class GameOfChess(private val gameId: String) {
                     listener.gameStarted(
                         gameId,
                         GameInfoDto(
-                            gameId = "1",
+                            gameId = UUID.randomUUID().toString(),
                             mode = update.gameMode?.toString() ?: "",
                             player1 = PlayerDto.from(game.fetchPlayerOne()),
                             player2 = PlayerDto.from(game.fetchPlayerTwo())

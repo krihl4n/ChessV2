@@ -28,4 +28,16 @@ class ClientInteractionsSpec : ShouldSpec({
         assertEquals(PlayerDto("player1", "WHITE"), capturedGameInfo.player1)
         assertEquals(PlayerDto("computer", "BLACK"), capturedGameInfo.player2)
     }
+
+    should("game ids be unique") {
+        val gameInfoCaptor1 = slot<GameInfoDto>()
+        val gameInfoCaptor2 = slot<GameInfoDto>()
+        every { eventSender.gameStarted("1234", capture(gameInfoCaptor1)) } returns Unit
+        every { eventSender.gameStarted("1235", capture(gameInfoCaptor2)) } returns Unit
+
+        gameHandler.requestNewGame("1234", StartGameRequest("player1", "vs_computer", "white"))
+        gameHandler.requestNewGame("1235", StartGameRequest("player1", "vs_computer", "white"))
+
+        assertNotEquals(gameInfoCaptor1.captured.gameId, gameInfoCaptor2.captured.gameId)
+    }
 })
