@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class GameHandler(private val gameEventSender: GameEventSender) : ConnectionListener {
+class GameHandler(private val gameEventSender: GameEventSender) {
 
     private val games: MutableMap<String, GameOfChess> = mutableMapOf()
 
@@ -19,18 +19,6 @@ class GameHandler(private val gameEventSender: GameEventSender) : ConnectionList
             REDO_MOVE -> games[sessionId]?.redoMove()
             RESIGN -> games[sessionId]?.resign(sessionId)
         }
-    }
-
-    override fun connectionEstablished(sessionId: String) {
-        println("Register a new game for $sessionId")
-        games[sessionId] = GameOfChess(sessionId)
-        games[sessionId]?.setupChessboard()
-        games[sessionId]?.registerGameEventListener(gameEventSender)
-    }
-
-    override fun connectionClosed(sessionId: String) {
-        println("Remove game for $sessionId")
-        games.remove(sessionId)
     }
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {

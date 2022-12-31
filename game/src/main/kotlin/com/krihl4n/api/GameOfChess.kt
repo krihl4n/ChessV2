@@ -107,7 +107,8 @@ class GameOfChess(private val gameId: String) {
                             gameId = UUID.randomUUID().toString(),
                             mode = update.gameMode?.toString() ?: "",
                             player1 = PlayerDto.from(game.fetchPlayerOne()),
-                            player2 = PlayerDto.from(game.fetchPlayerTwo())
+                            player2 = PlayerDto.from(game.fetchPlayerTwo()),
+                            piecePositions = game.getFieldOccupationInfo()
                         )
                     )
                 }
