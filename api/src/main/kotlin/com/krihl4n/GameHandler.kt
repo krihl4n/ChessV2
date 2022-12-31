@@ -9,36 +9,40 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class GameHandler(private val gameEventSender: GameEventSender) {
+class GameHandler(
+    private val gameEventSender: GameEventSender,
+    private val gamesRegister: GamesRegister
+) {
 
-    private val games: MutableMap<String, GameOfChess> = mutableMapOf()
+    //private val games: MutableMap<String, GameOfChess> = mutableMapOf()
 
     fun handleGameCommand(sessionId: String, command: Command) {
         when (command) {
-            UNDO_MOVE -> games[sessionId]?.undoMove()
-            REDO_MOVE -> games[sessionId]?.redoMove()
-            RESIGN -> games[sessionId]?.resign(sessionId)
+            UNDO_MOVE -> gamesRegister.getGame(sessionId)?.undoMove()
+            REDO_MOVE -> gamesRegister.getGame(sessionId)?.redoMove()
+            RESIGN -> gamesRegister.getGame(sessionId)?.resign(sessionId)
         }
     }
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
-        games[sessionId] = GameOfChess(sessionId)
-        games[sessionId]?.setupChessboard()
-        games[sessionId]?.registerGameEventListener(gameEventSender)
-        games[sessionId]?.requestNewGame(request.playerId, fromCommand(request.mode), request.colorPreference)
-        return UUID.randomUUID().toString()
+        val newGame = GameOfChess(UUID.randomUUID().toString())
+        gamesRegister.reqisterNewGame(newGame, sessionId)
+        gamesRegister.getGame(sessionId)?.setupChessboard()
+        gamesRegister.getGame(sessionId)?.registerGameEventListener(gameEventSender)
+        gamesRegister.getGame(sessionId)?.requestNewGame(request.playerId, fromCommand(request.mode), request.colorPreference)
+        return newGame.gameId
     }
 
     fun move(sessionId: String, playerId: String, from: String, to: String) {
-        games[sessionId]?.move(playerId, from, to)
+        gamesRegister.getGame(sessionId)?.move(playerId, from, to)
     }
 
     fun getPositions(sessionId: String): List<FieldOccupationDto>? {
-        return games[sessionId]?.getFieldOccupationInfo()
+        return gamesRegister.getGame(sessionId)?.getFieldOccupationInfo()
     }
 
     fun getPossibleMoves(sessionId: String, field: String): PossibleMovesDto? {
-        return games[sessionId]?.getPossibleMoves(field);
+        return gamesRegister.getGame(sessionId)?.getPossibleMoves(field);
     }
 }
 

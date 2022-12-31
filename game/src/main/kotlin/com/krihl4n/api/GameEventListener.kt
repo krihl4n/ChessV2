@@ -7,11 +7,11 @@ import com.krihl4n.api.dto.PiecePositionUpdateDto
 
 interface GameEventListener {
 
-    fun piecePositionUpdate(sessionId: String, update: PiecePositionUpdateDto)
+    fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto)
 
-    fun gameStateUpdate(sessionId: String, update: GameStateUpdateDto)
+    fun gameStateUpdate(gameId: String, update: GameStateUpdateDto)
 
-    fun gameStarted(sessionId: String, gameInfo: GameInfoDto)
+    fun gameStarted(gameId: String, gameInfo: GameInfoDto)
 
-    fun gameFinished(sessionId: String, result: GameResultDto)
+    fun gameFinished(gameId: String, result: GameResultDto)
 }

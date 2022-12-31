@@ -17,7 +17,7 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
             }
         } // todo move to gameStarted handler?
     }
-    override fun piecePositionUpdate(sessionId: String, update: PiecePositionUpdateDto) {
+    override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
 
         if (determineColorOfPieceThatMoved(update) == playerColor) {
             return
@@ -31,15 +31,15 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
         }
     }
 
-    override fun gameStateUpdate(sessionId: String, update: GameStateUpdateDto) {
+    override fun gameStateUpdate(gameId: String, update: GameStateUpdateDto) {
         println(update)
     }
 
-    override fun gameStarted(sessionId: String, gameInfo: GameInfoDto) {
+    override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
         TODO("Not yet implemented")
     }
 
-    override fun gameFinished(sessionId: String, result: GameResultDto) {
+    override fun gameFinished(gameId: String, result: GameResultDto) {
         // do nothing?
     }
 

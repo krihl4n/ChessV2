@@ -1,5 +1,6 @@
 import com.krihl4n.GameEventSender
 import com.krihl4n.GameHandler
+import com.krihl4n.GamesRegister
 import com.krihl4n.StartGameRequest
 import com.krihl4n.api.dto.GameInfoDto
 import com.krihl4n.api.dto.PlayerDto
@@ -13,9 +14,13 @@ import org.junit.jupiter.api.Assertions.assertNotEquals
 
 class ClientInteractionsSpec : ShouldSpec({
     val eventSender = mockk<GameEventSender>(relaxed = true)
-    val gameHandler = GameHandler(eventSender)
+    var gameHandler = GameHandler(eventSender, GamesRegister())
 
-    fun startGame(sessionId: String = "1111"): String{
+    beforeTest {
+        gameHandler = GameHandler(eventSender, GamesRegister())
+    }
+
+    fun startGame(sessionId: String = "1111"): String {
         return gameHandler.requestNewGame(sessionId, StartGameRequest("player1", "vs_computer", "white"))
     }
 
@@ -25,7 +30,7 @@ class ClientInteractionsSpec : ShouldSpec({
 
         startGame()
 
-        verify { eventSender.gameStarted("1111", any()) }
+        verify { eventSender.gameStarted(gameInfoCaptor.captured.gameId, any()) }
         assertNotEquals("1111", gameInfoCaptor.captured.gameId)
         assertEquals("VS_COMPUTER", gameInfoCaptor.captured.mode)
         assertEquals(PlayerDto("player1", "WHITE"), gameInfoCaptor.captured.player1)
@@ -33,20 +38,16 @@ class ClientInteractionsSpec : ShouldSpec({
     }
 
     should("game ids be unique") {
-        val gameInfoCaptor1 = slot<GameInfoDto>()
-        val gameInfoCaptor2 = slot<GameInfoDto>()
-        every { eventSender.gameStarted("1111", capture(gameInfoCaptor1)) } returns Unit
-        every { eventSender.gameStarted("2222", capture(gameInfoCaptor2)) } returns Unit
+        val gameId1 = startGame("1111")
+        val gameId2 = startGame("2222")
 
-        startGame("1111")
-        startGame("2222")
-
-        assertNotEquals(gameInfoCaptor1.captured.gameId, gameInfoCaptor2.captured.gameId)
+        assertNotEquals(gameId1, gameId2)
     }
 
     should("return correct game id") {
         val gameInfoCaptor = slot<GameInfoDto>()
-        every { eventSender.gameStarted("1111", capture(gameInfoCaptor)) } returns Unit
+        every { eventSender.gameStarted(any(), capture(gameInfoCaptor)) } returns Unit
+
         val gameId = startGame("1111")
 
         assertNotEquals("", gameId)
