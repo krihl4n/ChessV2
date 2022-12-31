@@ -1,7 +1,4 @@
-import com.krihl4n.GameEventSender
-import com.krihl4n.GameHandler
-import com.krihl4n.GamesRegister
-import com.krihl4n.StartGameRequest
+import com.krihl4n.*
 import com.krihl4n.api.dto.GameInfoDto
 import com.krihl4n.api.dto.PlayerDto
 import io.kotest.core.spec.style.ShouldSpec
@@ -13,11 +10,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 
 class ClientInteractionsSpec : ShouldSpec({
-    val eventSender = mockk<GameEventSender>(relaxed = true)
-    var gameHandler = GameHandler(eventSender, GamesRegister())
+    val msgSender = mockk<MessageSender>(relaxed = true)
+    var gamesRegister = GamesRegister()
+    var gameHandler = GameHandler(GameEventSender(msgSender, gamesRegister), gamesRegister)
 
     beforeTest {
-        gameHandler = GameHandler(eventSender, GamesRegister())
+        gamesRegister = GamesRegister()
+        gameHandler = GameHandler(GameEventSender(msgSender, gamesRegister), gamesRegister)
     }
 
     fun startGame(sessionId: String = "1111"): String {
@@ -26,12 +25,13 @@ class ClientInteractionsSpec : ShouldSpec({
 
     should("notify player 1 that game has started when playing vs computer") {
         val gameInfoCaptor = slot<GameInfoDto>()
-        every { eventSender.gameStarted(any(), capture(gameInfoCaptor)) } returns Unit
+        every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
 
-        startGame()
+        val gameId = startGame("999")
 
-        verify { eventSender.gameStarted(gameInfoCaptor.captured.gameId, any()) }
-        assertNotEquals("1111", gameInfoCaptor.captured.gameId)
+        verify { msgSender.sendGameStartedMsg("999", any()) }
+        assertNotEquals("999", gameInfoCaptor.captured.gameId)
+        assertEquals(gameId, gameInfoCaptor.captured.gameId)
         assertEquals("VS_COMPUTER", gameInfoCaptor.captured.mode)
         assertEquals(PlayerDto("player1", "WHITE"), gameInfoCaptor.captured.player1)
         assertEquals(PlayerDto("computer", "BLACK"), gameInfoCaptor.captured.player2)
@@ -46,9 +46,9 @@ class ClientInteractionsSpec : ShouldSpec({
 
     should("return correct game id") {
         val gameInfoCaptor = slot<GameInfoDto>()
-        every { eventSender.gameStarted(any(), capture(gameInfoCaptor)) } returns Unit
+        every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
 
-        val gameId = startGame("1111")
+        val gameId = startGame("888")
 
         assertNotEquals("", gameId)
         assertEquals(gameId, gameInfoCaptor.captured.gameId)

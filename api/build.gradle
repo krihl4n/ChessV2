@@ -19,7 +19,7 @@ dependencies {
     implementation project(':game')
 
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5-jvm', version: '5.5.4'
-    testImplementation "io.mockk:mockk:1.9.3"
+    testImplementation "io.mockk:mockk:1.13.3"
 }
 
 test {

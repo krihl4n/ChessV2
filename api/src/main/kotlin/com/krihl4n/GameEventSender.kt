@@ -5,59 +5,29 @@ import com.krihl4n.api.dto.GameInfoDto
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
-import org.springframework.context.annotation.Lazy
-import org.springframework.messaging.MessageHeaders
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor
-import org.springframework.messaging.simp.SimpMessageType
-import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Service
 
 @Service
 class GameEventSender(
-    private val simpMessagingTemplate: SimpMessagingTemplate,
+    private val messageSender: MessageSender,
     private val gamesRegister: GamesRegister
 ) : GameEventListener {
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
-        simpMessagingTemplate.convertAndSendToUser(
-            gamesRegister.getRelatedSessionIds(gameId).first(), // todo notify many
-            "user/queue/piece-position-updates",
-            update,
-            prepareSessionIdHeader(gamesRegister.getRelatedSessionIds(gameId).first())
-        )
+        messageSender.sendPiecePositionUpdateMsg(getSessionId(gameId), update)
     }
 
     override fun gameStateUpdate(gameId: String, update: GameStateUpdateDto) {
-        simpMessagingTemplate.convertAndSendToUser(
-            gamesRegister.getRelatedSessionIds(gameId).first(),
-            "/user/queue/game-state-updates",
-            update,
-            prepareSessionIdHeader(gamesRegister.getRelatedSessionIds(gameId).first())
-        )
+        messageSender.sendGameStateUpdateMsg(getSessionId(gameId), update)
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        simpMessagingTemplate.convertAndSendToUser(
-            gamesRegister.getRelatedSessionIds(gameId).first(),
-            "/user/queue/game-started",
-            gameInfo,
-            prepareSessionIdHeader(gamesRegister.getRelatedSessionIds(gameId).first())
-        )
+        messageSender.sendGameStartedMsg(getSessionId(gameId), gameInfo)
     }
 
     override fun gameFinished(gameId: String, result: GameResultDto) {
-        simpMessagingTemplate.convertAndSendToUser(
-            gamesRegister.getRelatedSessionIds(gameId).first(),
-            "/user/queue/game-result",
-            result,
-            prepareSessionIdHeader(gamesRegister.getRelatedSessionIds(gameId).first())
-        )
+        messageSender.sendGameFinishedMsg(getSessionId(gameId), result)
     }
 
-    private fun prepareSessionIdHeader(sessionId: String): MessageHeaders {
-        val headerAccessor = SimpMessageHeaderAccessor
-            .create(SimpMessageType.MESSAGE)
-        headerAccessor.sessionId = sessionId
-        return headerAccessor.messageHeaders
-    }
+    private fun getSessionId(gameId: String) = gamesRegister.getRelatedSessionIds(gameId).first() // TODO multiple
 }
