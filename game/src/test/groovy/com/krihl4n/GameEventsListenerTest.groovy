@@ -16,6 +16,7 @@ import com.krihl4n.api.pieceSetups.EnPassantSetup
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.api.pieceSetups.QueenConversionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
+import com.krihl4n.model.GameStateUpdate
 import spock.lang.Specification
 
 import static com.krihl4n.api.dto.GameModeDto.*
@@ -237,6 +238,29 @@ class GameEventsListenerTest extends Specification {
 
         when:
         gameOfChess.requestNewGame("player", TEST_MODE, null)
+
+        then:
+        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("IN_PROGRESS"))
+    }
+
+    def "should notify about waiting for players state change"() {
+        given:
+        gameOfChess.setupChessboard(new AboutToCheckMateSetup())
+
+        when:
+        gameOfChess.requestNewGame("player1", VS_FRIEND, null)
+
+        then:
+        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("WAITING_FOR_PLAYERS"))
+    }
+
+    def "should notify about game start after player two joins"() {
+        given:
+        gameOfChess.setupChessboard(new AboutToCheckMateSetup())
+        gameOfChess.requestNewGame("player1", VS_FRIEND, null)
+
+        when:
+        gameOfChess.playerTwoReady("player2")
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("IN_PROGRESS"))

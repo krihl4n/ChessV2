@@ -8,9 +8,9 @@ import com.krihl4n.api.dto.PiecePositionUpdateDto
 import org.springframework.stereotype.Service
 
 @Service
-class GameEventSender(
+class GameEventHandler(
     private val messageSender: MessageSender,
-    private val gamesRegister: GamesRegister
+    private val gamesRegister: GamesRegister,
 ) : GameEventListener {
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
@@ -18,15 +18,18 @@ class GameEventSender(
     }
 
     override fun gameStateUpdate(gameId: String, update: GameStateUpdateDto) {
-        getSessionId(gameId)?.let { messageSender.sendGameStateUpdateMsg(it, update)}
+        getSessionId(gameId)?.let { messageSender.sendGameStateUpdateMsg(it, update) }
+        if (update.gameState == "WAITING_FOR_PLAYERS") {
+            getSessionId(gameId)?.let { messageSender.sendWaitingForOtherPlayerMsg(it, "7777") }
+        }
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        getSessionId(gameId)?.let { messageSender.sendGameStartedMsg(it, gameInfo)}
+        getSessionId(gameId)?.let { messageSender.sendGameStartedMsg(it, gameInfo) }
     }
 
     override fun gameFinished(gameId: String, result: GameResultDto) {
-        getSessionId(gameId)?.let { messageSender.sendGameFinishedMsg(it, result)}
+        getSessionId(gameId)?.let { messageSender.sendGameFinishedMsg(it, result) }
     }
 
     private fun getSessionId(gameId: String) = gamesRegister.getRelatedSessionIds(gameId).firstOrNull() // TODO multiple

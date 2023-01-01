@@ -10,7 +10,7 @@ import java.util.*
 
 @Service
 class GameHandler(
-    private val gameEventSender: GameEventSender,
+    private val gameEventHandler: GameEventHandler,
     private val gamesRegister: GamesRegister
 ): ConnectionListener {
 
@@ -26,7 +26,7 @@ class GameHandler(
         val newGame = GameOfChess(UUID.randomUUID().toString())
         gamesRegister.reqisterNewGame(newGame, sessionId)
         gamesRegister.getGame(sessionId)?.setupChessboard()
-        gamesRegister.getGame(sessionId)?.registerGameEventListener(gameEventSender)
+        gamesRegister.getGame(sessionId)?.registerGameEventListener(gameEventHandler)
         gamesRegister.getGame(sessionId)?.requestNewGame(request.playerId, fromCommand(request.mode), request.colorPreference)
         return newGame.gameId
     }

@@ -51,17 +51,25 @@ class GameOfChess(val gameId: String) {
                 game.initialize(mode)
                 game.playerReady("player1", colorPreference)
             }
-            GameModeDto.VS_COMPUTER -> {
+
+            GameModeDto.VS_COMPUTER -> { // todo maybe extract and make it a separate module
                 game.initialize(mode)
                 game.playerReady(playerId ?: "player1", colorPreference)
                 game.playerReady("computer")
-                val computerColor = game.fetchPlayer("computer")?.color ?: throw RuntimeException("cannot determine opponent color")
+                val computerColor = game.fetchPlayer("computer")?.color
+                    ?: throw RuntimeException("cannot determine opponent color")
                 registerGameEventListener(ComputerOpponent(this, "computer", computerColor.toString()))
             }
+
             GameModeDto.VS_FRIEND -> {
-                // todo
+                game.initialize(mode)
+                game.playerReady(playerId ?: "player1", colorPreference)
             }
         }
+    }
+
+    fun playerTwoReady(playerId: String) {
+        game.playerReady("player2")
     }
 
     fun resign(playerId: String) {

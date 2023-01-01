@@ -31,6 +31,10 @@ class MessageSender(
         sendMsg(sessionId, "/user/queue/game-result", result)
     }
 
+    fun sendWaitingForOtherPlayerMsg(sessionId: String, joinToken:String) {
+        sendMsg(sessionId, "user/queue/waiting-for-other-player", joinToken)
+    }
+
     private fun sendMsg(sessionId: String, destination: String, result: Any) {
         simpMessagingTemplate.convertAndSendToUser(
             sessionId,

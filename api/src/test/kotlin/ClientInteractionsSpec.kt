@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Assertions.assertNotEquals
 class ClientInteractionsSpec : ShouldSpec({
     val msgSender = mockk<MessageSender>(relaxed = true)
     var gamesRegister = GamesRegister()
-    var eventSender = GameEventSender(msgSender, gamesRegister)
+    var eventSender = GameEventHandler(msgSender, gamesRegister)
     var gameHandler = GameHandler(eventSender, gamesRegister)
 
     beforeTest {
         gamesRegister = GamesRegister()
-        eventSender = GameEventSender(msgSender, gamesRegister)
+        eventSender = GameEventHandler(msgSender, gamesRegister)
         gameHandler = GameHandler(eventSender, gamesRegister)
     }
 

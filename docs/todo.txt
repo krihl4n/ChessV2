@@ -56,3 +56,5 @@ https://www.youtube.com/watch?v=U4ogK0MIzqk&ab_channel=SebastianLague
 maybe pieces should remember their positions? or maybe not
 
 is it possible to subscribe to one web socket channel and receive messages with different model?
+
+no piece at field log in UI - what's that about?
