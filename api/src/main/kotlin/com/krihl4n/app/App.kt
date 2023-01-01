@@ -1,4 +1,4 @@
-package com.krihl4n
+package com.krihl4n.app
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

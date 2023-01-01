@@ -1,4 +1,4 @@
-package com.krihl4n
+package com.krihl4n.app
 
 import com.krihl4n.api.dto.GameInfoDto
 import com.krihl4n.api.dto.GameResultDto

@@ -1,4 +1,6 @@
 import com.krihl4n.*
+import com.krihl4n.app.MessageSender
+import com.krihl4n.requests.StartGameRequest
 import io.kotest.core.spec.style.ShouldSpec
 import io.mockk.*
 

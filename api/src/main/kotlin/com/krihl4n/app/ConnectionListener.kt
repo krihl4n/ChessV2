@@ -1,4 +1,4 @@
-package com.krihl4n
+package com.krihl4n.app
 
 interface ConnectionListener {
 

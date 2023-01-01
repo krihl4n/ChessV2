@@ -1,5 +1,9 @@
-package com.krihl4n
+package com.krihl4n.app
 
+import com.krihl4n.Command
+import com.krihl4n.GameHandler
+import com.krihl4n.requests.Move
+import com.krihl4n.requests.StartGameRequest
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping

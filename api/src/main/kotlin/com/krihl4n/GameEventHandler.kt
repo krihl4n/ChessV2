@@ -5,6 +5,7 @@ import com.krihl4n.api.dto.GameInfoDto
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
+import com.krihl4n.app.MessageSender
 import org.springframework.stereotype.Service
 
 @Service

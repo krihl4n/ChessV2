@@ -1,4 +1,4 @@
-package com.krihl4n
+package com.krihl4n.app
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
