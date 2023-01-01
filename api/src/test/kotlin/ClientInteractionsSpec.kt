@@ -1,22 +1,22 @@
 import com.krihl4n.*
 import com.krihl4n.api.dto.GameInfoDto
+import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.PlayerDto
 import io.kotest.core.spec.style.ShouldSpec
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
+import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 
 class ClientInteractionsSpec : ShouldSpec({
     val msgSender = mockk<MessageSender>(relaxed = true)
     var gamesRegister = GamesRegister()
-    var gameHandler = GameHandler(GameEventSender(msgSender, gamesRegister), gamesRegister)
+    var eventSender = GameEventSender(msgSender, gamesRegister)
+    var gameHandler = GameHandler(eventSender, gamesRegister)
 
     beforeTest {
         gamesRegister = GamesRegister()
-        gameHandler = GameHandler(GameEventSender(msgSender, gamesRegister), gamesRegister)
+        eventSender = GameEventSender(msgSender, gamesRegister)
+        gameHandler = GameHandler(eventSender, gamesRegister)
     }
 
     fun startGame(sessionId: String = "1111"): String {
@@ -52,5 +52,14 @@ class ClientInteractionsSpec : ShouldSpec({
 
         assertNotEquals("", gameId)
         assertEquals(gameId, gameInfoCaptor.captured.gameId)
+    }
+
+    should("discard session id if session closed") {
+        val gameId = startGame("999")
+        gameHandler.connectionClosed("999")
+
+        eventSender.gameFinished(gameId, GameResultDto("", ""))
+
+        verify(exactly = 0) { msgSender.sendGameFinishedMsg("999", any()) }
     }
 })

@@ -12,9 +12,7 @@ import java.util.*
 class GameHandler(
     private val gameEventSender: GameEventSender,
     private val gamesRegister: GamesRegister
-) {
-
-    //private val games: MutableMap<String, GameOfChess> = mutableMapOf()
+): ConnectionListener {
 
     fun handleGameCommand(sessionId: String, command: Command) {
         when (command) {
@@ -43,6 +41,13 @@ class GameHandler(
 
     fun getPossibleMoves(sessionId: String, field: String): PossibleMovesDto? {
         return gamesRegister.getGame(sessionId)?.getPossibleMoves(field);
+    }
+
+    override fun connectionEstablished(sessionId: String) {
+    }
+
+    override fun connectionClosed(sessionId: String) {
+        gamesRegister.deregisterSession(sessionId)
     }
 }
 

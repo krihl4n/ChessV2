@@ -14,20 +14,20 @@ class GameEventSender(
 ) : GameEventListener {
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
-        messageSender.sendPiecePositionUpdateMsg(getSessionId(gameId), update)
+        getSessionId(gameId)?.let { messageSender.sendPiecePositionUpdateMsg(it, update) }
     }
 
     override fun gameStateUpdate(gameId: String, update: GameStateUpdateDto) {
-        messageSender.sendGameStateUpdateMsg(getSessionId(gameId), update)
+        getSessionId(gameId)?.let { messageSender.sendGameStateUpdateMsg(it, update)}
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        messageSender.sendGameStartedMsg(getSessionId(gameId), gameInfo)
+        getSessionId(gameId)?.let { messageSender.sendGameStartedMsg(it, gameInfo)}
     }
 
     override fun gameFinished(gameId: String, result: GameResultDto) {
-        messageSender.sendGameFinishedMsg(getSessionId(gameId), result)
+        getSessionId(gameId)?.let { messageSender.sendGameFinishedMsg(it, result)}
     }
 
-    private fun getSessionId(gameId: String) = gamesRegister.getRelatedSessionIds(gameId).first() // TODO multiple
+    private fun getSessionId(gameId: String) = gamesRegister.getRelatedSessionIds(gameId).firstOrNull() // TODO multiple
 }
