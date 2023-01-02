@@ -12,13 +12,15 @@ import org.junit.jupiter.api.Assertions.assertNotEquals
 class ClientInteractionsSpec : ShouldSpec({
     val msgSender = mockk<MessageSender>(relaxed = true)
     var gamesRegister = GamesRegister()
-    var eventSender = GameEventHandler(msgSender, gamesRegister)
-    var gameHandler = GameHandler(eventSender, gamesRegister)
+    var joinGameHandler = JoinGameHandler()
+    var eventSender = GameEventHandler(msgSender, gamesRegister, joinGameHandler)
+    var gameHandler = GameHandler(eventSender, gamesRegister, joinGameHandler)
 
     beforeTest {
         gamesRegister = GamesRegister()
-        eventSender = GameEventHandler(msgSender, gamesRegister)
-        gameHandler = GameHandler(eventSender, gamesRegister)
+        joinGameHandler = JoinGameHandler()
+        eventSender = GameEventHandler(msgSender, gamesRegister, joinGameHandler)
+        gameHandler = GameHandler(eventSender, gamesRegister, joinGameHandler)
     }
 
     fun startGame(sessionId: String = "1111"): String {

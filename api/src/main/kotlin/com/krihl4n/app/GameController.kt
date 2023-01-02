@@ -2,6 +2,7 @@ package com.krihl4n.app
 
 import com.krihl4n.Command
 import com.krihl4n.GameHandler
+import com.krihl4n.requests.JoinAsPlayerTwoRequest
 import com.krihl4n.requests.Move
 import com.krihl4n.requests.StartGameRequest
 import org.springframework.messaging.MessageHeaders
@@ -39,6 +40,12 @@ class GameController(
     @Throws(Exception::class)
     fun startNewGame(@Payload startGameRequest: StartGameRequest, @Header("simpSessionId") sessionId: String) {
         gameHandler.requestNewGame(sessionId, startGameRequest)
+    }
+
+    @MessageMapping("/join-as-player-two")
+    @Throws(Exception::class)
+    fun joinAsPlayerTwo(@Payload req: JoinAsPlayerTwoRequest, @Header("simpSessionId") sessionId: String) {
+        gameHandler.joinAsPlayerTwo(sessionId, req)
     }
 
     @MessageMapping("/fields-occupation")

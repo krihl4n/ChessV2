@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 class GamesRegister {
 
     private val games: MutableList<GameOfChess> = mutableListOf() // todo when to remove games?
-    private val gamesSessionIds: MutableMap<String, List<String>> = mutableMapOf()
+    private val gamesSessionIds: MutableMap<String, MutableList<String>> = mutableMapOf()
 
     fun reqisterNewGame(gameOfChess: GameOfChess, sessionId: String) {
         games.add(gameOfChess)
@@ -33,7 +33,17 @@ class GamesRegister {
         gamesSessionIds.keys.forEach { gameId ->
             gamesSessionIds[gameId]
                 ?.filter { it != sessionId }
-                ?.let { gamesSessionIds[gameId] = it }
+                ?.let { gamesSessionIds[gameId] = it.toMutableList() }
         }
+    }
+
+    fun getGameById(gameId: String): GameOfChess {
+        return this.games.first { it.gameId == gameId }
+    }
+
+    fun registerSessionForGame(sessionId: String, gameId: String) {
+        val sessionIds = gamesSessionIds[gameId]
+        sessionIds?.add(sessionId)
+        sessionIds?.let { gamesSessionIds[gameId] = sessionIds }
     }
 }

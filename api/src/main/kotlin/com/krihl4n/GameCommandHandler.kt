@@ -6,6 +6,7 @@ import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.app.ConnectionListener
+import com.krihl4n.requests.JoinAsPlayerTwoRequest
 import com.krihl4n.requests.StartGameRequest
 import org.springframework.stereotype.Service
 import java.util.*
@@ -13,7 +14,8 @@ import java.util.*
 @Service
 class GameHandler(
     private val gameEventHandler: GameEventHandler,
-    private val gamesRegister: GamesRegister
+    private val gamesRegister: GamesRegister,
+    private val joinGameHandler: JoinGameHandler
 ): ConnectionListener {
 
     fun handleGameCommand(sessionId: String, command: Command) {
@@ -50,6 +52,12 @@ class GameHandler(
 
     override fun connectionClosed(sessionId: String) {
         gamesRegister.deregisterSession(sessionId)
+    }
+
+    fun joinAsPlayerTwo(sessionId: String, request: JoinAsPlayerTwoRequest) {
+        val gameId = joinGameHandler.requestToJoinGame(request.joinCode)
+        gamesRegister.registerSessionForGame(sessionId, gameId)
+        gamesRegister.getGameById(gameId).playerTwoReady(request.playerId)
     }
 }
 
