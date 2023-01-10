@@ -13,62 +13,50 @@ class ActualGamePlayersManagerSpec extends Specification {
 
     def "should register player with selected color"() {
         when:
-        playersFacade.registerPlayer("player1", Color.@WHITE)
+        playersFacade.registerPlayer(Color.@WHITE)
 
         then:
-        playersFacade.getPlayer("player1") == new Player("player1", Color.@WHITE)
+        playersFacade.getPlayerOne().color == Color.@WHITE
     }
 
     def "player gets random color if not specified explicitly"() {
         when:
-        playersFacade.registerPlayer("player1", null)
+        playersFacade.registerPlayer(null)
 
         then:
-        playersFacade.getPlayer("player1").getId() == "player1"
-        [Color.@BLACK, Color.@WHITE].contains(playersFacade.getPlayer("player1").getColor())
+        [Color.@BLACK, Color.@WHITE].contains(playersFacade.getPlayerOne().getColor())
     }
 
     def "can register second player"() {
         given:
-        playersFacade.registerPlayer("player1", null)
+        playersFacade.registerPlayer(null)
 
         when:
-        playersFacade.registerPlayer("player2", null)
+        playersFacade.registerPlayer(null)
 
         then:
-        playersFacade.getPlayer("player2").getId() == "player2"
+        playersFacade.getPlayerTwo() != null
     }
 
     def "second player color preferences don't matter"() {
         given:
-        playersFacade.registerPlayer("player1", Color.@BLACK)
+        playersFacade.registerPlayer(Color.@BLACK)
 
         when:
-        playersFacade.registerPlayer("player2", Color.@BLACK)
+        playersFacade.registerPlayer(Color.@BLACK)
 
         then:
-        playersFacade.getPlayer("player1") == new Player("player1", Color.@BLACK)
-        playersFacade.getPlayer("player2") == new Player("player2", Color.@WHITE)
-    }
-
-    def "players cannot have same ids"() {
-        given:
-        playersFacade.registerPlayer("player1", Color.@BLACK)
-
-        when:
-        playersFacade.registerPlayer("player1", Color.@BLACK)
-
-        then:
-        thrown(IllegalArgumentException)
+        playersFacade.getPlayerOne().color == Color.@BLACK
+        playersFacade.getPlayerTwo().color == Color.@WHITE
     }
 
     def "cannot register more than 2 players"() {
         given:
-        playersFacade.registerPlayer("player1", null)
-        playersFacade.registerPlayer("player2", null)
+        playersFacade.registerPlayer(null)
+        playersFacade.registerPlayer(null)
 
         when:
-        playersFacade.registerPlayer("player3", null)
+        playersFacade.registerPlayer(null)
 
         then:
         thrown(UnsupportedOperationException)
@@ -76,8 +64,8 @@ class ActualGamePlayersManagerSpec extends Specification {
 
     def "should return true if player registration is complete"() {
         when:
-        def isComplete1 = playersFacade.registerPlayer("player1", null)
-        def isComplete2 = playersFacade.registerPlayer("player2", null)
+        def isComplete1 = playersFacade.registerPlayer(null)
+        def isComplete2 = playersFacade.registerPlayer(null)
 
         then:
         !isComplete1

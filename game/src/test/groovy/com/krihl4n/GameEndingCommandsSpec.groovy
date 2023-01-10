@@ -15,10 +15,10 @@ class GameEndingCommandsSpec extends BaseGameSpec {
 
     def "game resigned by white player"() {
         given:
-        game.playerReady("player", "white")
+        game.playerReady("white")
 
         when:
-        game.resign("player")
+        game.resign(game.fetchPlayerOne().id)
 
         then:
         game.result == new GameResult(BLACK_PLAYER_WON, PLAYER_RESIGNED)
@@ -26,10 +26,10 @@ class GameEndingCommandsSpec extends BaseGameSpec {
 
     def "game resigned by black player"() {
         given:
-        game.playerReady("player", "black")
+        game.playerReady("black")
 
         when:
-        game.resign("player")
+        game.resign(game.fetchPlayerOne().id)
 
         then:
         game.result == new GameResult(WHITE_PLAYER_WON, PLAYER_RESIGNED)

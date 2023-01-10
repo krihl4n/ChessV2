@@ -9,7 +9,7 @@ class StalemateSpec extends BaseGameSpec {
     void setup() {
         gameCanBeFinished()
         game.initialize()
-        game.playerReady("player", null)
+        game.playerReady(null)
     }
 
     def "stalemate should result in a draw"() {

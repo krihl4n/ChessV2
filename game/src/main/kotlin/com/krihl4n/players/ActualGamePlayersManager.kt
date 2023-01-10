@@ -2,6 +2,7 @@ package com.krihl4n.players
 
 import com.krihl4n.model.Color
 import java.lang.UnsupportedOperationException
+import java.util.*
 import kotlin.random.Random
 
 class ActualGamePlayersManager : PlayersManager {
@@ -11,9 +12,10 @@ class ActualGamePlayersManager : PlayersManager {
     private var player1: Player? = null
     private var player2: Player? = null
 
-    override fun registerPlayer(id: String, colorPreference: Color?): Boolean {
+    override fun registerPlayer(colorPreference: Color?): Boolean {
+        val id = UUID.randomUUID().toString()
         if (player1 == null) {
-            registerPlayerOne(colorPreference, id)
+            registerPlayerOne(colorPreference, "player1") // todo UI change needed
             return false
         }
 

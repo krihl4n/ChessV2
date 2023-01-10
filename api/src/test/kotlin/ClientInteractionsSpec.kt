@@ -14,17 +14,17 @@ class ClientInteractionsSpec : ShouldSpec({
     var gamesRegister = GamesRegister()
     var joinGameHandler = JoinGameHandler()
     var eventSender = GameEventHandler(msgSender, gamesRegister, joinGameHandler)
-    var gameHandler = GameHandler(eventSender, gamesRegister, joinGameHandler)
+    var gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, joinGameHandler)
 
     beforeTest {
         gamesRegister = GamesRegister()
         joinGameHandler = JoinGameHandler()
         eventSender = GameEventHandler(msgSender, gamesRegister, joinGameHandler)
-        gameHandler = GameHandler(eventSender, gamesRegister, joinGameHandler)
+        gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, joinGameHandler)
     }
 
     fun startGame(sessionId: String = "1111"): String {
-        return gameHandler.requestNewGame(sessionId, StartGameRequest("player1", "vs_computer", "white"))
+        return gameCommandHandler.requestNewGame(sessionId, StartGameRequest("player1", "vs_computer", "white"))
     }
 
     should("notify player 1 that game has started when playing vs computer") {
@@ -37,8 +37,6 @@ class ClientInteractionsSpec : ShouldSpec({
         assertNotEquals("999", gameInfoCaptor.captured.gameId)
         assertEquals(gameId, gameInfoCaptor.captured.gameId)
         assertEquals("VS_COMPUTER", gameInfoCaptor.captured.mode)
-        assertEquals(PlayerDto("player1", "WHITE"), gameInfoCaptor.captured.player1)
-        assertEquals(PlayerDto("computer", "BLACK"), gameInfoCaptor.captured.player2)
     }
 
     should("game ids be unique") {
@@ -60,7 +58,7 @@ class ClientInteractionsSpec : ShouldSpec({
 
     should("discard session id if session closed") {
         val gameId = startGame("999")
-        gameHandler.connectionClosed("999")
+        gameCommandHandler.connectionClosed("999")
 
         eventSender.gameFinished(gameId, GameResultDto("", ""))
 

@@ -49,21 +49,20 @@ class GameOfChess(val gameId: String) {
         when (mode) {
             GameModeDto.TEST_MODE -> {
                 game.initialize(mode)
-                game.playerReady("player1", colorPreference)
+                game.playerReady(colorPreference)
             }
 
             GameModeDto.VS_COMPUTER -> { // todo maybe extract and make it a separate module
                 game.initialize(mode)
-                game.playerReady(playerId ?: "player1", colorPreference)
-                game.playerReady("computer")
-                val computerColor = game.fetchPlayer("computer")?.color
-                    ?: throw RuntimeException("cannot determine opponent color")
-                registerGameEventListener(ComputerOpponent(this, "computer", computerColor.toString()))
+                game.playerReady(colorPreference)
+                game.playerReady()
+                val computerPlayer = game.fetchPlayerTwo()
+                registerGameEventListener(ComputerOpponent(this, computerPlayer.id, computerPlayer.color.toString()))
             }
 
             GameModeDto.VS_FRIEND -> {
                 game.initialize(mode)
-                game.playerReady(playerId ?: "player1", colorPreference)
+                game.playerReady(colorPreference)
             }
         }
     }

@@ -1,7 +1,9 @@
 package com.krihl4n
 
+import org.springframework.stereotype.Service
 import java.util.*
 
+@Service
 class JoinGameHandler {
 
     private var joinCodes = mutableMapOf<String, String>()

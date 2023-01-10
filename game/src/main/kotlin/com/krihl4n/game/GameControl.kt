@@ -87,8 +87,8 @@ internal class GameControl(
         DebugLogger.printChessboard(positionTracker)
     }
 
-    override fun executePlayerReady(playerId: String, colorPreference: String?) =
-        this.playersManager.registerPlayer(playerId, colorPreference?.let { Color.of(it) })
+    override fun executePlayerReady(colorPreference: String?) =
+        this.playersManager.registerPlayer(colorPreference?.let { Color.of(it) })
 
     override fun fetchPlayer(playerId: String): Player? =
         this.playersManager.getPlayer(playerId)

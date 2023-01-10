@@ -55,8 +55,8 @@ internal class Game(
     @JvmOverloads
     fun initialize(gameMode: GameModeDto = GameModeDto.TEST_MODE) = gameState.initializeGame(this, gameControl, gameMode)
 
-    fun playerReady(playerId: String, colorPreference: String? = null) =
-        gameState.playerReady(this, gameControl, playerId, colorPreference)
+    fun playerReady(colorPreference: String? = null) =
+        gameState.playerReady(this, gameControl, colorPreference)
 
     fun fetchPlayer(playerId: String) = gameControl.fetchPlayer(playerId)
 

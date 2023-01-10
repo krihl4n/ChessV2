@@ -4,7 +4,7 @@ class PawnQueenConversionSpec extends BaseGameSpec {
 
     void setup() {
         game.initialize()
-        game.playerReady("player", null)
+        game.playerReady(null)
     }
 
     def "when pawn reaches the end it converts to a queen"() {

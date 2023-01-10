@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class GameHandler(
+class GameCommandHandler(
     private val gameEventHandler: GameEventHandler,
     private val gamesRegister: GamesRegister,
     private val joinGameHandler: JoinGameHandler

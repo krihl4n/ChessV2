@@ -1,7 +1,7 @@
 package com.krihl4n.app
 
 import com.krihl4n.Command
-import com.krihl4n.GameHandler
+import com.krihl4n.GameCommandHandler
 import com.krihl4n.requests.JoinAsPlayerTwoRequest
 import com.krihl4n.requests.Move
 import com.krihl4n.requests.StartGameRequest
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class GameController(
-    private val gameHandler: GameHandler,
+    private val gameCommandHandler: GameCommandHandler,
     private val simpMessagingTemplate: SimpMessagingTemplate,
 ) {
 
@@ -27,31 +27,31 @@ class GameController(
     @Throws(Exception::class)
     fun move(@Payload move: Move, @Header("simpSessionId") sessionId: String) {
         println(move)
-        gameHandler.move(sessionId, move.playerId, move.from, move.to)
+        gameCommandHandler.move(sessionId, move.playerId, move.from, move.to)
     }
 
     @MessageMapping("/game-controls")
     @Throws(Exception::class)
     fun gameControls(@Payload command: String, @Header("simpSessionId") sessionId: String) {
-        gameHandler.handleGameCommand(sessionId, Command.valueOf(command.uppercase()))
+        gameCommandHandler.handleGameCommand(sessionId, Command.valueOf(command.uppercase()))
     }
 
     @MessageMapping("/start-new-game") // request-new-game
     @Throws(Exception::class)
     fun startNewGame(@Payload startGameRequest: StartGameRequest, @Header("simpSessionId") sessionId: String) {
-        gameHandler.requestNewGame(sessionId, startGameRequest)
+        gameCommandHandler.requestNewGame(sessionId, startGameRequest)
     }
 
     @MessageMapping("/join-as-player-two")
     @Throws(Exception::class)
     fun joinAsPlayerTwo(@Payload req: JoinAsPlayerTwoRequest, @Header("simpSessionId") sessionId: String) {
-        gameHandler.joinAsPlayerTwo(sessionId, req)
+        gameCommandHandler.joinAsPlayerTwo(sessionId, req)
     }
 
     @MessageMapping("/fields-occupation")
     @Throws(Exception::class)
     fun fieldsOccupation(@Payload command: String, @Header("simpSessionId") sessionId: String) {
-        gameHandler.getPositions(sessionId)?.let {
+        gameCommandHandler.getPositions(sessionId)?.let {
             simpMessagingTemplate.convertAndSendToUser(
                 sessionId,
                 "/user/queue/fields-occupation",
@@ -64,7 +64,7 @@ class GameController(
     @MessageMapping("/possible-moves")
     @Throws(Exception::class)
     fun possibleMoves(@Payload field: String, @Header("simpSessionId") sessionId: String) {
-        gameHandler.getPossibleMoves(sessionId, field)?.let {
+        gameCommandHandler.getPossibleMoves(sessionId, field)?.let {
             simpMessagingTemplate.convertAndSendToUser(
                 sessionId,
                 "/user/queue/possible-moves",

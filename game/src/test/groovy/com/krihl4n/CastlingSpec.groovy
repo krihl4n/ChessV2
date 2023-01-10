@@ -4,7 +4,7 @@ class CastlingSpec extends BaseGameSpec {
 
     void setup() {
         game.initialize()
-        game.playerReady("player", null)
+        game.playerReady(null)
     }
 
     def "basic castling #type"() {

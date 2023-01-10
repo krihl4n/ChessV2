@@ -8,7 +8,7 @@ class CheckSpec extends BaseGameSpec {
 
     void setup() {
         game.initialize()
-        game.playerReady("player", null)
+        game.playerReady(null)
     }
 
     def "king should escape from check"() {

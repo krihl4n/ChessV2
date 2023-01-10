@@ -6,8 +6,8 @@ class ActualGameModeSpec extends BaseGameSpec {
 
     void setup() {
         game.initialize(GameModeDto.VS_FRIEND)
-        game.playerReady("player1", "WHITE")
-        game.playerReady("player2", "BLACK")
+        game.playerReady("WHITE")
+        game.playerReady("BLACK")
     }
 
     def "black pieces cannot start the game"() {
@@ -15,7 +15,7 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         when:
-        performMove("player2", "d7 d6")
+        performMove(game.fetchPlayerOne().id, "d7 d6")
 
         then:
         assertPositions("wp_d2 bp_d7")
@@ -26,10 +26,10 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         and:
-        performMove("player1", "d2 d3")
+        performMove(game.fetchPlayerOne().id, "d2 d3")
 
         when:
-        performMove("player2", "d7 d6")
+        performMove(game.fetchPlayerTwo().id, "d7 d6")
 
         then:
         assertPositions("wp_d3 bp_d6")
@@ -40,10 +40,10 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         and:
-        performMove("player1", "d2 d3")
+        performMove(game.fetchPlayerOne().id, "d2 d3")
 
         when:
-        performMove("player1", "d3 d4")
+        performMove(game.fetchPlayerOne().id, "d3 d4")
 
         then:
         assertPositions("wp_d3 bp_d7")
@@ -54,12 +54,12 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         and:
-        performMove("player1", "d2 d3")
-        performMove("player2", "d7 d6")
+        performMove(game.fetchPlayerOne().id, "d2 d3")
+        performMove(game.fetchPlayerTwo().id, "d7 d6")
 
         when:
         game.undoMove()
-        performMove("player2", "d7 d5")
+        performMove(game.fetchPlayerTwo().id, "d7 d5")
 
         then:
         assertPositions("wp_d3 bp_d5")
@@ -70,11 +70,11 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_d2 bp_d7")
 
         and:
-        performMove("player1", "d2 d3")
+        performMove(game.fetchPlayerOne().id, "d2 d3")
         game.undoMove()
 
         when:
-        performMove("player1", "d2 d3")
+        performMove(game.fetchPlayerOne().id, "d2 d3")
 
         then:
         assertPositions("wp_d3 bp_d7")
@@ -85,11 +85,11 @@ class ActualGameModeSpec extends BaseGameSpec {
         setupPieces("wp_a2 bp_a7")
 
         and:
-        performMove("player1","a2 a3")
-        performMove("player2","a7 a6")
+        performMove(game.fetchPlayerOne().id,"a2 a3")
+        performMove(game.fetchPlayerTwo().id,"a7 a6")
 
         when:
-        performMove("player1", "a6 a5")
+        performMove(game.fetchPlayerOne().id, "a6 a5")
 
         then:
         assertPositions("wp_a3 bp_a6")
