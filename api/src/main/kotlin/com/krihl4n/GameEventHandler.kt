@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service
 class GameEventHandler(
     private val messageSender: MessageSender,
     private val gamesRegister: GamesRegister,
-    private val joinGameHandler: JoinGameHandler,
 ) : GameEventListener {
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
@@ -26,14 +25,13 @@ class GameEventHandler(
             getSessionIds(gameId).forEach {
                 messageSender.sendWaitingForOtherPlayerMsg(
                     it,
-                    joinGameHandler.generateJoinCode(gameId)
+                    gameId
                 )
             }
         }
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        this.joinGameHandler.notifyGameStarted(gameId)
         getSessionIds(gameId).forEach {
             messageSender.sendGameStartedMsg(
                 it,

@@ -11,15 +11,13 @@ import org.junit.jupiter.api.Assertions.assertNotEquals
 class ClientInteractionsSpec : ShouldSpec({
     val msgSender = mockk<MessageSender>(relaxed = true)
     var gamesRegister = GamesRegister()
-    var joinGameHandler = JoinGameHandler()
-    var eventSender = GameEventHandler(msgSender, gamesRegister, joinGameHandler)
-    var gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, joinGameHandler)
+    var eventSender = GameEventHandler(msgSender, gamesRegister)
+    var gameCommandHandler = GameCommandHandler(eventSender, gamesRegister)
 
     beforeTest {
         gamesRegister = GamesRegister()
-        joinGameHandler = JoinGameHandler()
-        eventSender = GameEventHandler(msgSender, gamesRegister, joinGameHandler)
-        gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, joinGameHandler)
+        eventSender = GameEventHandler(msgSender, gamesRegister)
+        gameCommandHandler = GameCommandHandler(eventSender, gamesRegister)
     }
 
     fun startGame(sessionId: String = "1111"): String {
@@ -63,5 +61,20 @@ class ClientInteractionsSpec : ShouldSpec({
         eventSender.gameFinished(gameId, GameResultDto("", ""))
 
         verify(exactly = 0) { msgSender.sendGameFinishedMsg("999", any()) }
+    }
+
+    should("send waiting for player event with game id") {
+        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
+
+        verify { msgSender.sendWaitingForOtherPlayerMsg("1111", gameId) }
+    }
+
+    should("send game started event when second player joins") {
+        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
+
+        gameCommandHandler.joinGame("2222", gameId)
+
+        verify { msgSender.sendGameStartedMsg("1111", any()) }
+        verify { msgSender.sendGameStartedMsg("2222", any()) }
     }
 })

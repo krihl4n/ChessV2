@@ -14,7 +14,6 @@ import java.util.*
 class GameCommandHandler(
     private val gameEventHandler: GameEventHandler,
     private val gamesRegister: GamesRegister,
-    private val joinGameHandler: JoinGameHandler
 ): ConnectionListener {
 
     fun handleGameCommand(sessionId: String, command: Command) {
@@ -46,18 +45,17 @@ class GameCommandHandler(
         return gamesRegister.getGame(sessionId)?.getPossibleMoves(field);
     }
 
+    fun joinGame(sessionId: String, gameId: String) {
+        gamesRegister.registerSessionForGame(sessionId, gameId)
+        gamesRegister.getGameById(gameId).playerTwoReady()
+    }
+
     override fun connectionEstablished(sessionId: String) {
     }
 
     override fun connectionClosed(sessionId: String) {
         gamesRegister.deregisterSession(sessionId)
     }
-
-//    fun joinAsPlayerTwo(sessionId: String, request: JoinAsPlayerTwoRequest) {
-//        val gameId = joinGameHandler.requestToJoinGame(request.joinCode)
-//        gamesRegister.registerSessionForGame(sessionId, gameId)
-//        gamesRegister.getGameById(gameId).playerTwoReady()
-//    }
 }
 
 enum class Command {
