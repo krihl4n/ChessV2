@@ -4,6 +4,7 @@ import com.krihl4n.api.dto.GameInfoDto
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
+import com.krihl4n.events.GameInfoEvent
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessageType
@@ -23,7 +24,7 @@ class MessageSender(
         sendMsg(sessionId, "/user/queue/game-state-updates", update)
     }
 
-    fun sendGameStartedMsg(sessionId: String, gameInfo: GameInfoDto) {
+    fun sendGameStartedMsg(sessionId: String, gameInfo: GameInfoEvent) {
         sendMsg(sessionId, "/user/queue/game-started", gameInfo)
     }
 

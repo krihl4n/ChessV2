@@ -6,6 +6,7 @@ import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.app.MessageSender
+import com.krihl4n.events.GameInfoEvent
 import org.springframework.stereotype.Service
 
 @Service
@@ -33,7 +34,17 @@ class GameEventHandler(
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
         this.joinGameHandler.notifyGameStarted(gameId)
-        getSessionIds(gameId).forEach { messageSender.sendGameStartedMsg(it, gameInfo) }
+        getSessionIds(gameId).forEach {
+            messageSender.sendGameStartedMsg(
+                it,
+                GameInfoEvent(
+                    gameInfo.gameId,
+                    gameInfo.mode,
+                    gameInfo.player1,
+                    gameInfo.piecePositions
+                )
+            )
+        }
     }
 
     override fun gameFinished(gameId: String, result: GameResultDto) {

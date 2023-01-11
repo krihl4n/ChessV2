@@ -15,7 +15,7 @@ class ActualGamePlayersManager : PlayersManager {
     override fun registerPlayer(colorPreference: Color?): Boolean {
         val id = UUID.randomUUID().toString()
         if (player1 == null) {
-            registerPlayerOne(colorPreference, "player1") // todo UI change needed
+            registerPlayerOne(colorPreference, id)
             return false
         }
 
