@@ -1,6 +1,5 @@
 import com.krihl4n.*
 import com.krihl4n.app.MessageSender
-import com.krihl4n.requests.JoinAsPlayerTwoRequest
 import com.krihl4n.requests.StartGameRequest
 import io.kotest.core.spec.style.ShouldSpec
 import io.mockk.*
@@ -28,16 +27,16 @@ class JoinPlayerTwoSpec : ShouldSpec({
         verify { msgSender.sendWaitingForOtherPlayerMsg("1111", tokenCapture.captured) }
     }
 
-    should("send start game event when second player joins") {
-        val tokenCapture = slot<String>()
-        every { msgSender.sendWaitingForOtherPlayerMsg(any(), capture(tokenCapture)) } returns Unit
-        gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
-
-        gameCommandHandler.joinAsPlayerTwo("2222", JoinAsPlayerTwoRequest("player2", tokenCapture.captured))
-
-        verify { msgSender.sendGameStartedMsg("1111", any()) }
-        verify { msgSender.sendGameStartedMsg("2222", any()) }
-    }
+//    should("send start game event when second player joins") {
+//        val tokenCapture = slot<String>()
+//        every { msgSender.sendWaitingForOtherPlayerMsg(any(), capture(tokenCapture)) } returns Unit
+//        gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
+//
+//        gameCommandHandler.joinAsPlayerTwo("2222", JoinAsPlayerTwoRequest("player2", tokenCapture.captured))
+//
+//        verify { msgSender.sendGameStartedMsg("1111", any()) }
+//        verify { msgSender.sendGameStartedMsg("2222", any()) }
+//    }
 
 //    should("reject join attempt if join code incorrect") {
 //        val joinCodeCaptor = slot<String>()

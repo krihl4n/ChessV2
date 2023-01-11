@@ -67,8 +67,8 @@ class GameOfChess(val gameId: String) {
         }
     }
 
-    fun playerTwoReady(playerId: String) {
-        game.playerReady(playerId)
+    fun playerTwoReady() {
+        game.playerReady()
     }
 
     fun resign(playerId: String) {

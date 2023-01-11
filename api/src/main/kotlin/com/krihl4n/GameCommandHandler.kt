@@ -6,7 +6,6 @@ import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.app.ConnectionListener
-import com.krihl4n.requests.JoinAsPlayerTwoRequest
 import com.krihl4n.requests.StartGameRequest
 import org.springframework.stereotype.Service
 import java.util.*
@@ -54,11 +53,11 @@ class GameCommandHandler(
         gamesRegister.deregisterSession(sessionId)
     }
 
-    fun joinAsPlayerTwo(sessionId: String, request: JoinAsPlayerTwoRequest) {
-        val gameId = joinGameHandler.requestToJoinGame(request.joinCode)
-        gamesRegister.registerSessionForGame(sessionId, gameId)
-        gamesRegister.getGameById(gameId).playerTwoReady(request.playerId)
-    }
+//    fun joinAsPlayerTwo(sessionId: String, request: JoinAsPlayerTwoRequest) {
+//        val gameId = joinGameHandler.requestToJoinGame(request.joinCode)
+//        gamesRegister.registerSessionForGame(sessionId, gameId)
+//        gamesRegister.getGameById(gameId).playerTwoReady()
+//    }
 }
 
 enum class Command {

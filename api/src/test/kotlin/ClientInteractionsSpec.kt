@@ -1,10 +1,7 @@
 import com.krihl4n.*
-import com.krihl4n.api.dto.GameInfoDto
 import com.krihl4n.api.dto.GameResultDto
-import com.krihl4n.api.dto.PlayerDto
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
-import com.krihl4n.requests.JoinAsPlayerTwoRequest
 import com.krihl4n.requests.StartGameRequest
 import io.kotest.core.spec.style.ShouldSpec
 import io.mockk.*

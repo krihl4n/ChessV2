@@ -2,7 +2,6 @@ package com.krihl4n
 
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
-import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.MoveDto
@@ -16,7 +15,6 @@ import com.krihl4n.api.pieceSetups.EnPassantSetup
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.api.pieceSetups.QueenConversionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
-import com.krihl4n.model.GameStateUpdate
 import spock.lang.Specification
 
 import static com.krihl4n.api.dto.GameModeDto.*
@@ -260,7 +258,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.requestNewGame(VS_FRIEND, null)
 
         when:
-        gameOfChess.playerTwoReady("player2")
+        gameOfChess.playerTwoReady()
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("IN_PROGRESS"))
