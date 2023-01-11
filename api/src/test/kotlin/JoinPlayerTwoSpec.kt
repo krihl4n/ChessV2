@@ -23,7 +23,7 @@ class JoinPlayerTwoSpec : ShouldSpec({
         val tokenCapture = slot<String>()
         every { msgSender.sendWaitingForOtherPlayerMsg(any(), capture(tokenCapture)) } returns Unit
 
-        gameCommandHandler.requestNewGame("1111", StartGameRequest("player1", "vs_friend", "white"))
+        gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
 
         verify { msgSender.sendWaitingForOtherPlayerMsg("1111", tokenCapture.captured) }
     }
@@ -31,7 +31,7 @@ class JoinPlayerTwoSpec : ShouldSpec({
     should("send start game event when second player joins") {
         val tokenCapture = slot<String>()
         every { msgSender.sendWaitingForOtherPlayerMsg(any(), capture(tokenCapture)) } returns Unit
-        gameCommandHandler.requestNewGame("1111", StartGameRequest("player1", "vs_friend", "white"))
+        gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
 
         gameCommandHandler.joinAsPlayerTwo("2222", JoinAsPlayerTwoRequest("player2", tokenCapture.captured))
 

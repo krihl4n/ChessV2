@@ -26,14 +26,14 @@ class ClientInteractionsSpec : ShouldSpec({
     }
 
     fun startGame(sessionId: String = "1111"): String {
-        return gameCommandHandler.requestNewGame(sessionId, StartGameRequest("player1", "vs_computer", "white"))
+        return gameCommandHandler.requestNewGame(sessionId, StartGameRequest("vs_computer", "white"))
     }
 
     should("notify player 1 that game has started when playing vs computer") {
         val gameInfoCaptor = slot<GameInfoEvent>()
         every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
 
-        val gameId = gameCommandHandler.requestNewGame("999", StartGameRequest("player1", "vs_computer", "white"))
+        val gameId = gameCommandHandler.requestNewGame("999", StartGameRequest("vs_computer", "white"))
 
         verify { msgSender.sendGameStartedMsg("999", any()) }
         assertNotEquals("999", gameInfoCaptor.captured.gameId)

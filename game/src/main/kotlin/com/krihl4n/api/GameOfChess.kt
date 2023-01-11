@@ -44,7 +44,7 @@ class GameOfChess(val gameId: String) {
         game.setupChessboard(pieceSetup)
     }
 
-    fun requestNewGame(playerId: String?, mode: GameModeDto, colorPreference: String? = null) {
+    fun requestNewGame(mode: GameModeDto, colorPreference: String? = null) {
         println("Request new game: $mode")
         when (mode) {
             GameModeDto.TEST_MODE -> {

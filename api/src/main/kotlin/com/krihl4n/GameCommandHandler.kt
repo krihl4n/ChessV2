@@ -31,7 +31,7 @@ class GameCommandHandler(
         gamesRegister.reqisterNewGame(newGame, sessionId)
         gamesRegister.getGame(sessionId)?.setupChessboard()
         gamesRegister.getGame(sessionId)?.registerGameEventListener(gameEventHandler)
-        gamesRegister.getGame(sessionId)?.requestNewGame(request.playerId, fromCommand(request.mode), request.colorPreference)
+        gamesRegister.getGame(sessionId)?.requestNewGame(fromCommand(request.mode), request.colorPreference)
         return newGame.gameId
     }
 
