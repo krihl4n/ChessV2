@@ -70,11 +70,16 @@ class ClientInteractionsSpec : ShouldSpec({
     }
 
     should("send game started event when second player joins") {
+        val gameInfoPlayer1Captor = slot<GameInfoEvent>()
+        every { msgSender.sendGameStartedMsg("1111", capture(gameInfoPlayer1Captor)) } returns Unit
+        val gameInfoPlayer2Captor = slot<GameInfoEvent>()
+        every { msgSender.sendGameStartedMsg("2222", capture(gameInfoPlayer2Captor)) } returns Unit
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
 
         gameCommandHandler.joinGame("2222", gameId)
 
-        verify { msgSender.sendGameStartedMsg("1111", any()) }
-        verify { msgSender.sendGameStartedMsg("2222", any()) }
+        assertNotEquals(gameInfoPlayer1Captor.captured.player.id, gameInfoPlayer2Captor.captured.player.id)
+        assertEquals("WHITE", gameInfoPlayer1Captor.captured.player.color)
+        assertEquals("BLACK", gameInfoPlayer2Captor.captured.player.color)
     }
 })

@@ -25,9 +25,9 @@ class GameCommandHandler(
     }
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
-        val newGame = GameOfChess(UUID.randomUUID().toString())
+        val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.reqisterNewGame(newGame, sessionId)
-        gamesRegister.getGame(sessionId)?.setupChessboard()
+        gamesRegister.getGame(sessionId)?.setupChessboard() // TODO just use newGame object?
         gamesRegister.getGame(sessionId)?.registerGameEventListener(gameEventHandler)
         gamesRegister.getGame(sessionId)?.requestNewGame(fromCommand(request.mode), request.colorPreference)
         return newGame.gameId
@@ -42,11 +42,11 @@ class GameCommandHandler(
     }
 
     fun getPossibleMoves(sessionId: String, field: String): PossibleMovesDto? {
-        return gamesRegister.getGame(sessionId)?.getPossibleMoves(field);
+        return gamesRegister.getGame(sessionId)?.getPossibleMoves(field)
     }
 
     fun joinGame(sessionId: String, gameId: String) {
-        gamesRegister.registerSessionForGame(sessionId, gameId)
+        gamesRegister.joinGame(sessionId, gameId)
         gamesRegister.getGameById(gameId).playerTwoReady()
     }
 

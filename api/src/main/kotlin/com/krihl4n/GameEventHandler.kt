@@ -32,13 +32,13 @@ class GameEventHandler(
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        getSessionIds(gameId).forEach {
+        gamesRegister.getRelatedPlayerSessionIds(gameId).forEach {
             messageSender.sendGameStartedMsg(
-                it,
+                it.sessionId,
                 GameInfoEvent(
                     gameInfo.gameId,
                     gameInfo.mode,
-                    gameInfo.player1,
+                    if (it.isPlayerOne) gameInfo.player1 else gameInfo.player2,
                     gameInfo.piecePositions
                 )
             )

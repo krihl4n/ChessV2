@@ -40,9 +40,7 @@ class GameOfChess(val gameId: String) {
         commandCoordinator.registerObserver(this.gameResultEvaluator)
     }
 
-    fun setupChessboard(pieceSetup: PieceSetup? = null) {
-        game.setupChessboard(pieceSetup)
-    }
+    fun setupChessboard(pieceSetup: PieceSetup? = null) = game.setupChessboard(pieceSetup)
 
     fun requestNewGame(mode: GameModeDto, colorPreference: String? = null) {
         println("Request new game: $mode")
@@ -67,29 +65,20 @@ class GameOfChess(val gameId: String) {
         }
     }
 
-    fun playerTwoReady() {
-        game.playerReady()
-    }
+    fun playerTwoReady() = game.playerReady()
 
-    fun resign(playerId: String) {
-        game.resign(playerId)
-    }
+    fun getPlayerOne()  = this.game.fetchPlayerOne()
 
-    fun move(playerId: String, from: String, to: String) {
-        game.performMove(playerId, from, to)
-    }
+    fun getPlayerTwo() = this.game.fetchPlayerTwo()
+    fun resign(playerId: String) = game.resign(playerId)
 
-    fun undoMove() {
-        game.undoMove()
-    }
+    fun move(playerId: String, from: String, to: String) = game.performMove(playerId, from, to)
 
-    fun redoMove() {
-        game.redoMove()
-    }
+    fun undoMove() = game.undoMove()
 
-    fun getFieldOccupationInfo(): List<FieldOccupationDto> {
-        return game.getFieldOccupationInfo()
-    }
+    fun redoMove() = game.redoMove()
+
+    fun getFieldOccupationInfo() = game.getFieldOccupationInfo()
 
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
@@ -133,7 +122,5 @@ class GameOfChess(val gameId: String) {
         })
     }
 
-    fun getPossibleMoves(field: String): PossibleMovesDto {
-        return game.getPossibleMoves(field)
-    }
+    fun getPossibleMoves(field: String) = game.getPossibleMoves(field)
 }
