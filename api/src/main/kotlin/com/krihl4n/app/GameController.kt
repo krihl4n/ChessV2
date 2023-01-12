@@ -41,6 +41,12 @@ class GameController(
         gameCommandHandler.requestNewGame(sessionId, startGameRequest)
     }
 
+    @MessageMapping("/join-game")
+    @Throws(Exception::class)
+    fun joinGame(@Payload gameId: String, @Header("simpSessionId") sessionId: String) {
+        gameCommandHandler.joinGame(sessionId, gameId)
+    }
+
     @MessageMapping("/fields-occupation")
     @Throws(Exception::class)
     fun fieldsOccupation(@Payload command: String, @Header("simpSessionId") sessionId: String) {

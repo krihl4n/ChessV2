@@ -1,6 +1,5 @@
 package com.krihl4n.app
 
-import com.krihl4n.api.dto.GameInfoDto
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
@@ -32,8 +31,8 @@ class MessageSender(
         sendMsg(sessionId, "/user/queue/game-result", result)
     }
 
-    fun sendWaitingForOtherPlayerMsg(sessionId: String, joinToken:String) {
-        sendMsg(sessionId, "user/queue/waiting-for-other-player", joinToken)
+    fun sendWaitingForOtherPlayerMsg(sessionId: String, gameId:String) {
+        sendMsg(sessionId, "user/queue/waiting-for-other-player", gameId)
     }
 
     private fun sendMsg(sessionId: String, destination: String, result: Any) {
