@@ -9,7 +9,7 @@ class CheckMateSpec extends BaseGameSpec {
     void setup() {
         gameCanBeFinished()
         game.initialize()
-        game.playerReady(null)
+        game.playerReady("player", null)
     }
 
     def "game should be finished if check mate"() {

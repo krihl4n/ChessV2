@@ -18,6 +18,7 @@ import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import java.util.UUID
 
 class GameOfChess(val gameId: String) {
 
@@ -46,11 +47,11 @@ class GameOfChess(val gameId: String) {
         game.initialize(mode)
     }
 
-    fun playerReady(colorPreference: String?) {
-        game.playerReady(colorPreference)
+    fun playerReady(playerId: String, colorPreference: String?) {
+        game.playerReady(playerId, colorPreference)
         game.getMode()?.let {
             if (it == GameModeDto.VS_COMPUTER) {
-                game.playerReady()
+                game.playerReady(UUID.randomUUID().toString())
                 val computerPlayer = game.fetchPlayerTwo()
                 registerGameEventListener(ComputerOpponent(this, computerPlayer.id, computerPlayer.color.toString()))
             }

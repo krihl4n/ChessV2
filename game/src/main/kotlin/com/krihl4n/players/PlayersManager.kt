@@ -4,7 +4,7 @@ import com.krihl4n.model.Color
 
 interface PlayersManager {
 
-    fun registerPlayer(colorPreference: Color?): Boolean
+    fun registerPlayer(playerId: String, colorPreference: Color?): Boolean
     fun getPlayer(id: String): Player?
     fun getPlayerOne(): Player
     fun getPlayerTwo(): Player

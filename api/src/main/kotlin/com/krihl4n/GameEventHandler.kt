@@ -32,19 +32,42 @@ class GameEventHandler(
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        gamesRegister.getRelatedPlayerSessionIds(gameId).forEach {
+        gamesRegister.getRelatedPlayerSessionIds(gameInfo.player1.id).forEach {
             messageSender.sendGameStartedMsg(
-                it.sessionId,
+                it,
                 GameInfoEvent(
                     gameInfo.gameId,
                     gameInfo.mode,
-                    if (it.isPlayerOne) gameInfo.player1 else gameInfo.player2,
+                    gameInfo.player1,
                     gameInfo.piecePositions
                 )
             )
         }
-    }
+        gamesRegister.getRelatedPlayerSessionIds(gameInfo.player2.id).forEach {
+            messageSender.sendGameStartedMsg(
+                it,
+                GameInfoEvent(
+                    gameInfo.gameId,
+                    gameInfo.mode,
+                    gameInfo.player2,
+                    gameInfo.piecePositions
+                )
+            )
 
+
+//        gamesRegister.getRelatedPlayerSessionIds(gameId).forEach {
+//            messageSender.sendGameStartedMsg(
+//                it.sessionId,
+//                GameInfoEvent(
+//                    gameInfo.gameId,
+//                    gameInfo.mode,
+//                    if (it.isPlayerOne) gameInfo.player1 else gameInfo.player2,
+//                    gameInfo.piecePositions
+//                )
+//            )
+//        }
+        }
+    }
     override fun gameFinished(gameId: String, result: GameResultDto) {
         getSessionIds(gameId).forEach { messageSender.sendGameFinishedMsg(it, result) }
     }

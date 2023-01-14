@@ -17,6 +17,7 @@ enum class GameState : State {
         override fun playerReady(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
+            playerId: String,
             colorPreference: String?
         ) {
             throw IllegalStateException("Game not started yet")
@@ -56,9 +57,10 @@ enum class GameState : State {
         override fun playerReady(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
+            playerId: String,
             colorPreference: String?
         ) {
-            val allPlayersRegistered = gameCommand.executePlayerReady(colorPreference)
+            val allPlayersRegistered = gameCommand.executePlayerReady(playerId, colorPreference)
             if (allPlayersRegistered) {
                 stateHolder.setState(IN_PROGRESS, gameCommand.fetchGameMode())
             }
@@ -99,6 +101,7 @@ enum class GameState : State {
         override fun playerReady(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
+            playerId: String,
             colorPreference: String?
         ) {
             throw IllegalStateException("Cannot register if game in progress")
@@ -139,6 +142,7 @@ enum class GameState : State {
         override fun playerReady(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
+            playerId: String,
             colorPreference: String?
         ) {
             throw IllegalStateException("Cannot register if the game is finished")
@@ -172,7 +176,7 @@ interface State {
 
     fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto)
     fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String)
-    fun playerReady(stateHolder: StateHolder, gameCommand: GameCommand, colorPreference: String?)
+    fun playerReady(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, colorPreference: String?)
     fun move(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, from: String, to: String)
     fun undo(stateHolder: StateHolder, gameCommand: GameCommand)
     fun redo(stateHolder: StateHolder, gameCommand: GameCommand)

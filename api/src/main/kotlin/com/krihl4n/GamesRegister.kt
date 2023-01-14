@@ -7,19 +7,20 @@ import org.springframework.stereotype.Service
 class GamesRegister {
 
     private val games: MutableList<GameOfChess> = mutableListOf() // todo when to remove games?
-    private val gamesSessionIds: MutableMap<String, MutableList<PlayerSessions>> = mutableMapOf()
+    private val gamesSessionIds: MutableMap<String, MutableList<String>> = mutableMapOf()
+    private val playerSessionIds: MutableMap<String, MutableList<String>> = mutableMapOf()
 
     fun reqisterNewGame(gameOfChess: GameOfChess, sessionId: String) {
         games.add(gameOfChess)
-        gamesSessionIds[gameOfChess.gameId] = mutableListOf(PlayerSessions(true, sessionId))
+        gamesSessionIds[gameOfChess.gameId] = mutableListOf(sessionId)
     }
 
     fun getRelatedSessionIds(gameId: String): List<String> {
-        return gamesSessionIds[gameId]?.map { it.sessionId } ?: emptyList()
+        return gamesSessionIds[gameId].orEmpty()
     }
 
-    fun getRelatedPlayerSessionIds(gameId: String): List<PlayerSessions> {
-        return gamesSessionIds[gameId] ?: emptyList()
+    fun getRelatedPlayerSessionIds(playerId: String): List<String> {
+        return playerSessionIds[playerId].orEmpty()
     }
 
     // TODO if many games per session, each request must have game id
@@ -27,7 +28,7 @@ class GamesRegister {
     // can there be many?
     fun getGame(sessionId: String): GameOfChess? {
         val gameId: String = gamesSessionIds
-            .filter { playerSessions -> playerSessions.value.map { it.sessionId }.contains(sessionId) }
+            .filter { gamesSessionIds -> gamesSessionIds.value.contains(sessionId) }
             .map { it.key }
             .first()
         return this.games.find { it.gameId == gameId }
@@ -35,9 +36,10 @@ class GamesRegister {
 
     fun deregisterSession(sessionId: String) {
         gamesSessionIds.keys.forEach { gameId ->
-            gamesSessionIds[gameId]
-                ?.filter { it.sessionId != sessionId }
-                ?.let { gamesSessionIds[gameId] = it.toMutableList() }
+            gamesSessionIds[gameId]?.remove(sessionId)
+        }
+        playerSessionIds.keys.forEach { playerId ->
+            playerSessionIds[playerId]?.remove(sessionId)
         }
     }
 
@@ -45,18 +47,21 @@ class GamesRegister {
         return this.games.first { it.gameId == gameId }
     }
 
-    fun registerPlayer(sessionId: String, gameId: String, playerId: String) {
-        //gamesSessionIds[gameId]?.remove(PlayerSessions(null, sessionId))
-    }
-
     fun joinGame(sessionId: String, gameId: String) {
         val sessionIds = gamesSessionIds[gameId]
-        if (sessionIds?.find { it.sessionId == sessionId } != null) {
+        if (sessionIds?.find { it == sessionId } != null) {
             return
         }
-        sessionIds?.add(PlayerSessions(false, sessionId)) // TODO something better with player management here
+        sessionIds?.add(sessionId)
         sessionIds?.let { gamesSessionIds[gameId] = sessionIds }
     }
 
-    data class PlayerSessions(val isPlayerOne: Boolean, val sessionId: String)
+    fun joinPlayer(sessionId: String, playerId: String) {
+        var sessionIds =  playerSessionIds[playerId]
+        if(sessionIds == null) {
+            sessionIds = mutableListOf()
+        }
+        sessionIds.add(sessionId)
+        playerSessionIds[playerId] = sessionIds
+    }
 }

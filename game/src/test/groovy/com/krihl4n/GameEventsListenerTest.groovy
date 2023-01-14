@@ -42,7 +42,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(null)
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.move("player", "a2", "a3")
@@ -61,11 +61,11 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(null)
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
         and:
         secondGameOfChess.setupChessboard(null)
         secondGameOfChess.requestNewGame(TEST_MODE)
-        secondGameOfChess.playerReady(null)
+        secondGameOfChess.playerReady("player2", null)
 
         when:
         secondGameOfChess.move("player", "a2", "a3")
@@ -91,7 +91,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(new CastlingPieceSetup())
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.move("player", "e1", "g1")
@@ -112,7 +112,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(new SimpleAttackSetup())
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.move("player", "c2", "d3")
@@ -133,7 +133,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(null)
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         and:
         gameOfChess.move("player", "a2", "a3")
@@ -155,7 +155,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(null)
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         and:
         gameOfChess.move("player", "a2", "a3")
@@ -178,7 +178,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(new EnPassantSetup())
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         and:
         gameOfChess.move("player", "d2", "d4")
@@ -202,7 +202,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(new QueenConversionSetup())
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.move("player", "d7", "d8")
@@ -223,7 +223,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(new QueenConversionSetup())
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.move("player", "d7", "e8")
@@ -246,7 +246,7 @@ class GameEventsListenerTest extends Specification {
 
         when:
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("IN_PROGRESS"))
@@ -267,10 +267,10 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(new AboutToCheckMateSetup())
         gameOfChess.requestNewGame(VS_FRIEND)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player1", null)
 
         when:
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player2", null)
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("IN_PROGRESS"))
@@ -280,7 +280,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(new AboutToCheckMateSetup())
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.move("player", "h2", "h1")
@@ -303,7 +303,7 @@ class GameEventsListenerTest extends Specification {
             }
         })
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.move("player", "h2", "h1")
@@ -317,7 +317,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(new AboutToStalemateSetup())
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.move("player", "f6", "f7")
@@ -340,7 +340,7 @@ class GameEventsListenerTest extends Specification {
             }
         })
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.move("player", "a1", "a2")
@@ -354,7 +354,7 @@ class GameEventsListenerTest extends Specification {
         given:
         gameOfChess.setupChessboard(null)
         gameOfChess.requestNewGame(TEST_MODE)
-        gameOfChess.playerReady(null)
+        gameOfChess.playerReady("player", null)
 
         when:
         gameOfChess.resign("player")

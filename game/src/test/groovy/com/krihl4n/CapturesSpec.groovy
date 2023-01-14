@@ -4,7 +4,7 @@ class CapturesSpec extends BaseGameSpec {
 
     void setup() {
         game.initialize()
-        game.playerReady(null)
+        game.playerReady("player", null)
     }
 
     def "should perform attack"() {

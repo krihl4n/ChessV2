@@ -8,9 +8,9 @@ class FreeMovePlayersManager : PlayersManager {
     private var playerId: String? = null
     private var player: Player? = null
 
-    override fun registerPlayer(colorPreference: Color?): Boolean {
-        playerId = UUID.randomUUID().toString()
-        player = Player(playerId!!, colorPreference ?: Color.WHITE)
+    override fun registerPlayer(playerId: String, colorPreference: Color?): Boolean {
+        this.playerId = playerId
+        player = Player(playerId, colorPreference ?: Color.WHITE)
         return true
     }
 

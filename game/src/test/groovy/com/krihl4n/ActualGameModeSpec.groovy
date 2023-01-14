@@ -6,8 +6,8 @@ class ActualGameModeSpec extends BaseGameSpec {
 
     void setup() {
         game.initialize(GameModeDto.VS_FRIEND)
-        game.playerReady("WHITE")
-        game.playerReady("BLACK")
+        game.playerReady("player1", "WHITE")
+        game.playerReady("player2", "BLACK")
     }
 
     def "black pieces cannot start the game"() {

@@ -12,15 +12,14 @@ class ActualGamePlayersManager : PlayersManager {
     private var player1: Player? = null
     private var player2: Player? = null
 
-    override fun registerPlayer(colorPreference: Color?): Boolean {
-        val id = UUID.randomUUID().toString()
+    override fun registerPlayer(playerId: String, colorPreference: Color?): Boolean {
         if (player1 == null) {
-            registerPlayerOne(colorPreference, id)
+            registerPlayerOne(colorPreference, playerId)
             return false
         }
 
         if (player2 == null) {
-            registerPlayerTwo(id)
+            registerPlayerTwo(playerId)
             return true
         }
 

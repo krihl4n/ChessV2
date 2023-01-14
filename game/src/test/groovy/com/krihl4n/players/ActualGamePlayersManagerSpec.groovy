@@ -13,7 +13,7 @@ class ActualGamePlayersManagerSpec extends Specification {
 
     def "should register player with selected color"() {
         when:
-        playersFacade.registerPlayer(Color.@WHITE)
+        playersFacade.registerPlayer("player", Color.@WHITE)
 
         then:
         playersFacade.getPlayerOne().color == Color.@WHITE
@@ -21,7 +21,7 @@ class ActualGamePlayersManagerSpec extends Specification {
 
     def "player gets random color if not specified explicitly"() {
         when:
-        playersFacade.registerPlayer(null)
+        playersFacade.registerPlayer("player1", null)
 
         then:
         [Color.@BLACK, Color.@WHITE].contains(playersFacade.getPlayerOne().getColor())
@@ -29,10 +29,10 @@ class ActualGamePlayersManagerSpec extends Specification {
 
     def "can register second player"() {
         given:
-        playersFacade.registerPlayer(null)
+        playersFacade.registerPlayer("player1", null)
 
         when:
-        playersFacade.registerPlayer(null)
+        playersFacade.registerPlayer("player2", null)
 
         then:
         playersFacade.getPlayerTwo() != null
@@ -40,10 +40,10 @@ class ActualGamePlayersManagerSpec extends Specification {
 
     def "second player color preferences don't matter"() {
         given:
-        playersFacade.registerPlayer(Color.@BLACK)
+        playersFacade.registerPlayer("player1", Color.@BLACK)
 
         when:
-        playersFacade.registerPlayer(Color.@BLACK)
+        playersFacade.registerPlayer("player2", Color.@BLACK)
 
         then:
         playersFacade.getPlayerOne().color == Color.@BLACK
@@ -52,11 +52,11 @@ class ActualGamePlayersManagerSpec extends Specification {
 
     def "cannot register more than 2 players"() {
         given:
-        playersFacade.registerPlayer(null)
-        playersFacade.registerPlayer(null)
+        playersFacade.registerPlayer("player1", null)
+        playersFacade.registerPlayer("player2", null)
 
         when:
-        playersFacade.registerPlayer(null)
+        playersFacade.registerPlayer("player3", null)
 
         then:
         thrown(UnsupportedOperationException)
@@ -64,8 +64,8 @@ class ActualGamePlayersManagerSpec extends Specification {
 
     def "should return true if player registration is complete"() {
         when:
-        def isComplete1 = playersFacade.registerPlayer(null)
-        def isComplete2 = playersFacade.registerPlayer(null)
+        def isComplete1 = playersFacade.registerPlayer("player1", null)
+        def isComplete2 = playersFacade.registerPlayer("player2", null)
 
         then:
         !isComplete1

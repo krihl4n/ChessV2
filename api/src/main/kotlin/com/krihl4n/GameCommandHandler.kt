@@ -47,8 +47,10 @@ class GameCommandHandler(
     }
 
     fun joinGame(sessionId: String, req: JoinGameRequest) {
+        val playerId = UUID.randomUUID().toString()
+        gamesRegister.joinPlayer(sessionId, playerId)
         gamesRegister.joinGame(sessionId, req.gameId)
-        gamesRegister.getGameById(req.gameId).playerReady(req.colorPreference)
+        gamesRegister.getGameById(req.gameId).playerReady(playerId, req.colorPreference)
     }
 
     override fun connectionEstablished(sessionId: String) {
