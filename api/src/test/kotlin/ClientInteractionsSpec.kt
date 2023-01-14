@@ -22,14 +22,14 @@ class ClientInteractionsSpec : ShouldSpec({
     }
 
     fun startGame(sessionId: String = "1111"): String {
-        return gameCommandHandler.requestNewGame(sessionId, StartGameRequest("vs_computer", "white"))
+        return gameCommandHandler.requestNewGame(sessionId, StartGameRequest("vs_computer"))
     }
 
     should("notify player 1 that game has started when playing vs computer") {
         val gameInfoCaptor = slot<GameInfoEvent>()
         every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
 
-        val gameId = gameCommandHandler.requestNewGame("999", StartGameRequest("vs_computer", "white"))
+        val gameId = gameCommandHandler.requestNewGame("999", StartGameRequest("vs_computer"))
         gameCommandHandler.joinGame("999", JoinGameRequest(gameId, "white"))
 
         verify { msgSender.sendGameStartedMsg("999", any()) }
@@ -67,7 +67,7 @@ class ClientInteractionsSpec : ShouldSpec({
     }
 
     should("send waiting for player event with game id") {
-        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
+        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend"))
 
         verify { msgSender.sendWaitingForOtherPlayerMsg("1111", gameId) }
     }
@@ -77,7 +77,7 @@ class ClientInteractionsSpec : ShouldSpec({
         every { msgSender.sendGameStartedMsg("1111", capture(gameInfoPlayer1Captor)) } returns Unit
         val gameInfoPlayer2Captor = slot<GameInfoEvent>()
         every { msgSender.sendGameStartedMsg("2222", capture(gameInfoPlayer2Captor)) } returns Unit
-        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
+        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend"))
 
         gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null))
