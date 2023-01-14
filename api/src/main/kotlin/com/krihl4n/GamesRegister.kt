@@ -51,6 +51,9 @@ class GamesRegister {
 
     fun joinGame(sessionId: String, gameId: String) {
         val sessionIds = gamesSessionIds[gameId]
+        if (sessionIds?.find { it.sessionId == sessionId } != null) {
+            return
+        }
         sessionIds?.add(PlayerSessions(false, sessionId)) // TODO something better with player management here
         sessionIds?.let { gamesSessionIds[gameId] = sessionIds }
     }

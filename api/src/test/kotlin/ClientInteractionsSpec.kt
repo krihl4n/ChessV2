@@ -2,6 +2,7 @@ import com.krihl4n.*
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
+import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
 import io.kotest.core.spec.style.ShouldSpec
 import io.mockk.*
@@ -29,6 +30,7 @@ class ClientInteractionsSpec : ShouldSpec({
         every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
 
         val gameId = gameCommandHandler.requestNewGame("999", StartGameRequest("vs_computer", "white"))
+        gameCommandHandler.joinGame("999", JoinGameRequest(gameId, "white"))
 
         verify { msgSender.sendGameStartedMsg("999", any()) }
         assertNotEquals("999", gameInfoCaptor.captured.gameId)
@@ -45,13 +47,14 @@ class ClientInteractionsSpec : ShouldSpec({
     }
 
     should("return correct game id") {
-        val gameInfoCaptor = slot<GameInfoEvent>()
-        every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
+        val gameInfoCaptor = slot<String>()
+        every { msgSender.sendWaitingForOtherPlayerMsg("888", capture(gameInfoCaptor)) } returns Unit
 
         val gameId = startGame("888")
+        gameCommandHandler.joinGame("888", JoinGameRequest(gameId, "white"))
 
         assertNotEquals("", gameId)
-        assertEquals(gameId, gameInfoCaptor.captured.gameId)
+        assertEquals(gameId, gameInfoCaptor.captured)
     }
 
     should("discard session id if session closed") {
@@ -76,7 +79,8 @@ class ClientInteractionsSpec : ShouldSpec({
         every { msgSender.sendGameStartedMsg("2222", capture(gameInfoPlayer2Captor)) } returns Unit
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend", "white"))
 
-        gameCommandHandler.joinGame("2222", gameId)
+        gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
+        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null))
 
         assertNotEquals(gameInfoPlayer1Captor.captured.player.id, gameInfoPlayer2Captor.captured.player.id)
         assertEquals("WHITE", gameInfoPlayer1Captor.captured.player.color)

@@ -36,6 +36,7 @@ class MessageSender(
     }
 
     private fun sendMsg(sessionId: String, destination: String, result: Any) {
+        println("<-- $destination | $result")
         simpMessagingTemplate.convertAndSendToUser(
             sessionId,
             destination,

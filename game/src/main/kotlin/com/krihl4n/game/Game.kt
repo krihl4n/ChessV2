@@ -52,6 +52,8 @@ internal class Game(
         gameControl.setupChessboard(pieceSetup)
     }
 
+    fun getMode() = this.gameControl.fetchGameMode()
+
     @JvmOverloads
     fun initialize(gameMode: GameModeDto = GameModeDto.TEST_MODE) = gameState.initializeGame(this, gameControl, gameMode)
 

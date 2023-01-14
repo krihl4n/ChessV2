@@ -2,6 +2,7 @@ package com.krihl4n.app
 
 import com.krihl4n.Command
 import com.krihl4n.GameCommandHandler
+import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.Move
 import com.krihl4n.requests.StartGameRequest
 import org.springframework.messaging.MessageHeaders
@@ -37,14 +38,16 @@ class GameController(
 
     @MessageMapping("/start-new-game") // request-new-game
     @Throws(Exception::class)
-    fun startNewGame(@Payload startGameRequest: StartGameRequest, @Header("simpSessionId") sessionId: String) {
-        gameCommandHandler.requestNewGame(sessionId, startGameRequest)
+    fun startNewGame(@Payload request: StartGameRequest, @Header("simpSessionId") sessionId: String) {
+        println("--> /start-new-game | $request")
+        gameCommandHandler.requestNewGame(sessionId, request) // maybe return ack?
     }
 
     @MessageMapping("/join-game")
     @Throws(Exception::class)
-    fun joinGame(@Payload gameId: String, @Header("simpSessionId") sessionId: String) {
-        gameCommandHandler.joinGame(sessionId, gameId)
+    fun joinGame(@Payload request: JoinGameRequest, @Header("simpSessionId") sessionId: String) {
+        println("--> /join-game | $request")
+        gameCommandHandler.joinGame(sessionId, request)
     }
 
     @MessageMapping("/fields-occupation")

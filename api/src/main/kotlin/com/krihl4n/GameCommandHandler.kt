@@ -6,6 +6,7 @@ import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.app.ConnectionListener
+import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
 import org.springframework.stereotype.Service
 import java.util.*
@@ -45,9 +46,9 @@ class GameCommandHandler(
         return gamesRegister.getGame(sessionId)?.getPossibleMoves(field)
     }
 
-    fun joinGame(sessionId: String, gameId: String) {
-        gamesRegister.joinGame(sessionId, gameId)
-        gamesRegister.getGameById(gameId).playerTwoReady()
+    fun joinGame(sessionId: String, req: JoinGameRequest) {
+        gamesRegister.joinGame(sessionId, req.gameId)
+        gamesRegister.getGameById(req.gameId).playerReady(req.colorPreference)
     }
 
     override fun connectionEstablished(sessionId: String) {

@@ -18,7 +18,6 @@ import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
-import java.lang.RuntimeException
 
 class GameOfChess(val gameId: String) {
 
@@ -44,28 +43,19 @@ class GameOfChess(val gameId: String) {
 
     fun requestNewGame(mode: GameModeDto, colorPreference: String? = null) {
         println("Request new game: $mode")
-        when (mode) {
-            GameModeDto.TEST_MODE -> {
-                game.initialize(mode)
-                game.playerReady(colorPreference)
-            }
+        game.initialize(mode)
+    }
 
-            GameModeDto.VS_COMPUTER -> { // todo maybe extract and make it a separate module
-                game.initialize(mode)
-                game.playerReady(colorPreference)
+    fun playerReady(colorPreference: String?) {
+        game.playerReady(colorPreference)
+        game.getMode()?.let {
+            if (it == GameModeDto.VS_COMPUTER) {
                 game.playerReady()
                 val computerPlayer = game.fetchPlayerTwo()
                 registerGameEventListener(ComputerOpponent(this, computerPlayer.id, computerPlayer.color.toString()))
             }
-
-            GameModeDto.VS_FRIEND -> {
-                game.initialize(mode)
-                game.playerReady(colorPreference)
-            }
         }
     }
-
-    fun playerTwoReady() = game.playerReady()
 
     fun getPlayerOne()  = this.game.fetchPlayerOne()
 
