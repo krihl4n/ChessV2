@@ -23,9 +23,6 @@ class GamesRegister {
         return playerSessionIds[playerId].orEmpty()
     }
 
-    // TODO if many games per session, each request must have game id
-    // for now one game per session
-    // can there be many?
     fun getGame(sessionId: String): GameOfChess? {
         val gameId: String = gamesSessionIds
             .filter { gamesSessionIds -> gamesSessionIds.value.contains(sessionId) }
