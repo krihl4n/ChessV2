@@ -53,19 +53,6 @@ class GameEventHandler(
                     gameInfo.piecePositions
                 )
             )
-
-
-//        gamesRegister.getRelatedPlayerSessionIds(gameId).forEach {
-//            messageSender.sendGameStartedMsg(
-//                it.sessionId,
-//                GameInfoEvent(
-//                    gameInfo.gameId,
-//                    gameInfo.mode,
-//                    if (it.isPlayerOne) gameInfo.player1 else gameInfo.player2,
-//                    gameInfo.piecePositions
-//                )
-//            )
-//        }
         }
     }
     override fun gameFinished(gameId: String, result: GameResultDto) {

@@ -104,7 +104,7 @@ enum class GameState : State {
             playerId: String,
             colorPreference: String?
         ) {
-            throw IllegalStateException("Cannot register if game in progress")
+            throw IllegalStateException("Cannot register another player, game is already in progress")
         }
 
         override fun move(

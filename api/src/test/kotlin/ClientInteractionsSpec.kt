@@ -86,4 +86,15 @@ class ClientInteractionsSpec : ShouldSpec({
         assertEquals("WHITE", gameInfoPlayer1Captor.captured.player.color)
         assertEquals("BLACK", gameInfoPlayer2Captor.captured.player.color)
     }
+
+    should("be able to join game with second session") {
+        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
+        val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
+        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId))
+
+        gameCommandHandler.move("2222", playerId, "a2", "a3")
+
+        verify { msgSender.sendPiecePositionUpdateMsg("1111", any()) }
+        verify { msgSender.sendPiecePositionUpdateMsg("2222", any()) }
+    }
 })

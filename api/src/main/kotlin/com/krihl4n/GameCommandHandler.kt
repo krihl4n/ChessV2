@@ -15,7 +15,7 @@ import java.util.*
 class GameCommandHandler(
     private val gameEventHandler: GameEventHandler,
     private val gamesRegister: GamesRegister,
-): ConnectionListener {
+) : ConnectionListener {
 
     fun handleGameCommand(sessionId: String, command: Command) {
         when (command) {
@@ -46,11 +46,14 @@ class GameCommandHandler(
         return gamesRegister.getGame(sessionId)?.getPossibleMoves(field)
     }
 
-    fun joinGame(sessionId: String, req: JoinGameRequest) {
+    fun joinGame(sessionId: String, req: JoinGameRequest): String {
         val playerId = UUID.randomUUID().toString()
         gamesRegister.joinPlayer(sessionId, playerId)
         gamesRegister.joinGame(sessionId, req.gameId)
-        gamesRegister.getGameById(req.gameId).playerReady(playerId, req.colorPreference)
+        if (req.playerId == null) {
+            gamesRegister.getGameById(req.gameId).playerReady(playerId, req.colorPreference)
+        }
+        return playerId
     }
 
     override fun connectionEstablished(sessionId: String) {
