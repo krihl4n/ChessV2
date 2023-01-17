@@ -21,6 +21,8 @@ class ClientInteractionsSpec : ShouldSpec({
         gameCommandHandler = GameCommandHandler(eventSender, gamesRegister)
     }
 
+    afterTest { clearAllMocks() }
+
     fun startGame(sessionId: String = "1111"): String {
         return gameCommandHandler.requestNewGame(sessionId, StartGameRequest("vs_computer"))
     }
@@ -96,5 +98,17 @@ class ClientInteractionsSpec : ShouldSpec({
 
         verify { msgSender.sendPiecePositionUpdateMsg("1111", any()) }
         verify { msgSender.sendPiecePositionUpdateMsg("2222", any()) }
+    }
+
+    should("be able to deregister session and then rejoin game") {
+        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
+        val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
+        gameCommandHandler.connectionClosed("1111")
+        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId))
+
+        gameCommandHandler.move("2222", playerId, "a2", "a3")
+
+        verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg("2222", any()) }
+        verify(exactly = 0) { msgSender.sendPiecePositionUpdateMsg("1111", any()) }
     }
 })
