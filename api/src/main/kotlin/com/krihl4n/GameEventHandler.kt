@@ -1,12 +1,11 @@
 package com.krihl4n
 
 import com.krihl4n.api.GameEventListener
-import com.krihl4n.api.dto.GameInfoDto
-import com.krihl4n.api.dto.GameResultDto
-import com.krihl4n.api.dto.GameStateUpdateDto
-import com.krihl4n.api.dto.PiecePositionUpdateDto
+import com.krihl4n.api.GameOfChess
+import com.krihl4n.api.dto.*
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
+import com.krihl4n.players.Player
 import org.springframework.stereotype.Service
 
 @Service
@@ -57,6 +56,19 @@ class GameEventHandler(
     }
     override fun gameFinished(gameId: String, result: GameResultDto) {
         getSessionIds(gameId).forEach { messageSender.sendGameFinishedMsg(it, result) }
+    }
+
+    fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {
+        val game: GameOfChess = gamesRegister.getGameById(gameId)
+        game.getPlayer(playerId)?.let {
+            val gameInfo = GameInfoEvent(
+                gameId = gameId,
+                mode = "", // todo needed?
+                player = PlayerDto(playerId, it.color.toString()),
+                piecePositions = game.getFieldOccupationInfo()
+            )
+            messageSender.sendJoinedExistingGameMsg(sessionId, gameInfo)
+        }
     }
 
     private fun getSessionIds(gameId: String) = gamesRegister.getRelatedSessionIds(gameId)

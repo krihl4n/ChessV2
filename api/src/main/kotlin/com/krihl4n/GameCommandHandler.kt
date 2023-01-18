@@ -52,6 +52,8 @@ class GameCommandHandler(
         gamesRegister.joinGame(sessionId, req.gameId)
         if (req.playerId == null) {
             gamesRegister.getGameById(req.gameId).playerReady(playerId, req.colorPreference)
+        } else {
+            gameEventHandler.joinedExistingGame(sessionId, req.gameId, req.playerId)
         }
         return playerId
     }

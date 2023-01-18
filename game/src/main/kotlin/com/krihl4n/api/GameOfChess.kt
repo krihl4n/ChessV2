@@ -61,6 +61,8 @@ class GameOfChess(val gameId: String) {
     fun getPlayerOne()  = this.game.fetchPlayerOne()
 
     fun getPlayerTwo() = this.game.fetchPlayerTwo()
+
+    fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)
     fun resign(playerId: String) = game.resign(playerId)
 
     fun move(playerId: String, from: String, to: String) = game.performMove(playerId, from, to)

@@ -35,6 +35,10 @@ class MessageSender(
         sendMsg(sessionId, "user/queue/waiting-for-other-player", gameId)
     }
 
+    fun sendJoinedExistingGameMsg(sessionId: String, gameInfo: GameInfoEvent) {
+        sendMsg(sessionId, "/user/queue/joined-existing-game", gameInfo)
+    }
+
     private fun sendMsg(sessionId: String, destination: String, result: Any) {
         println("<-- $destination | $result")
         simpMessagingTemplate.convertAndSendToUser(
