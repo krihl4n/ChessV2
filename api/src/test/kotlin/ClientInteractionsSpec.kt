@@ -1,5 +1,6 @@
 import com.krihl4n.*
 import com.krihl4n.api.dto.GameResultDto
+import com.krihl4n.api.dto.PlayerDto
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
 import com.krihl4n.requests.JoinGameRequest
@@ -110,5 +111,20 @@ class ClientInteractionsSpec : ShouldSpec({
 
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg("2222", any()) }
         verify(exactly = 0) { msgSender.sendPiecePositionUpdateMsg("1111", any()) }
+    }
+
+    should("notify player that he has joined to exising game") {
+        val gameInfoCaptor = slot<GameInfoEvent>()
+        every { msgSender.sendJoinedExistingGameMsg("2222", capture(gameInfoCaptor)) } returns Unit
+        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
+        val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
+
+        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId))
+
+        verify(exactly = 1) { msgSender.sendJoinedExistingGameMsg("2222", any()) }
+        verify(exactly = 0) { msgSender.sendJoinedExistingGameMsg("1111", any()) }
+        assertEquals(gameId, gameInfoCaptor.captured.gameId)
+        assertEquals(playerId, gameInfoCaptor.captured.player.id)
+        assertEquals("WHITE", gameInfoCaptor.captured.player.color)
     }
 })
