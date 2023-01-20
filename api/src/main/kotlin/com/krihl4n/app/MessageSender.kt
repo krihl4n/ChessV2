@@ -16,27 +16,27 @@ class MessageSender(
 ) {
 
     fun sendPiecePositionUpdateMsg(sessionId: String, update: PiecePositionUpdateDto) {
-        sendMsg(sessionId, "user/queue/piece-position-updates", update)
+        sendMsg(sessionId, "/queue/piece-position-updates", update)
     }
 
     fun sendGameStateUpdateMsg(sessionId: String, update: GameStateUpdateDto) {
-        sendMsg(sessionId, "/user/queue/game-state-updates", update)
+        sendMsg(sessionId, "/queue/game-state-updates", update)
     }
 
     fun sendGameStartedMsg(sessionId: String, gameInfo: GameInfoEvent) {
-        sendMsg(sessionId, "/user/queue/game-started", gameInfo)
+        sendMsg(sessionId, "/queue/game-started", gameInfo)
     }
 
     fun sendGameFinishedMsg(sessionId: String, result: GameResultDto) {
-        sendMsg(sessionId, "/user/queue/game-result", result)
+        sendMsg(sessionId, "/queue/game-result", result)
     }
 
     fun sendWaitingForOtherPlayerMsg(sessionId: String, gameId:String) {
-        sendMsg(sessionId, "user/queue/waiting-for-other-player", gameId)
+        sendMsg(sessionId, "/queue/waiting-for-other-player", gameId)
     }
 
     fun sendJoinedExistingGameMsg(sessionId: String, gameInfo: GameInfoEvent) {
-        sendMsg(sessionId, "/user/queue/joined-existing-game", gameInfo)
+        sendMsg(sessionId, "/queue/joined-existing-game", gameInfo)
     }
 
     private fun sendMsg(sessionId: String, destination: String, result: Any) {

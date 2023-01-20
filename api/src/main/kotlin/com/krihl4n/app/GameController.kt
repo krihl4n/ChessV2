@@ -56,7 +56,7 @@ class GameController(
         gameCommandHandler.getPositions(sessionId)?.let {
             simpMessagingTemplate.convertAndSendToUser(
                 sessionId,
-                "/user/queue/fields-occupation",
+                "/queue/fields-occupation",
                 it,
                 prepareSessionIdHeader(sessionId)
             )
@@ -69,7 +69,7 @@ class GameController(
         gameCommandHandler.getPossibleMoves(sessionId, field)?.let {
             simpMessagingTemplate.convertAndSendToUser(
                 sessionId,
-                "/user/queue/possible-moves",
+                "/queue/possible-moves",
                 it,
                 prepareSessionIdHeader(sessionId)
             )
