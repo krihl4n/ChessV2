@@ -54,6 +54,8 @@ internal class Game(
 
     fun getMode() = this.gameControl.fetchGameMode()
 
+    fun colorAllowedToMove() = this.gameControl.fetchColorAllowedToMove()
+
     @JvmOverloads
     fun initialize(gameMode: GameModeDto = GameModeDto.TEST_MODE) = gameState.initializeGame(this, gameControl, gameMode)
 
@@ -86,4 +88,6 @@ internal class Game(
     fun registerGameStateUpdateListener(gameStateUpdateListener: GameStateUpdateListener) {
         gameStateListeners.add(gameStateUpdateListener)
     }
+
+    fun fetchColorAllowedToMove() = gameControl.fetchColorAllowedToMove().toString()
 }

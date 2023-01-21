@@ -7,11 +7,12 @@ data class PiecePositionUpdateDto(
     val secondaryMove: MoveDto? = null,
     val pieceCapture: PieceCaptureDto? = null,
     val convertToQueen: Boolean = false,
-    val reverted: Boolean = false
+    val reverted: Boolean = false,
+    val turn: String
 ) {
 
     companion object {
-        internal fun from(positionUpdate: PiecePositionUpdate): PiecePositionUpdateDto {
+        internal fun from(positionUpdate: PiecePositionUpdate, turn: String): PiecePositionUpdateDto {
             return PiecePositionUpdateDto(
                 primaryMove = MoveDto(
                     positionUpdate.primaryMove.from.token(),
@@ -33,7 +34,8 @@ data class PiecePositionUpdateDto(
                     )
                 },
                 convertToQueen = positionUpdate.convertToQueen,
-                reverted = positionUpdate.reverted
+                reverted = positionUpdate.reverted,
+                turn = turn
             )
         }
     }

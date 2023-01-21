@@ -63,6 +63,9 @@ class GameOfChess(val gameId: String) {
     fun getPlayerTwo() = this.game.fetchPlayerTwo()
 
     fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)
+
+    fun getColorAllowedToMove() = this.game.colorAllowedToMove().toString()
+
     fun resign(playerId: String) = game.resign(playerId)
 
     fun move(playerId: String, from: String, to: String) = game.performMove(playerId, from, to)
@@ -76,7 +79,7 @@ class GameOfChess(val gameId: String) {
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
             override fun positionsUpdated(update: PiecePositionUpdate) {
-                listener.piecePositionUpdate(gameId, PiecePositionUpdateDto.from(update))
+                listener.piecePositionUpdate(gameId, PiecePositionUpdateDto.from(update, game.fetchColorAllowedToMove()))
             }
         })
 
@@ -96,7 +99,8 @@ class GameOfChess(val gameId: String) {
                             mode = update.gameMode?.toString() ?: "",
                             player1 = PlayerDto.from(game.fetchPlayerOne()),
                             player2 = PlayerDto.from(game.fetchPlayerTwo()),
-                            piecePositions = game.getFieldOccupationInfo()
+                            piecePositions = game.getFieldOccupationInfo(),
+                            turn = game.fetchColorAllowedToMove()
                         )
                     )
                 }

@@ -14,6 +14,10 @@ internal class ActualGameMovePolicy(private val playersManager: PlayersManager) 
         return playerColor == colorAllowedToMove && playerColor == move.piece.color
     }
 
+    override fun colorAllowedToMove(): Color {
+        return this.colorAllowedToMove
+    }
+
     override fun movePerformed(move: Move) {
         this.colorAllowedToMove = move.piece.color.opposite()
     }

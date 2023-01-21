@@ -1,6 +1,7 @@
 package com.krihl4n.game
 
 import com.krihl4n.api.dto.GameModeDto
+import com.krihl4n.model.Color
 import com.krihl4n.players.Player
 
 interface GameCommand {
@@ -16,6 +17,8 @@ interface GameCommand {
     fun fetchPlayerTwo(): Player
 
     fun fetchGameMode(): GameModeDto?
+
+    fun fetchColorAllowedToMove(): Color
 
     fun executeResign(playerId: String)
 

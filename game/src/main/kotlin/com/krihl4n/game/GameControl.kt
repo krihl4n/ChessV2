@@ -101,6 +101,8 @@ internal class GameControl(
 
     override fun fetchGameMode(): GameModeDto? = this.gameMode
 
+    override fun fetchColorAllowedToMove(): Color = this.movePolicy.colorAllowedToMove()
+
     override fun executeResign(playerId: String) {
         val resigningPlayerColor = playersManager.getPlayer(playerId)?.color
             ?: throw IllegalStateException("Unable to determine resigning player's color")

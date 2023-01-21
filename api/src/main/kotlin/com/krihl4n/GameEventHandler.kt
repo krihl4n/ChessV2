@@ -5,7 +5,6 @@ import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
-import com.krihl4n.players.Player
 import org.springframework.stereotype.Service
 
 @Service
@@ -38,7 +37,8 @@ class GameEventHandler(
                     gameInfo.gameId,
                     gameInfo.mode,
                     gameInfo.player1,
-                    gameInfo.piecePositions
+                    gameInfo.piecePositions,
+                    gameInfo.turn
                 )
             )
         }
@@ -49,7 +49,8 @@ class GameEventHandler(
                     gameInfo.gameId,
                     gameInfo.mode,
                     gameInfo.player2,
-                    gameInfo.piecePositions
+                    gameInfo.piecePositions,
+                    gameInfo.turn
                 )
             )
         }
@@ -65,7 +66,8 @@ class GameEventHandler(
                 gameId = gameId,
                 mode = "", // todo needed?
                 player = PlayerDto(playerId, it.color.toString()),
-                piecePositions = game.getFieldOccupationInfo()
+                piecePositions = game.getFieldOccupationInfo(),
+                turn = game.getColorAllowedToMove()
             )
             messageSender.sendJoinedExistingGameMsg(sessionId, gameInfo)
         }

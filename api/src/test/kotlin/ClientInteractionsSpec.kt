@@ -1,5 +1,7 @@
 import com.krihl4n.*
 import com.krihl4n.api.dto.GameResultDto
+import com.krihl4n.api.dto.MoveDto
+import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.api.dto.PlayerDto
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
@@ -40,6 +42,7 @@ class ClientInteractionsSpec : ShouldSpec({
         assertEquals(gameId, gameInfoCaptor.captured.gameId)
         assertEquals("VS_COMPUTER", gameInfoCaptor.captured.mode)
         assertEquals("WHITE", gameInfoCaptor.captured.player.color)
+        assertEquals("WHITE", gameInfoCaptor.captured.turn)
     }
 
     should("game ids be unique") {
@@ -88,6 +91,8 @@ class ClientInteractionsSpec : ShouldSpec({
         assertNotEquals(gameInfoPlayer1Captor.captured.player.id, gameInfoPlayer2Captor.captured.player.id)
         assertEquals("WHITE", gameInfoPlayer1Captor.captured.player.color)
         assertEquals("BLACK", gameInfoPlayer2Captor.captured.player.color)
+        assertEquals("WHITE", gameInfoPlayer1Captor.captured.turn)
+        assertEquals("WHITE", gameInfoPlayer2Captor.captured.turn)
     }
 
     should("be able to join game with second session") {
@@ -113,7 +118,7 @@ class ClientInteractionsSpec : ShouldSpec({
         verify(exactly = 0) { msgSender.sendPiecePositionUpdateMsg("1111", any()) }
     }
 
-    should("notify player that he has joined to exising game") {
+    should("notify player that he has joined to existing game") {
         val gameInfoCaptor = slot<GameInfoEvent>()
         every { msgSender.sendJoinedExistingGameMsg("2222", capture(gameInfoCaptor)) } returns Unit
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
@@ -126,5 +131,25 @@ class ClientInteractionsSpec : ShouldSpec({
         assertEquals(gameId, gameInfoCaptor.captured.gameId)
         assertEquals(playerId, gameInfoCaptor.captured.player.id)
         assertEquals("WHITE", gameInfoCaptor.captured.player.color)
+        assertEquals("WHITE", gameInfoCaptor.captured.turn)
+    }
+
+    should("notify player moved including info about current turn") {
+        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend"))
+        val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
+        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null))
+
+        gameCommandHandler.move("1111", playerId, "a2", "a4")
+
+        val expectedUpdate = PiecePositionUpdateDto(
+            primaryMove = MoveDto("a2", "a4"),
+            secondaryMove = null,
+            pieceCapture = null,
+            convertToQueen = false,
+            reverted = false,
+            turn = "BLACK"
+        )
+        verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg("1111", expectedUpdate) }
+        verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg("2222", expectedUpdate) }
     }
 })

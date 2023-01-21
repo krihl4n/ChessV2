@@ -54,7 +54,8 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         false,
-                        false))
+                        false,
+                        "WHITE"))
     }
 
     def "having two games, only one is notified about moving piece"() {
@@ -77,14 +78,16 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         false,
-                        false))
+                        false,
+                        "WHITE"))
         0 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
                         new MoveDto("a2", "a3"),
                         null,
                         null,
                         false,
-                        false))
+                        false,
+                        "WHITE"))
     }
 
     def "should notify about two moves when castling"() {
@@ -103,7 +106,8 @@ class GameEventsListenerTest extends Specification {
                         new MoveDto("h1", "f1"),
                         null,
                         false,
-                        false
+                        false,
+                        "WHITE"
                 )
         )
     }
@@ -124,7 +128,8 @@ class GameEventsListenerTest extends Specification {
                         null,
                         new PieceCaptureDto("d3", new PieceDto("BLACK", "PAWN")),
                         false,
-                        false
+                        false,
+                        "WHITE"
                 )
         )
     }
@@ -148,7 +153,8 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         false,
-                        true))
+                        true,
+                        "WHITE"))
     }
 
     def "should send event when redoing a move"() {
@@ -171,7 +177,8 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         false,
-                        false))
+                        false,
+                        "WHITE"))
     }
 
     def "should notify about en passant capture"() {
@@ -193,7 +200,8 @@ class GameEventsListenerTest extends Specification {
                         null,
                         new PieceCaptureDto("d4", new PieceDto("WHITE", "PAWN")),
                         false,
-                        false
+                        false,
+                        "WHITE"
                 )
         )
     }
@@ -214,7 +222,8 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         true,
-                        false
+                        false,
+                        "WHITE"
                 )
         )
     }
@@ -235,7 +244,8 @@ class GameEventsListenerTest extends Specification {
                         null,
                         new PieceCaptureDto("e8", new PieceDto("BLACK", "KNIGHT")),
                         true,
-                        false
+                        false,
+                        "WHITE"
                 )
         )
     }
