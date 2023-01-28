@@ -5,7 +5,10 @@ import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.model.*
 import com.krihl4n.moveCalculators.PossibleMove
 
-internal class EnPassantGuard(private val positionTracker: PositionTracker, private val commandCoordinator: CommandCoordinator) {
+internal class EnPassantGuard(
+    private val positionTracker: PositionTracker,
+    private val commandCoordinator: CommandCoordinator
+) {
 
     fun getEnPassantMoves(): List<PossibleMove> {
         val lastMove = commandCoordinator.getLastMove() ?: return emptyList()
@@ -26,13 +29,13 @@ internal class EnPassantGuard(private val positionTracker: PositionTracker, priv
         return moves
     }
 
-    private fun MutableList<PossibleMove>.appendWith(fromFile:File, fromRank: Rank, toField: Field) {
+    private fun MutableList<PossibleMove>.appendWith(fromFile: File, fromRank: Rank, toField: Field) {
         this.add(PossibleMove(Field(fromFile, fromRank), toField))
     }
 
-    private fun getPawnToTheRight(lastMove: Move) = getPawnAt(lastMove.to.file + 1, lastMove.to.rank)
+    private fun getPawnToTheRight(lastMove: Move) = getPawnAt(lastMove.to.file + 1, lastMove.to.rank, lastMove.piece)
 
-    private fun getPawnToTheLeft(lastMove: Move) = getPawnAt(lastMove.to.file - 1, lastMove.to.rank)
+    private fun getPawnToTheLeft(lastMove: Move) = getPawnAt(lastMove.to.file - 1, lastMove.to.rank, lastMove.piece)
 
     private fun findAttackedField(lastMove: Move): Field {
         val rank: Rank? = if (lastMove.piece.color == Color.BLACK) {
@@ -44,10 +47,10 @@ internal class EnPassantGuard(private val positionTracker: PositionTracker, priv
         return Field(lastMove.to.file, rank ?: throw IllegalArgumentException("Illegal field"))
     }
 
-    private fun getPawnAt(file: File?, rank: Rank): Piece? {
+    private fun getPawnAt(file: File?, rank: Rank, lastMovePawn: Piece): Piece? {
         file?.let {
             positionTracker.getPieceAt(Field(file, rank))?.let {
-                if (it.type == Type.PAWN) {
+                if (it.type == Type.PAWN && it.color != lastMovePawn.color) {
                     return it
                 }
             }

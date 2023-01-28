@@ -104,4 +104,16 @@ class EnPassantSpec extends BaseGameSpec {
         then:
         assertPositions("bp_e3")
     }
+
+    def "en passant bug fix"() {
+        given:
+        setupPieces("wp_e2 wp_f2")
+        performMove("e2 e4")
+
+        when:
+        performMove("f2 f4")
+
+        then:
+        !game.getPossibleMoves("f4").to.contains("f3")
+    }
 }

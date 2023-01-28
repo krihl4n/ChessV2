@@ -26,12 +26,6 @@
 * bugs
 ** move observer not notified when redoing the move, bug probably with right to castle
 
-** en passant error
- e2 e4
- d2 d4
- possible moves from d4: d5, d3
- should be: d3
-
 ** redo actions not cleared
     move piece
     undo
