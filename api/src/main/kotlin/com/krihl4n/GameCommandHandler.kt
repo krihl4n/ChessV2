@@ -1,6 +1,5 @@
 package com.krihl4n
 
-import com.krihl4n.Command.*
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
@@ -16,14 +15,6 @@ class GameCommandHandler(
     private val gameEventHandler: GameEventHandler,
     private val gamesRegister: GamesRegister,
 ) : ConnectionListener {
-
-    fun handleGameCommand(sessionId: String, command: Command) {
-        when (command) {
-            UNDO_MOVE -> gamesRegister.getGame(sessionId)?.undoMove()
-            REDO_MOVE -> gamesRegister.getGame(sessionId)?.redoMove()
-            RESIGN -> gamesRegister.getGame(sessionId)?.resign(sessionId)
-        }
-    }
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
@@ -68,8 +59,13 @@ class GameCommandHandler(
     fun resign(sessionId: String, playerId: String) {
         gamesRegister.getGame(sessionId)?.resign(playerId)
     }
-}
 
-enum class Command {
-    UNDO_MOVE, REDO_MOVE, RESIGN
+    // todo this needs to be smarter
+    fun undoMove(sessionId: String, playerId: String) {
+        gamesRegister.getGame(sessionId)?.undoMove()
+    }
+
+    fun redoMove(sessionId: String, playerId: String) {
+        gamesRegister.getGame(sessionId)?.redoMove()
+    }
 }

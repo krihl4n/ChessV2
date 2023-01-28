@@ -1,6 +1,5 @@
 package com.krihl4n.app
 
-import com.krihl4n.Command
 import com.krihl4n.GameCommandHandler
 import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.Move
@@ -28,13 +27,6 @@ class GameController(
     fun move(@Payload move: Move, @Header("simpSessionId") sessionId: String) {
         println("--> /move | sessionId=$sessionId | $move")
         gameCommandHandler.move(sessionId, move.playerId, move.from, move.to)
-    }
-
-    @MessageMapping("/game-controls")
-    @Throws(Exception::class)
-    fun gameControls(@Payload command: String, @Header("simpSessionId") sessionId: String) {
-        println("--> /game-controls | sessionId=$sessionId | $command")
-        gameCommandHandler.handleGameCommand(sessionId, Command.valueOf(command.uppercase()))
     }
 
     @MessageMapping("/start-new-game") // request-new-game
@@ -82,6 +74,20 @@ class GameController(
     fun resign(@Payload playerId: String, @Header("simpSessionId") sessionId: String) {
         println("--> /resign | sessionId=$sessionId | playerId=$playerId")
         gameCommandHandler.resign(sessionId, playerId)
+    }
+
+    @MessageMapping("/undo-move")
+    @Throws(Exception::class)
+    fun undoMove(@Payload playerId: String, @Header("simpSessionId") sessionId: String) {
+        println("--> /undo-move | sessionId=$sessionId | playerId=$playerId")
+        gameCommandHandler.undoMove(sessionId, playerId)
+    }
+
+    @MessageMapping("/redo-move")
+    @Throws(Exception::class)
+    fun redoMove(@Payload playerId: String, @Header("simpSessionId") sessionId: String) {
+        println("--> /resign | sessionId=$sessionId | playerId=$playerId")
+        gameCommandHandler.redoMove(sessionId, playerId)
     }
 
     private fun prepareSessionIdHeader(sessionId: String): MessageHeaders {
