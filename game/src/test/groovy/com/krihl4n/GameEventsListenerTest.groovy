@@ -373,4 +373,35 @@ class GameEventsListenerTest extends Specification {
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
         1 * listener.gameFinished(GAME_ID, new GameResultDto("BLACK_PLAYER_WON", "PLAYER_RESIGNED"))
     }
+
+    def "should notify correctly about en passant attack"() {
+        given:
+        gameOfChess.setupChessboard(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "e5 white pawn",
+                        "d7 black pawn"
+                ]
+            }
+        })
+        gameOfChess.requestNewGame(TEST_MODE)
+        gameOfChess.playerReady("player", null)
+
+        when:
+        gameOfChess.move("player", "d7", "d5")
+        gameOfChess.move("player", "e5", "d6")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID,
+                new PiecePositionUpdateDto(
+                        new MoveDto("e5", "d6"),
+                        null,
+                        new PieceCaptureDto("d5", new PieceDto("BLACK", "PAWN")),
+                        false,
+                        false,
+                        "WHITE"
+                )
+        )
+    }
 }
