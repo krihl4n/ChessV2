@@ -21,7 +21,6 @@ internal class GameResultEvaluator(
     override fun movePerformed(move: Move) {
         if (isKingChecked(move.piece.color.opposite())) {
             if (!isThereASavingMove(move.piece.color.opposite())) {
-                println("check-mate!")
                 this.result = move.piece.color.let {
                     if (it == Color.WHITE) {
                         GameResult(WHITE_PLAYER_WON, CHECK_MATE)

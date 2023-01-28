@@ -26,27 +26,28 @@ class GameController(
     @MessageMapping("/move")
     @Throws(Exception::class)
     fun move(@Payload move: Move, @Header("simpSessionId") sessionId: String) {
-        println(move)
+        println("--> /move | $sessionId | $move")
         gameCommandHandler.move(sessionId, move.playerId, move.from, move.to)
     }
 
     @MessageMapping("/game-controls")
     @Throws(Exception::class)
     fun gameControls(@Payload command: String, @Header("simpSessionId") sessionId: String) {
+        println("--> /game-controls | $sessionId | $command")
         gameCommandHandler.handleGameCommand(sessionId, Command.valueOf(command.uppercase()))
     }
 
     @MessageMapping("/start-new-game") // request-new-game
     @Throws(Exception::class)
     fun startNewGame(@Payload request: StartGameRequest, @Header("simpSessionId") sessionId: String) {
-        println("--> /start-new-game | $request")
+        println("--> /start-new-game | $sessionId | $request")
         gameCommandHandler.requestNewGame(sessionId, request) // maybe return ack?
     }
 
     @MessageMapping("/join-game")
     @Throws(Exception::class)
     fun joinGame(@Payload request: JoinGameRequest, @Header("simpSessionId") sessionId: String) {
-        println("--> /join-game | $request")
+        println("--> /join-game | $sessionId | $request")
         gameCommandHandler.joinGame(sessionId, request)
     }
 

@@ -32,7 +32,7 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
     }
 
     override fun gameStateUpdate(gameId: String, update: GameStateUpdateDto) {
-        println(update)
+
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
