@@ -2,7 +2,6 @@ import com.krihl4n.*
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
-import com.krihl4n.api.dto.PlayerDto
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
 import com.krihl4n.requests.JoinGameRequest
