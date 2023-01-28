@@ -151,4 +151,15 @@ class ClientInteractionsSpec : ShouldSpec({
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg("1111", expectedUpdate) }
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg("2222", expectedUpdate) }
     }
+
+    should("be able to resign from the game and loose") {
+        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend"))
+        val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
+        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null))
+
+        gameCommandHandler.resign("1111", playerId)
+
+        verify { msgSender.sendGameFinishedMsg("1111", GameResultDto("BLACK_PLAYER_WON", "PLAYER_RESIGNED")) }
+        verify { msgSender.sendGameFinishedMsg("2222", GameResultDto("BLACK_PLAYER_WON", "PLAYER_RESIGNED")) }
+    }
 })

@@ -64,6 +64,10 @@ class GameCommandHandler(
     override fun connectionClosed(sessionId: String) {
         gamesRegister.deregisterSession(sessionId)
     }
+
+    fun resign(sessionId: String, playerId: String) {
+        gamesRegister.getGame(sessionId)?.resign(playerId)
+    }
 }
 
 enum class Command {
