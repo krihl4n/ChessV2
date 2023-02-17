@@ -41,7 +41,7 @@ internal class GameControl(
             return
         }
 
-        val move = positionTracker.getPieceAt(Field(moveDto.from))?.let { Move(it, moveDto.from, moveDto.to) } ?: return
+        val move = positionTracker.getPieceAt(Field(moveDto.from))?.let { Move(it, moveDto.from, moveDto.to, moveDto.conversion) } ?: return
 
         if (!movePolicy.moveAllowedBy(moveDto.playerId, move)) {
             println("it's not player's $moveDto.playerId turn")

@@ -4,6 +4,7 @@ import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
+import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PerformedMoveDto
 import com.krihl4n.api.dto.PieceCaptureDto
 import com.krihl4n.api.dto.PieceDto
@@ -45,7 +46,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "a2", "a3")
+        gameOfChess.move(new MoveDto("player", "a2", "a3", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -69,7 +70,7 @@ class GameEventsListenerTest extends Specification {
         secondGameOfChess.playerReady("player2", null)
 
         when:
-        secondGameOfChess.move("player", "a2", "a3")
+        secondGameOfChess.move(new MoveDto("player", "a2", "a3", null))
 
         then:
         1 * secondListener.piecePositionUpdate(SECOND_GAME_ID,
@@ -97,7 +98,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "e1", "g1")
+        gameOfChess.move(new MoveDto("player", "e1", "g1", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -119,7 +120,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "c2", "d3")
+        gameOfChess.move(new MoveDto("player", "c2", "d3", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -141,7 +142,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         and:
-        gameOfChess.move("player", "a2", "a3")
+        gameOfChess.move(new MoveDto("player", "a2", "a3", null))
 
         when:
         gameOfChess.undoMove()
@@ -164,7 +165,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         and:
-        gameOfChess.move("player", "a2", "a3")
+        gameOfChess.move(new MoveDto("player", "a2", "a3", null))
         gameOfChess.undoMove()
 
         when:
@@ -188,10 +189,10 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         and:
-        gameOfChess.move("player", "d2", "d4")
+        gameOfChess.move(new MoveDto("player", "d2", "d4", null))
 
         when:
-        gameOfChess.move("player", "e4", "d3")
+        gameOfChess.move(new MoveDto("player", "e4", "d3", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -213,7 +214,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "d7", "d8")
+        gameOfChess.move(new MoveDto("player", "d7", "d8", "queen"))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -235,7 +236,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "d7", "e8")
+        gameOfChess.move(new MoveDto("player", "d7", "e8", "queen"))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -293,7 +294,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "h2", "h1")
+        gameOfChess.move(new MoveDto("player", "h2", "h1", null))
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
@@ -316,7 +317,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "h2", "h1")
+        gameOfChess.move(new MoveDto("player", "h2", "h1", null))
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
@@ -330,7 +331,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "f6", "f7")
+        gameOfChess.move(new MoveDto("player", "f6", "f7", null))
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
@@ -353,7 +354,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "a1", "a2")
+        gameOfChess.move(new MoveDto("player", "a1", "a2", null))
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
@@ -389,8 +390,8 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move("player", "d7", "d5")
-        gameOfChess.move("player", "e5", "d6")
+        gameOfChess.move(new MoveDto("player", "d7", "d5", null))
+        gameOfChess.move(new MoveDto("player", "e5", "d6", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,

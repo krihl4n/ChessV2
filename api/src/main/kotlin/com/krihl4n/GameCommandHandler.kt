@@ -3,6 +3,7 @@ package com.krihl4n
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
+import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.AboutToCheckMateSetup
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
@@ -29,8 +30,8 @@ class GameCommandHandler(
         return newGame.gameId
     }
 
-    fun move(sessionId: String, playerId: String, from: String, to: String) {
-        gamesRegister.getGame(sessionId)?.move(playerId, from, to)
+    fun move(sessionId: String, playerId: String, from: String, to: String, conversion: String?) {
+        gamesRegister.getGame(sessionId)?.move(MoveDto(playerId, from, to, conversion))
     }
 
     fun getPositions(sessionId: String): List<FieldOccupationDto>? {

@@ -7,15 +7,7 @@ class PawnConversionSpec extends BaseGameSpec {
         game.playerReady("player", null)
     }
 
-//    def "should have info about pawn conversion when reaches the last rank"() {
-//        given:
-//
-//        when:
-//
-//        then:
-//    }
-
-    def "when pawn reaches the end it converts to a queen"() {
+    def "should have info about pawn conversion when reaches the last rank"() {
         given:
         setupPieces(setup)
 
@@ -23,12 +15,28 @@ class PawnConversionSpec extends BaseGameSpec {
         performMove(move)
 
         then:
-        assertPositions(positions)
+        thrown(IllegalArgumentException)
 
         where:
         setup   | move    || positions
-        "wp_a7" | "a7 a8" || "wq_a8"
-        "bp_a2" | "a2 a1" || "bq_a1"
+        "wp_a7" | "a7 a8" || "wp_a7"
+        "bp_a2" | "a2 a1" || "bp_a2"
+    }
+
+    def "when pawn reaches the end it converts to a queen"() {
+        given:
+        setupPieces(setup)
+
+        when:
+        performMoveWithConversion(move, conversion)
+
+        then:
+        assertPositions(positions)
+
+        where:
+        setup   | move    | conversion  || positions
+        "wp_a7" | "a7 a8" | "queen"     || "wq_a8"
+        "bp_a2" | "a2 a1" | "queen"     || "bq_a1"
     }
 
     def "undo pawn reaches the end move"() {
@@ -36,7 +44,7 @@ class PawnConversionSpec extends BaseGameSpec {
         setupPieces(setup)
 
         when:
-        performMove(move)
+        performMoveWithConversion(move, "queen")
 
         and:
         undoMove()
@@ -55,7 +63,7 @@ class PawnConversionSpec extends BaseGameSpec {
         setupPieces(setup)
 
         when:
-        performMove(move)
+        performMoveWithConversion(move, "queen")
 
         then:
         assertPositions(positions)
@@ -71,7 +79,7 @@ class PawnConversionSpec extends BaseGameSpec {
         setupPieces(setup)
 
         when:
-        performMove(move)
+        performMoveWithConversion(move, "queen")
 
         and:
         undoMove()

@@ -103,7 +103,7 @@ class GameSpec extends BaseGameSpec {
         positionTracker.setPieceAtField(aWhitePawn(), aField("a2"))
 
         when:
-        def result = performMove("player", "a2 b8")
+        def result = performMove("player", "a2 b7")
 
         then:
         !result

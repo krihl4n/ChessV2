@@ -9,21 +9,9 @@ class MoveSpec extends BaseSpec {
         def field = new Field("a1")
 
         when:
-        new Move(aWhitePawn(), field, field)
+        new Move(aWhitePawn(), field, field, null)
 
         then:
         thrown(IllegalArgumentException)
-    }
-
-    def "create move using expression"() {
-        given:
-
-        when:
-        def result = Move.of(aWhitePawn(), "a1 a2")
-
-        then:
-        result.from == new Field("a1")
-        result.to == new Field("a2")
-        result.piece == aWhitePawn()
     }
 }

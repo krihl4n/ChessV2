@@ -55,7 +55,7 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
             } else {
                 for(dst in possibleMoves.to) {
                     if(opponentPositions.contains(dst)) {
-                        game.move(playerId, field, dst)
+                        game.move(MoveDto(playerId, field, dst, "queen"))
                         return true
                     }
                 }
@@ -78,7 +78,7 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
                 positions.remove(field)
                 continue
             } else {
-                game.move(playerId, field, possibleMoves.to[Random.nextInt(0, possibleMoves.to.size)])
+                game.move(MoveDto(playerId, field, possibleMoves.to[Random.nextInt(0, possibleMoves.to.size)], "queen"))
                 break
             }
         }
