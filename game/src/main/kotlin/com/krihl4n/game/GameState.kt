@@ -1,6 +1,7 @@
 package com.krihl4n.game
 
 import com.krihl4n.api.dto.GameModeDto
+import com.krihl4n.api.dto.MoveDto
 
 enum class GameState : State {
 
@@ -26,9 +27,7 @@ enum class GameState : State {
         override fun move(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
-            playerId: String,
-            from: String,
-            to: String
+            move: MoveDto
         ) {
             throw IllegalStateException("Game not started yet")
         }
@@ -69,9 +68,7 @@ enum class GameState : State {
         override fun move(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
-            playerId: String,
-            from: String,
-            to: String
+            move: MoveDto
         ) {
             throw IllegalStateException("Cannot move, waiting for players")
         }
@@ -110,11 +107,9 @@ enum class GameState : State {
         override fun move(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
-            playerId: String,
-            from: String,
-            to: String
+            move: MoveDto
         ) {
-            gameCommand.executePerformMove(playerId, from, to)
+            gameCommand.executePerformMove(move)
         }
 
         override fun undo(stateHolder: StateHolder, gameCommand: GameCommand) {
@@ -151,9 +146,7 @@ enum class GameState : State {
         override fun move(
             stateHolder: StateHolder,
             gameCommand: GameCommand,
-            playerId: String,
-            from: String,
-            to: String
+            move: MoveDto
         ) {
             throw IllegalStateException("Cannot move if the game is finished")
         }
@@ -177,7 +170,7 @@ interface State {
     fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto)
     fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String)
     fun playerReady(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, colorPreference: String?)
-    fun move(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, from: String, to: String)
+    fun move(stateHolder: StateHolder, gameCommand: GameCommand, move: MoveDto)
     fun undo(stateHolder: StateHolder, gameCommand: GameCommand)
     fun redo(stateHolder: StateHolder, gameCommand: GameCommand)
     fun gameFinished(stateHolder: StateHolder)

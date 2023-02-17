@@ -1,6 +1,7 @@
 package com.krihl4n.game
 
 import com.krihl4n.api.dto.GameModeDto
+import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.model.Color
 import com.krihl4n.players.Player
 
@@ -22,7 +23,7 @@ interface GameCommand {
 
     fun executeResign(playerId: String)
 
-    fun executePerformMove(playerId: String, from: String, to: String)
+    fun executePerformMove(move: MoveDto)
 
     fun executeUndo()
 

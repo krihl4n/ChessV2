@@ -3,8 +3,8 @@ package com.krihl4n.api.dto
 import com.krihl4n.model.PiecePositionUpdate
 
 data class PiecePositionUpdateDto(
-    val primaryMove: MoveDto,
-    val secondaryMove: MoveDto? = null,
+    val primaryMove: PerformedMoveDto,
+    val secondaryMove: PerformedMoveDto? = null,
     val pieceCapture: PieceCaptureDto? = null,
     val convertToQueen: Boolean = false,
     val reverted: Boolean = false,
@@ -14,12 +14,12 @@ data class PiecePositionUpdateDto(
     companion object {
         internal fun from(positionUpdate: PiecePositionUpdate, turn: String): PiecePositionUpdateDto {
             return PiecePositionUpdateDto(
-                primaryMove = MoveDto(
+                primaryMove = PerformedMoveDto(
                     positionUpdate.primaryMove.from.token(),
                     positionUpdate.primaryMove.to.token()
                 ),
                 secondaryMove = positionUpdate.secondaryMove?.let {
-                    MoveDto(
+                    PerformedMoveDto(
                         positionUpdate.secondaryMove.from.token(),
                         positionUpdate.secondaryMove.to.token()
                     )
@@ -41,6 +41,6 @@ data class PiecePositionUpdateDto(
     }
 }
 
-data class MoveDto(val from: String, val to: String)
+data class PerformedMoveDto(val from: String, val to: String)
 
 data class PieceCaptureDto(val field: String, val capturedPiece: PieceDto)

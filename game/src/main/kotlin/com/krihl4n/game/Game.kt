@@ -3,6 +3,7 @@ package com.krihl4n.game
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.GameModeDto
+import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.moveCommands.CommandCoordinator
@@ -70,8 +71,8 @@ internal class Game(
 
     fun resign(playerId: String) = gameState.resign(this, gameControl, playerId)
 
-    fun performMove(playerId: String, from: String, to: String) =
-        gameState.move(this, gameControl, playerId, from, to)
+    fun performMove(move: MoveDto) =
+        gameState.move(this, gameControl, move)
 
     fun undoMove() = gameState.undo(this, gameControl)
 

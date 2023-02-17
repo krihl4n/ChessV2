@@ -4,6 +4,10 @@ import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
 import com.krihl4n.api.dto.PossibleMovesDto
+import com.krihl4n.api.pieceSetups.AboutToCheckMateSetup
+import com.krihl4n.api.pieceSetups.CastlingPieceSetup
+import com.krihl4n.api.pieceSetups.EnPassantSetup
+import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
@@ -19,7 +23,7 @@ class GameCommandHandler(
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.reqisterNewGame(newGame, sessionId)
-        gamesRegister.getGame(sessionId)?.setupChessboard() // TODO just use newGame object?
+        gamesRegister.getGame(sessionId)?.setupChessboard(EnPassantSetup()) // TODO just use newGame object?
         gamesRegister.getGame(sessionId)?.registerGameEventListener(gameEventHandler)
         gamesRegister.getGame(sessionId)?.requestNewGame(fromCommand(request.mode))
         return newGame.gameId

@@ -1,6 +1,6 @@
 import com.krihl4n.*
 import com.krihl4n.api.dto.GameResultDto
-import com.krihl4n.api.dto.MoveDto
+import com.krihl4n.api.dto.PerformedMoveDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
@@ -141,7 +141,7 @@ class ClientInteractionsSpec : ShouldSpec({
         gameCommandHandler.move("1111", playerId, "a2", "a4")
 
         val expectedUpdate = PiecePositionUpdateDto(
-            primaryMove = MoveDto("a2", "a4"),
+            primaryMove = PerformedMoveDto("a2", "a4"),
             secondaryMove = null,
             pieceCapture = null,
             convertToQueen = false,

@@ -4,7 +4,7 @@ import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.GameStateUpdateDto
-import com.krihl4n.api.dto.MoveDto
+import com.krihl4n.api.dto.PerformedMoveDto
 import com.krihl4n.api.dto.PieceCaptureDto
 import com.krihl4n.api.dto.PieceDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
@@ -50,7 +50,7 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("a2", "a3"),
+                        new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
                         false,
@@ -74,7 +74,7 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * secondListener.piecePositionUpdate(SECOND_GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("a2", "a3"),
+                        new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
                         false,
@@ -82,7 +82,7 @@ class GameEventsListenerTest extends Specification {
                         "WHITE"))
         0 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("a2", "a3"),
+                        new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
                         false,
@@ -102,8 +102,8 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("e1", "g1"),
-                        new MoveDto("h1", "f1"),
+                        new PerformedMoveDto("e1", "g1"),
+                        new PerformedMoveDto("h1", "f1"),
                         null,
                         false,
                         false,
@@ -124,7 +124,7 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("c2", "d3"),
+                        new PerformedMoveDto("c2", "d3"),
                         null,
                         new PieceCaptureDto("d3", new PieceDto("BLACK", "PAWN")),
                         false,
@@ -149,7 +149,7 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("a2", "a3"),
+                        new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
                         false,
@@ -173,7 +173,7 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("a2", "a3"),
+                        new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
                         false,
@@ -196,7 +196,7 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("e4", "d3"),
+                        new PerformedMoveDto("e4", "d3"),
                         null,
                         new PieceCaptureDto("d4", new PieceDto("WHITE", "PAWN")),
                         false,
@@ -218,7 +218,7 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("d7", "d8"),
+                        new PerformedMoveDto("d7", "d8"),
                         null,
                         null,
                         true,
@@ -240,7 +240,7 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("d7", "e8"),
+                        new PerformedMoveDto("d7", "e8"),
                         null,
                         new PieceCaptureDto("e8", new PieceDto("BLACK", "KNIGHT")),
                         true,
@@ -395,7 +395,7 @@ class GameEventsListenerTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
-                        new MoveDto("e5", "d6"),
+                        new PerformedMoveDto("e5", "d6"),
                         null,
                         new PieceCaptureDto("d5", new PieceDto("BLACK", "PAWN")),
                         false,

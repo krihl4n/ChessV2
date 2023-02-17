@@ -67,7 +67,7 @@ class GameOfChess(val gameId: String) {
 
     fun resign(playerId: String) = game.resign(playerId)
 
-    fun move(playerId: String, from: String, to: String) = game.performMove(playerId, from, to)
+    fun move(playerId: String, from: String, to: String) = game.performMove(MoveDto(playerId, from, to))
 
     fun undoMove() = game.undoMove()
 

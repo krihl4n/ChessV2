@@ -1,11 +1,19 @@
 package com.krihl4n
 
-class PawnQueenConversionSpec extends BaseGameSpec {
+class PawnConversionSpec extends BaseGameSpec {
 
     void setup() {
         game.initialize()
         game.playerReady("player", null)
     }
+
+//    def "should have info about pawn conversion when reaches the last rank"() {
+//        given:
+//
+//        when:
+//
+//        then:
+//    }
 
     def "when pawn reaches the end it converts to a queen"() {
         given:

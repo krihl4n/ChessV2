@@ -86,7 +86,7 @@ class GameController(
     @MessageMapping("/redo-move")
     @Throws(Exception::class)
     fun redoMove(@Payload playerId: String, @Header("simpSessionId") sessionId: String) {
-        println("--> /resign | sessionId=$sessionId | playerId=$playerId")
+        println("--> /redo-move | sessionId=$sessionId | playerId=$playerId")
         gameCommandHandler.redoMove(sessionId, playerId)
     }
 

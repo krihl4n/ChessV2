@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.game.Game
 import com.krihl4n.game.GameResultEvaluator
 import com.krihl4n.guards.CastlingGuard
@@ -47,12 +48,12 @@ class BaseGameSpec extends BaseSpec {
     }
 
     def performMove(String move) {
-        performMove("player", move)
+        return performMove("player", move)
     }
 
     def performMove(String player, String move) {
         String[] tokens = move.split(' ')
-        game.performMove(player, tokens[0], tokens[1])
+        return game.performMove(new MoveDto(player, tokens[0], tokens[1]))
     }
 
     def undoMove() {

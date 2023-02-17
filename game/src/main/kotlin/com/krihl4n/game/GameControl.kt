@@ -4,6 +4,7 @@ import com.krihl4n.DebugLogger
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.GameModeDto
+import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.mappers.FieldsOccupationMapper
 import com.krihl4n.api.pieceSetups.PieceSetup
@@ -34,16 +35,16 @@ internal class GameControl(
 
     fun setupChessboard(pieceSetup: PieceSetup?) = positionTracker.resetInitialGameSetup(pieceSetup)
 
-    fun performMove(playerId: String, from: Field, to: Field) {
-        if (positionTracker.isFieldEmpty(from)) {
-            println("No piece at field $from")
+    fun performMove(moveDto: MoveDto) {
+        if (positionTracker.isFieldEmpty(Field(moveDto.from))) {
+            println("No piece at field ${moveDto.from}")
             return
         }
 
-        val move = positionTracker.getPieceAt(from)?.let { Move(it, from, to) } ?: return
+        val move = positionTracker.getPieceAt(Field(moveDto.from))?.let { Move(it, moveDto.from, moveDto.to) } ?: return
 
-        if (!movePolicy.moveAllowedBy(playerId, move)) {
-            println("it's not player's $playerId turn")
+        if (!movePolicy.moveAllowedBy(moveDto.playerId, move)) {
+            println("it's not player's $moveDto.playerId turn")
             return
         }
 
@@ -109,8 +110,8 @@ internal class GameControl(
         this.gameResultEvaluator.resign(resigningPlayerColor)
     }
 
-    override fun executePerformMove(playerId: String, from: String, to: String) =
-        this.performMove(playerId, Field(from), Field(to))
+    override fun executePerformMove(move: MoveDto) =
+        this.performMove(move)
 
     override fun executeUndo() = commandCoordinator.undo()
 

@@ -12,7 +12,7 @@ class CapturesSpec extends BaseGameSpec {
         setupPieces("wr_c3 bp_c5")
 
         when:
-        game.performMove("player","c3", "c5")
+        performMove("player","c3 c5")
 
         then:
         assertPositions("wr_c5")
@@ -23,7 +23,7 @@ class CapturesSpec extends BaseGameSpec {
         setupPieces("wr_c3 wp_c5")
 
         when:
-        game.performMove("player","c3", "c5")
+        performMove("player","c3 c5")
 
         then:
         assertPositions("wr_c3 wp_c5")
@@ -34,7 +34,7 @@ class CapturesSpec extends BaseGameSpec {
         setupPieces("wr_c3 bp_c5")
 
         and:
-        game.performMove("player","c3", "c5")
+        performMove("player","c3 c5")
 
         when:
         game.undoMove()
