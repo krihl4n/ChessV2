@@ -24,7 +24,7 @@ class GameCommandHandler(
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.reqisterNewGame(newGame, sessionId)
-        gamesRegister.getGame(sessionId)?.setupChessboard(EnPassantSetup()) // TODO just use newGame object?
+        gamesRegister.getGame(sessionId)?.setupChessboard() // TODO just use newGame object?
         gamesRegister.getGame(sessionId)?.registerGameEventListener(gameEventHandler)
         gamesRegister.getGame(sessionId)?.requestNewGame(fromCommand(request.mode))
         return newGame.gameId

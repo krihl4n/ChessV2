@@ -99,7 +99,7 @@ class ClientInteractionsSpec : ShouldSpec({
         val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId))
 
-        gameCommandHandler.move("2222", playerId, "a2", "a3")
+        gameCommandHandler.move("2222", playerId, "a2", "a3", null)
 
         verify { msgSender.sendPiecePositionUpdateMsg("1111", any()) }
         verify { msgSender.sendPiecePositionUpdateMsg("2222", any()) }
@@ -111,7 +111,7 @@ class ClientInteractionsSpec : ShouldSpec({
         gameCommandHandler.connectionClosed("1111")
         gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId))
 
-        gameCommandHandler.move("2222", playerId, "a2", "a3")
+        gameCommandHandler.move("2222", playerId, "a2", "a3", null)
 
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg("2222", any()) }
         verify(exactly = 0) { msgSender.sendPiecePositionUpdateMsg("1111", any()) }
@@ -138,7 +138,7 @@ class ClientInteractionsSpec : ShouldSpec({
         val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null))
 
-        gameCommandHandler.move("1111", playerId, "a2", "a4")
+        gameCommandHandler.move("1111", playerId, "a2", "a4", null)
 
         val expectedUpdate = PiecePositionUpdateDto(
             primaryMove = PerformedMoveDto("a2", "a4"),
