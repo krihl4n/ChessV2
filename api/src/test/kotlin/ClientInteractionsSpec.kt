@@ -6,12 +6,12 @@ import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
 import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
-import io.kotest.core.spec.style.ShouldSpec
+import io.kotest.core.spec.style.FunSpec
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 
-class ClientInteractionsSpec : ShouldSpec({
+class ClientInteractionsSpec : FunSpec({
     val msgSender = mockk<MessageSender>(relaxed = true)
     var gamesRegister = GamesRegister()
     var eventSender = GameEventHandler(msgSender, gamesRegister)
@@ -29,7 +29,7 @@ class ClientInteractionsSpec : ShouldSpec({
         return gameCommandHandler.requestNewGame(sessionId, StartGameRequest("vs_computer"))
     }
 
-    should("notify player 1 that game has started when playing vs computer") {
+    test("should notify player 1 that game has started when playing vs computer") {
         val gameInfoCaptor = slot<GameInfoEvent>()
         every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
 
@@ -44,14 +44,14 @@ class ClientInteractionsSpec : ShouldSpec({
         assertEquals("WHITE", gameInfoCaptor.captured.turn)
     }
 
-    should("game ids be unique") {
+    test("should game ids be unique") {
         val gameId1 = startGame("1111")
         val gameId2 = startGame("2222")
 
         assertNotEquals(gameId1, gameId2)
     }
 
-    should("return correct game id") {
+    test("should return correct game id") {
         val gameInfoCaptor = slot<String>()
         every { msgSender.sendWaitingForOtherPlayerMsg("888", capture(gameInfoCaptor)) } returns Unit
 
@@ -62,7 +62,7 @@ class ClientInteractionsSpec : ShouldSpec({
         assertEquals(gameId, gameInfoCaptor.captured)
     }
 
-    should("discard session id if session closed") {
+    test("should discard session id if session closed") {
         val gameId = startGame("999")
         gameCommandHandler.connectionClosed("999")
 
@@ -71,13 +71,13 @@ class ClientInteractionsSpec : ShouldSpec({
         verify(exactly = 0) { msgSender.sendGameFinishedMsg("999", any()) }
     }
 
-    should("send waiting for player event with game id") {
+    test("should send waiting for player event with game id") {
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend"))
 
         verify { msgSender.sendWaitingForOtherPlayerMsg("1111", gameId) }
     }
 
-    should("send game started event when second player joins") {
+    test("should send game started event when second player joins") {
         val gameInfoPlayer1Captor = slot<GameInfoEvent>()
         every { msgSender.sendGameStartedMsg("1111", capture(gameInfoPlayer1Captor)) } returns Unit
         val gameInfoPlayer2Captor = slot<GameInfoEvent>()
@@ -94,7 +94,7 @@ class ClientInteractionsSpec : ShouldSpec({
         assertEquals("WHITE", gameInfoPlayer2Captor.captured.turn)
     }
 
-    should("be able to join game with second session") {
+    test("should be able to join game with second session") {
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
         val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId))
@@ -105,7 +105,7 @@ class ClientInteractionsSpec : ShouldSpec({
         verify { msgSender.sendPiecePositionUpdateMsg("2222", any()) }
     }
 
-    should("be able to deregister session and then rejoin game") {
+    test("should be able to deregister session and then rejoin game") {
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
         val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.connectionClosed("1111")
@@ -117,7 +117,7 @@ class ClientInteractionsSpec : ShouldSpec({
         verify(exactly = 0) { msgSender.sendPiecePositionUpdateMsg("1111", any()) }
     }
 
-    should("notify player that he has joined to existing game") {
+    test("should notify player that he has joined to existing game") {
         val gameInfoCaptor = slot<GameInfoEvent>()
         every { msgSender.sendJoinedExistingGameMsg("2222", capture(gameInfoCaptor)) } returns Unit
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
@@ -133,7 +133,7 @@ class ClientInteractionsSpec : ShouldSpec({
         assertEquals("WHITE", gameInfoCaptor.captured.turn)
     }
 
-    should("notify player moved including info about current turn") {
+    test("should notify player moved including info about current turn") {
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend"))
         val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null))
@@ -152,7 +152,7 @@ class ClientInteractionsSpec : ShouldSpec({
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg("2222", expectedUpdate) }
     }
 
-    should("be able to resign from the game and loose") {
+    test("should be able to resign from the game and loose") {
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend"))
         val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null))

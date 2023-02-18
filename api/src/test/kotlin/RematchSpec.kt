@@ -2,11 +2,11 @@ import com.krihl4n.GameCommandHandler
 import com.krihl4n.GameEventHandler
 import com.krihl4n.GamesRegister
 import com.krihl4n.app.MessageSender
-import io.kotest.core.spec.style.ShouldSpec
+import io.kotest.core.spec.style.FunSpec
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 
-class RematchSpec : ShouldSpec({
+class RematchSpec : FunSpec({
 
     val msgSender = mockk<MessageSender>(relaxed = true)
     var gamesRegister = GamesRegister()
@@ -23,15 +23,15 @@ class RematchSpec : ShouldSpec({
 
     // reuse join-game ?
 
-    should("not allow rematch if game is not finished") {
+    test("should not allow rematch if game is not finished") {
 
     }
 
-    should("allow first player to propose rematch") {
+    test("should allow first player to propose rematch") {
 
     }
 
-    should("start new game after second player accepts rematch proposal") {
+    test("should start new game after second player accepts rematch proposal") {
 
     }
 })
