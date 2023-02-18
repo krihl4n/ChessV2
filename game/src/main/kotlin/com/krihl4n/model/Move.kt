@@ -2,16 +2,13 @@ package com.krihl4n.model
 
 import java.util.*
 
-internal class Move(val piece: Piece, val from: Field, val to: Field, conversion: Type? = null) {
+internal class Move(val piece: Piece, val from: Field, val to: Field, val conversion: Type? = null) {
 
     private val id = UUID.randomUUID()
 
     init {
         if (from == to)
             throw IllegalArgumentException("Move has to be performed to different location")
-
-        if (piece.type == Type.PAWN && to.rank.isLastFor(piece.color) && conversion == null)
-            throw IllegalArgumentException("No pawn conversion info")
     }
 
     constructor(piece: Piece, from: String, to: String, conversion: String?) : this(piece, Field(from), Field(to), conversion?.let { Type.of(it) })

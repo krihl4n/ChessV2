@@ -15,7 +15,7 @@ class PawnConversionSpec extends BaseGameSpec {
         performMove(move)
 
         then:
-        thrown(IllegalArgumentException)
+        assertPositions(positions)
 
         where:
         setup   | move    || positions
@@ -34,9 +34,15 @@ class PawnConversionSpec extends BaseGameSpec {
         assertPositions(positions)
 
         where:
-        setup   | move    | conversion  || positions
-        "wp_a7" | "a7 a8" | "queen"     || "wq_a8"
-        "bp_a2" | "a2 a1" | "queen"     || "bq_a1"
+        setup   | move    | conversion || positions
+        "wp_a7" | "a7 a8" | "queen"    || "wq_a8"
+        "bp_a2" | "a2 a1" | "queen"    || "bq_a1"
+        "wp_a7" | "a7 a8" | "knight"   || "wn_a8"
+        "bp_a2" | "a2 a1" | "knight"   || "bn_a1"
+        "wp_a7" | "a7 a8" | "rook"     || "wr_a8"
+        "bp_a2" | "a2 a1" | "rook"     || "br_a1"
+        "wp_a7" | "a7 a8" | "bishop"   || "wb_a8"
+        "bp_a2" | "a2 a1" | "bishop"   || "bb_a1"
     }
 
     def "undo pawn reaches the end move"() {
@@ -63,15 +69,15 @@ class PawnConversionSpec extends BaseGameSpec {
         setupPieces(setup)
 
         when:
-        performMoveWithConversion(move, "queen")
+        performMoveWithConversion(move, "knight")
 
         then:
         assertPositions(positions)
 
         where:
         setup         | move    || positions
-        "wp_a7 br_b8" | "a7 b8" || "wq_b8"
-        "bp_a2 wr_b1" | "a2 b1" || "bq_b1"
+        "wp_a7 br_b8" | "a7 b8" || "wn_b8"
+        "bp_a2 wr_b1" | "a2 b1" || "bn_b1"
     }
 
     def "undo pawn reaches last rank with attack move"() {
@@ -79,7 +85,7 @@ class PawnConversionSpec extends BaseGameSpec {
         setupPieces(setup)
 
         when:
-        performMoveWithConversion(move, "queen")
+        performMoveWithConversion(move, "bishop")
 
         and:
         undoMove()

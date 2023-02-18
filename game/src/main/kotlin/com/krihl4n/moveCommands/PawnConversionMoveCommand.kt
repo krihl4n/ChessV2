@@ -8,7 +8,7 @@ import com.krihl4n.model.Piece
 import com.krihl4n.model.PieceCapture
 import com.krihl4n.model.PiecePositionUpdate
 
-internal class PawnToQueenMoveCommand(
+internal class PawnConversionMoveCommand(
     private val move: Move,
     private val positionTracker: PositionTracker,
     private val captureTracker: CaptureTracker
@@ -17,12 +17,15 @@ internal class PawnToQueenMoveCommand(
     private var killedPiece: Piece? = null
 
     override fun execute() {
+        if (this.move.conversion == null)
+            throw IllegalArgumentException("No pawn conversion info")
+
         positionTracker.getPieceAt(move.to)?.let {
             captureTracker.pieceCaptured(it, move.to)
             killedPiece = it
         }
         positionTracker.removePieceFromField(move.from)
-        positionTracker.setPieceAtField(Piece(move.piece.color, Type.QUEEN), move.to)
+        positionTracker.setPieceAtField(Piece(move.piece.color, move.conversion), move.to)
     }
 
     override fun undo() {
