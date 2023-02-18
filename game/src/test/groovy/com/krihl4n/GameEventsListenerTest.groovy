@@ -14,7 +14,7 @@ import com.krihl4n.api.pieceSetups.AboutToStalemateSetup
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import com.krihl4n.api.pieceSetups.EnPassantSetup
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.api.pieceSetups.QueenConversionSetup
+import com.krihl4n.api.pieceSetups.PawnConversionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import spock.lang.Specification
 
@@ -209,7 +209,7 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about pawn to queen conversion"() {
         given:
-        gameOfChess.setupChessboard(new QueenConversionSetup())
+        gameOfChess.setupChessboard(new PawnConversionSetup())
         gameOfChess.requestNewGame(TEST_MODE)
         gameOfChess.playerReady("player", null)
 
@@ -231,7 +231,7 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about pawn to queen conversion and attack"() {
         given:
-        gameOfChess.setupChessboard(new QueenConversionSetup())
+        gameOfChess.setupChessboard(new PawnConversionSetup())
         gameOfChess.requestNewGame(TEST_MODE)
         gameOfChess.playerReady("player", null)
 
