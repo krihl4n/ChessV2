@@ -33,7 +33,7 @@ data class PiecePositionUpdateDto(
                         )
                     )
                 },
-                pawnConversion = positionUpdate.pawnConversion?.toString(),
+                pawnConversion = positionUpdate.pawnConversion?.name,
                 reverted = positionUpdate.reverted,
                 turn = turn
             )
