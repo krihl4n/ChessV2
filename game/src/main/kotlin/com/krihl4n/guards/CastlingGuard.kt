@@ -124,6 +124,7 @@ internal class CastlingGuard(
     ): Boolean {
         return positionTracker.getPositionsOfAllPieces()
             .filter { it.value.color == color }
+            .filterNot { it.value.type == Type.KING && it.key.rank.isFirstFor(it.value.color)} // ugly fix for bug_08_12_2022.txt (king cannot interrupt castling from the last rank)
             .flatMap { pieceMoveCalculator.findMoves(it.key) }
             .any { it.to == field }
     }

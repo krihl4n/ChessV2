@@ -37,6 +37,11 @@ internal data class Rank(val token: String) {
                 color == Color.BLACK && token == "1"
     }
 
+    fun isFirstFor(color: Color): Boolean {
+        return color == Color.WHITE && token == "1" ||
+                color == Color.BLACK && token == "8"
+    }
+
     fun distanceTo(rank: Rank): Int {
         return abs(rank.token.toInt() - this.token.toInt())
     }

@@ -250,4 +250,15 @@ class CastlingSpec extends BaseGameSpec {
             "bk_e8 br_a8 wq_d1" | "e8 c8" || startingSetup
             "bk_e8 br_h8 wq_f1" | "e8 g8" || startingSetup
     }
+
+    def "verifies castling infinite loop fix"() {
+        given:
+        setupPieces("wk_e1 bk_e8 bb_c8")
+
+        when:
+        performMove("c8 b7")
+
+        then:
+        assertPositions("wk_e1 bk_e8 bb_b7")
+    }
 }
