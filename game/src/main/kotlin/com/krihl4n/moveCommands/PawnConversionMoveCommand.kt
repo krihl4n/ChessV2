@@ -48,7 +48,7 @@ internal class PawnConversionMoveCommand(
     override fun getPiecePositionUpdate(): PiecePositionUpdate {
         return PiecePositionUpdate(
             primaryMove = move,
-            convertToQueen = true,
+            pawnConversion = move.conversion,
             pieceCapture = killedPiece?.let { PieceCapture(move.to, it) }
         )
     }

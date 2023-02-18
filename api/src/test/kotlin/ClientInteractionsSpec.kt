@@ -144,7 +144,7 @@ class ClientInteractionsSpec : ShouldSpec({
             primaryMove = PerformedMoveDto("a2", "a4"),
             secondaryMove = null,
             pieceCapture = null,
-            convertToQueen = false,
+            pawnConversion = null,
             reverted = false,
             turn = "BLACK"
         )

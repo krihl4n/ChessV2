@@ -54,7 +54,7 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
-                        false,
+                        null,
                         false,
                         "WHITE"))
     }
@@ -78,7 +78,7 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
-                        false,
+                        null,
                         false,
                         "WHITE"))
         0 * listener.piecePositionUpdate(GAME_ID,
@@ -86,7 +86,7 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
-                        false,
+                        null,
                         false,
                         "WHITE"))
     }
@@ -106,7 +106,7 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("e1", "g1"),
                         new PerformedMoveDto("h1", "f1"),
                         null,
-                        false,
+                        null,
                         false,
                         "WHITE"
                 )
@@ -128,7 +128,7 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("c2", "d3"),
                         null,
                         new PieceCaptureDto("d3", new PieceDto("BLACK", "PAWN")),
-                        false,
+                        null,
                         false,
                         "WHITE"
                 )
@@ -153,7 +153,7 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
-                        false,
+                        null,
                         true,
                         "WHITE"))
     }
@@ -177,7 +177,7 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("a2", "a3"),
                         null,
                         null,
-                        false,
+                        null,
                         false,
                         "WHITE"))
     }
@@ -200,21 +200,21 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("e4", "d3"),
                         null,
                         new PieceCaptureDto("d4", new PieceDto("WHITE", "PAWN")),
-                        false,
+                        null,
                         false,
                         "WHITE"
                 )
         )
     }
 
-    def "should notify about pawn to queen conversion"() {
+    def "should notify about pawn conversion"() {
         given:
         gameOfChess.setupChessboard(new PawnConversionSetup())
         gameOfChess.requestNewGame(TEST_MODE)
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move(new MoveDto("player", "d7", "d8", "queen"))
+        gameOfChess.move(new MoveDto("player", "d7", "d8", conversionReq))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -222,11 +222,18 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("d7", "d8"),
                         null,
                         null,
-                        true,
+                        conversion,
                         false,
                         "WHITE"
                 )
         )
+
+        where:
+        conversionReq || conversion
+        "queen"       || "QUEEN"
+        "knight"      || "KNIGHT"
+        "bishop"      || "BISHOP"
+        "rook"        || "ROOK"
     }
 
     def "should notify about pawn to queen conversion and attack"() {
@@ -244,7 +251,7 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("d7", "e8"),
                         null,
                         new PieceCaptureDto("e8", new PieceDto("BLACK", "KNIGHT")),
-                        true,
+                        "QUEEN",
                         false,
                         "WHITE"
                 )
@@ -399,7 +406,7 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("e5", "d6"),
                         null,
                         new PieceCaptureDto("d5", new PieceDto("BLACK", "PAWN")),
-                        false,
+                        null,
                         false,
                         "WHITE"
                 )
