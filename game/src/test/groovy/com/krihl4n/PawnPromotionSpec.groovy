@@ -1,13 +1,13 @@
 package com.krihl4n
 
-class PawnConversionSpec extends BaseGameSpec {
+class PawnPromotionSpec extends BaseGameSpec {
 
     void setup() {
         game.initialize()
         game.playerReady("player", null)
     }
 
-    def "should have info about pawn conversion when reaches the last rank"() {
+    def "should have info about pawn promotion when reaches the last rank"() {
         given:
         setupPieces(setup)
 
@@ -23,18 +23,18 @@ class PawnConversionSpec extends BaseGameSpec {
         "bp_a2" | "a2 a1" || "bp_a2"
     }
 
-    def "when pawn reaches the end it converts to a queen"() {
+    def "when pawn reaches the end it promotes to a queen"() {
         given:
         setupPieces(setup)
 
         when:
-        performMoveWithConversion(move, conversion)
+        performMoveWithPawnPromotion(move, promotion)
 
         then:
         assertPositions(positions)
 
         where:
-        setup   | move    | conversion || positions
+        setup   | move    | promotion || positions
         "wp_a7" | "a7 a8" | "queen"    || "wq_a8"
         "bp_a2" | "a2 a1" | "queen"    || "bq_a1"
         "wp_a7" | "a7 a8" | "knight"   || "wn_a8"
@@ -50,7 +50,7 @@ class PawnConversionSpec extends BaseGameSpec {
         setupPieces(setup)
 
         when:
-        performMoveWithConversion(move, "queen")
+        performMoveWithPawnPromotion(move, "queen")
 
         and:
         undoMove()
@@ -69,7 +69,7 @@ class PawnConversionSpec extends BaseGameSpec {
         setupPieces(setup)
 
         when:
-        performMoveWithConversion(move, "knight")
+        performMoveWithPawnPromotion(move, "knight")
 
         then:
         assertPositions(positions)
@@ -85,7 +85,7 @@ class PawnConversionSpec extends BaseGameSpec {
         setupPieces(setup)
 
         when:
-        performMoveWithConversion(move, "bishop")
+        performMoveWithPawnPromotion(move, "bishop")
 
         and:
         undoMove()

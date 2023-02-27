@@ -22,15 +22,15 @@ class GameCommandHandler(
         val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.reqisterNewGame(newGame, sessionId)
         gamesRegister.getGame(sessionId)?.let {
-            it.setupChessboard()
+            it.setupChessboard(PawnPromotionSetup())
             it.registerGameEventListener(gameEventHandler)
             it.requestNewGame(fromCommand(request.mode))
         }
         return newGame.gameId
     }
 
-    fun move(sessionId: String, playerId: String, from: String, to: String, conversion: String?) {
-        gamesRegister.getGame(sessionId)?.move(MoveDto(playerId, from, to, conversion))
+    fun move(sessionId: String, playerId: String, from: String, to: String, pawnPromotion: String?) {
+        gamesRegister.getGame(sessionId)?.move(MoveDto(playerId, from, to, pawnPromotion))
     }
 
     fun getPositions(sessionId: String): List<FieldOccupationDto>? {

@@ -8,7 +8,7 @@ import com.krihl4n.model.Piece
 import com.krihl4n.model.PieceCapture
 import com.krihl4n.model.PiecePositionUpdate
 
-internal class PawnConversionMoveCommand(
+internal class PawnPromotionMoveCommand(
     private val move: Move,
     private val positionTracker: PositionTracker,
     private val captureTracker: CaptureTracker
@@ -17,15 +17,15 @@ internal class PawnConversionMoveCommand(
     private var killedPiece: Piece? = null
 
     override fun execute() {
-        if (this.move.conversion == null)
-            throw IllegalArgumentException("No pawn conversion info")
+        if (this.move.pawnPromotion == null)
+            throw IllegalArgumentException("No pawn promotion info")
 
         positionTracker.getPieceAt(move.to)?.let {
             captureTracker.pieceCaptured(it, move.to)
             killedPiece = it
         }
         positionTracker.removePieceFromField(move.from)
-        positionTracker.setPieceAtField(Piece(move.piece.color, move.conversion), move.to)
+        positionTracker.setPieceAtField(Piece(move.piece.color, move.pawnPromotion), move.to)
     }
 
     override fun undo() {
@@ -48,7 +48,7 @@ internal class PawnConversionMoveCommand(
     override fun getPiecePositionUpdate(): PiecePositionUpdate {
         return PiecePositionUpdate(
             primaryMove = move,
-            pawnConversion = move.conversion,
+            pawnPromotion = move.pawnPromotion,
             pieceCapture = killedPiece?.let { PieceCapture(move.to, it) }
         )
     }

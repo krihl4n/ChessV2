@@ -144,7 +144,7 @@ class ClientInteractionsSpec : FunSpec({
             primaryMove = PerformedMoveDto("a2", "a4"),
             secondaryMove = null,
             pieceCapture = null,
-            pawnConversion = null,
+            pawnPromotion = null,
             reverted = false,
             turn = "BLACK"
         )

@@ -14,7 +14,7 @@ import com.krihl4n.api.pieceSetups.AboutToStalemateSetup
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import com.krihl4n.api.pieceSetups.EnPassantSetup
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.api.pieceSetups.PawnConversionSetup
+import com.krihl4n.api.pieceSetups.PawnPromotionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import spock.lang.Specification
 
@@ -207,14 +207,14 @@ class GameEventsListenerTest extends Specification {
         )
     }
 
-    def "should notify about pawn conversion"() {
+    def "should notify about pawn promotion"() {
         given:
-        gameOfChess.setupChessboard(new PawnConversionSetup())
+        gameOfChess.setupChessboard(new PawnPromotionSetup())
         gameOfChess.requestNewGame(TEST_MODE)
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move(new MoveDto("player", "d7", "d8", conversionReq))
+        gameOfChess.move(new MoveDto("player", "d7", "d8", promotionReq))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -222,23 +222,23 @@ class GameEventsListenerTest extends Specification {
                         new PerformedMoveDto("d7", "d8"),
                         null,
                         null,
-                        conversion,
+                        pawnPromotion,
                         false,
                         "WHITE"
                 )
         )
 
         where:
-        conversionReq || conversion
+        promotionReq || pawnPromotion
         "queen"       || "QUEEN"
         "knight"      || "KNIGHT"
         "bishop"      || "BISHOP"
         "rook"        || "ROOK"
     }
 
-    def "should notify about pawn to queen conversion and attack"() {
+    def "should notify about pawn to queen promotion and attack"() {
         given:
-        gameOfChess.setupChessboard(new PawnConversionSetup())
+        gameOfChess.setupChessboard(new PawnPromotionSetup())
         gameOfChess.requestNewGame(TEST_MODE)
         gameOfChess.playerReady("player", null)
 

@@ -1,6 +1,6 @@
 package com.krihl4n.api.pieceSetups
 
-class PawnConversionSetup : PieceSetup {
+class PawnPromotionSetup : PieceSetup {
 
     override fun get() = listOf(
         "d7 white pawn",

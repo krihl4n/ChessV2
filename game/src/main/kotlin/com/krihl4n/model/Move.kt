@@ -2,7 +2,7 @@ package com.krihl4n.model
 
 import java.util.*
 
-internal class Move(val piece: Piece, val from: Field, val to: Field, val conversion: Type? = null) {
+internal class Move(val piece: Piece, val from: Field, val to: Field, val pawnPromotion: Type? = null) {
 
     private val id = UUID.randomUUID()
 
@@ -11,7 +11,7 @@ internal class Move(val piece: Piece, val from: Field, val to: Field, val conver
             throw IllegalArgumentException("Move has to be performed to different location")
     }
 
-    constructor(piece: Piece, from: String, to: String, conversion: String?) : this(piece, Field(from), Field(to), conversion?.let { Type.of(it) })
+    constructor(piece: Piece, from: String, to: String, pawnPromotion: String?) : this(piece, Field(from), Field(to), pawnPromotion?.let { Type.of(it) })
 
     override fun toString(): String {
         return "Move(piece=$piece, from=$from, to=$to)"

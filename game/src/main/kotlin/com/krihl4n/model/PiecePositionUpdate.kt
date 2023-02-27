@@ -4,12 +4,12 @@ internal class PiecePositionUpdate(
     val primaryMove: Move,
     val secondaryMove: Move? = null,
     val pieceCapture: PieceCapture? = null,
-    val pawnConversion: Type? = null,
+    val pawnPromotion: Type? = null,
     var reverted: Boolean = false
 ) {
 
     fun reverted(): PiecePositionUpdate {
-        return PiecePositionUpdate(primaryMove, secondaryMove, pieceCapture, pawnConversion, true)
+        return PiecePositionUpdate(primaryMove, secondaryMove, pieceCapture, pawnPromotion, true)
     }
 }
 

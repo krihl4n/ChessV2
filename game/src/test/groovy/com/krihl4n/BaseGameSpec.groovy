@@ -47,17 +47,17 @@ class BaseGameSpec extends BaseSpec {
         commandCoordinator.registerObserver(gameResult)
     }
 
-    def performMoveWithConversion(String move, String conversion) {
-        return performMove("player", move, conversion)
+    def performMoveWithPawnPromotion(String move, String pawnPromotion) {
+        return performMove("player", move, pawnPromotion)
     }
 
     def performMove(String move) {
         return performMove("player", move, null)
     }
 
-    def performMove(String player, String move, String conversion = null) {
+    def performMove(String player, String move, String pawnPromotion = null) {
         String[] tokens = move.split(' ')
-        return game.performMove(new MoveDto(player, tokens[0], tokens[1], conversion))
+        return game.performMove(new MoveDto(player, tokens[0], tokens[1], pawnPromotion))
     }
 
     def undoMove() {

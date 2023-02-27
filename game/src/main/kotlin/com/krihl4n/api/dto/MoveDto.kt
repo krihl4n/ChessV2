@@ -4,5 +4,5 @@ data class MoveDto(
     val playerId: String,
     val from: String,
     val to: String,
-    val conversion: String?
+    val pawnPromotion: String?
 )

@@ -14,7 +14,7 @@ internal class CommandFactory(private val positionTracker: PositionTracker) {
             return CastlingMoveCommand(move, positionTracker)
 
         if (pawnReachesLastRank(move))
-            return PawnConversionMoveCommand(move, positionTracker, captureTracker)
+            return PawnPromotionMoveCommand(move, positionTracker, captureTracker)
 
         if (isEnPassantAttack(move))
             return EnPassantAttackMoveCommand(move, positionTracker)
