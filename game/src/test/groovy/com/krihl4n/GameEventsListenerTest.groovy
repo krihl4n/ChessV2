@@ -14,7 +14,7 @@ import com.krihl4n.api.pieceSetups.AboutToStalemateSetup
 import com.krihl4n.api.pieceSetups.CastlingPieceSetup
 import com.krihl4n.api.pieceSetups.EnPassantSetup
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.api.pieceSetups.PawnPromotionSetup
+import com.krihl4n.api.pieceSetups.WhitePawnPromotionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import spock.lang.Specification
 
@@ -209,7 +209,7 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about pawn promotion"() {
         given:
-        gameOfChess.setupChessboard(new PawnPromotionSetup())
+        gameOfChess.setupChessboard(new WhitePawnPromotionSetup())
         gameOfChess.requestNewGame(TEST_MODE)
         gameOfChess.playerReady("player", null)
 
@@ -238,7 +238,7 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about pawn to queen promotion and attack"() {
         given:
-        gameOfChess.setupChessboard(new PawnPromotionSetup())
+        gameOfChess.setupChessboard(new WhitePawnPromotionSetup())
         gameOfChess.requestNewGame(TEST_MODE)
         gameOfChess.playerReady("player", null)
 

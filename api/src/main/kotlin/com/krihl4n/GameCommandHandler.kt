@@ -22,7 +22,7 @@ class GameCommandHandler(
         val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.reqisterNewGame(newGame, sessionId)
         gamesRegister.getGame(sessionId)?.let {
-            it.setupChessboard(PawnPromotionSetup())
+            it.setupChessboard(SetupProvider.getSetup(request.setup))
             it.registerGameEventListener(gameEventHandler)
             it.requestNewGame(fromCommand(request.mode))
         }
