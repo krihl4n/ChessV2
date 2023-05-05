@@ -42,8 +42,6 @@ https://www.youtube.com/watch?v=U4ogK0MIzqk&ab_channel=SebastianLague
 
 is it possible to subscribe to one web socket channel and receive messages with different model?
 
-no piece at field log in UI - what's that about?
-
 clean up mess with the beans in api module. what should be @Service and what shout not?
 
 command query separation. maybe queries don't have to be pushed through same classes

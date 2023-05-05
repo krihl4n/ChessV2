@@ -41,7 +41,7 @@ internal class PawnMoveCalculator(private val enPassantGuard: EnPassantGuard) : 
                     moves.add(PossibleMove(from, attackField))
             }
 
-        moves.addAll(enPassantGuard.getEnPassantMoves())
+        moves.addAll(enPassantGuard.getEnPassantMoves(from))
         return moves
     }
 

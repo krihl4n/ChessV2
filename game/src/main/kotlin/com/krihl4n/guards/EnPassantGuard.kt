@@ -10,7 +10,7 @@ internal class EnPassantGuard(
     private val commandCoordinator: CommandCoordinator
 ) {
 
-    fun getEnPassantMoves(): List<PossibleMove> {
+    fun getEnPassantMoves(from: Field): List<PossibleMove> {
         val lastMove = commandCoordinator.getLastMove() ?: return emptyList()
         if (lastMove.piece.type != Type.PAWN || lastMove.to.rank.distanceTo(lastMove.from.rank) < 2)
             return emptyList()
@@ -19,11 +19,15 @@ internal class EnPassantGuard(
         val attackedField: Field = findAttackedField(lastMove)
 
         getPawnToTheLeft(lastMove)?.let {
-            moves.appendWith((lastMove.to.file - 1)!!, lastMove.to.rank, attackedField)
+            if(from.file == lastMove.to.file - 1) {
+                moves.appendWith((lastMove.to.file - 1)!!, lastMove.to.rank, attackedField)
+            }
         }
 
         getPawnToTheRight(lastMove)?.let {
-            moves.appendWith((lastMove.to.file + 1)!!, lastMove.to.rank, attackedField)
+            if(from.file == lastMove.to.file + 1) {
+                moves.appendWith((lastMove.to.file + 1)!!, lastMove.to.rank, attackedField)
+            }
         }
 
         return moves

@@ -116,4 +116,15 @@ class EnPassantSpec extends BaseGameSpec {
         then:
         !game.getPossibleMoves("f4").to.contains("f3")
     }
+
+    def "allow en passant for correct files only"() {
+        given:
+        setupPieces("wp_d2 bp_e4")
+
+        when:
+        performMove("d2 d4")
+
+        then:
+        !game.getPossibleMoves("d4").to.contains("d3")
+    }
 }
