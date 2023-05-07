@@ -43,6 +43,13 @@ class GameController(
         gameCommandHandler.joinGame(sessionId, request)
     }
 
+    @MessageMapping("/rematch")
+    @Throws(Exception::class)
+    fun rematch(@Payload command: String, @Header("simpSessionId") sessionId: String) { // todo object of some sort? with gameId maybe?
+        println("--> /rematch | sessionId=$sessionId | $command")
+        gameCommandHandler.requestRematch(sessionId)
+    }
+
     @MessageMapping("/fields-occupation")
     @Throws(Exception::class)
     fun fieldsOccupation(@Payload command: String, @Header("simpSessionId") sessionId: String) {

@@ -57,9 +57,7 @@ class GameOfChess(val gameId: String) {
         }
     }
 
-    fun getPlayerOne()  = this.game.fetchPlayerOne()
-
-    fun getPlayerTwo() = this.game.fetchPlayerTwo()
+    fun getMode() = game.getMode()
 
     fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)
 
@@ -78,7 +76,10 @@ class GameOfChess(val gameId: String) {
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
             override fun positionsUpdated(update: PiecePositionUpdate) {
-                listener.piecePositionUpdate(gameId, PiecePositionUpdateDto.from(update, game.fetchColorAllowedToMove()))
+                listener.piecePositionUpdate(
+                    gameId,
+                    PiecePositionUpdateDto.from(update, game.fetchColorAllowedToMove())
+                )
             }
         })
 
@@ -90,7 +91,7 @@ class GameOfChess(val gameId: String) {
                     )
                 )
 
-                if(update.gameState == "IN_PROGRESS") {
+                if (update.gameState == "IN_PROGRESS") {
                     listener.gameStarted(
                         gameId,
                         GameInfoDto(

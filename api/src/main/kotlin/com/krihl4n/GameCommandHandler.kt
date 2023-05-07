@@ -2,6 +2,7 @@ package com.krihl4n
 
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.FieldOccupationDto
+import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PossibleMovesDto
@@ -10,6 +11,7 @@ import com.krihl4n.app.ConnectionListener
 import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
 import java.util.*
 
 @Service
@@ -20,12 +22,31 @@ class GameCommandHandler(
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
-        gamesRegister.reqisterNewGame(newGame, sessionId)
+        gamesRegister.registerNewGame(newGame, sessionId)
         gamesRegister.getGame(sessionId)?.let {
             it.setupChessboard(SetupProvider.getSetup(request.setup))
             it.registerGameEventListener(gameEventHandler)
             it.requestNewGame(fromCommand(request.mode))
         }
+        return newGame.gameId
+    }
+
+    fun requestRematch(sessionId: String): String { // todo what to do with old games?
+        val existingGame = gamesRegister.getGame(sessionId) ?: throw RuntimeException("No game to base rematch on") // todo specific exception
+        val playerId = gamesRegister.getPlayerId(sessionId) ?: throw RuntimeException("No player registered") // todo test
+        gamesRegister.deregisterGame(existingGame.gameId)
+
+        val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
+        gamesRegister.registerNewGame(newGame, sessionId)
+        gamesRegister.getGame(sessionId)?.let {
+            it.setupChessboard(SetupProvider.getSetup(null))
+            it.registerGameEventListener(gameEventHandler)
+            it.requestNewGame(existingGame.getMode() ?: GameModeDto.TEST_MODE)
+        }
+
+//        gamesRegister.joinPlayer(sessionId, playerId)
+//        gamesRegister.joinGame(sessionId, newGame.gameId)
+//        gamesRegister.getGameById(newGame.gameId).playerReady(playerId,  null)
         return newGame.gameId
     }
 
