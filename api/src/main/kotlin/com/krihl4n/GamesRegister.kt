@@ -24,6 +24,10 @@ class GamesRegister {
         return if (id == null) emptyList() else listOf(id)
     }
 
+    fun getRelatedPlayerSessionId(playerId: String): String? { // todo just return string
+        return playerSessionIds[playerId]
+    }
+
     fun getGame(sessionId: String): GameOfChess? {
         return gamesSessionIds
             .filter { gamesSessionIds -> gamesSessionIds.value.contains(sessionId) }

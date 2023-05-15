@@ -81,12 +81,11 @@ class RematchSpec : FunSpec({
         assertEquals("VS_COMPUTER", gameInfoCaptor.captured.mode)
     }
 
+    // should notify all players about rematch
+
 //    test("should not allow rematch if game is not finished") {
 //
 //    }
 //
-//    test("should allow first player to propose rematch") {
-//
-//    }
 // two players propose rematch at the same time
 })

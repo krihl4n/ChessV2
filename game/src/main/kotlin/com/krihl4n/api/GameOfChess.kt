@@ -61,6 +61,8 @@ class GameOfChess(val gameId: String) {
 
     fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)
 
+    fun getPlayers() = listOf(this.game.fetchPlayerOne(), this.game.fetchPlayerTwo())
+
     fun getColorAllowedToMove() = this.game.colorAllowedToMove().toString()
 
     fun resign(playerId: String) = game.resign(playerId)

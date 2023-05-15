@@ -31,9 +31,12 @@ class GameCommandHandler(
         return newGame.gameId
     }
 
+    // todo why player id changes?
     fun requestRematch(sessionId: String): String { // todo what to do with old games?
-        val existingGame = gamesRegister.getGame(sessionId) ?: throw RuntimeException("No game to base rematch on") // todo specific exception
-        val playerId = gamesRegister.getPlayerId(sessionId) ?: throw RuntimeException("No player registered") // todo test
+        val existingGame = gamesRegister.getGame(sessionId)
+            ?: throw RuntimeException("No game to base rematch on") // todo specific exception
+        val playerId =
+            gamesRegister.getPlayerId(sessionId) ?: throw RuntimeException("No player registered") // todo test
         gamesRegister.deregisterGame(existingGame.gameId)
 
         val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
@@ -44,9 +47,13 @@ class GameCommandHandler(
             it.requestNewGame(existingGame.getMode() ?: GameModeDto.TEST_MODE)
         }
 
-//        gamesRegister.joinPlayer(sessionId, playerId)
-//        gamesRegister.joinGame(sessionId, newGame.gameId)
-//        gamesRegister.getGameById(newGame.gameId).playerReady(playerId,  null)
+        existingGame.getPlayers().forEach { player ->
+            if (player.id != playerId) {
+                gamesRegister.getRelatedPlayerSessionId(player.id)?.let {
+                    this.gameEventHandler.rematchRequested(it, newGame.gameId)
+                }
+            }
+        }
         return newGame.gameId
     }
 

@@ -39,6 +39,10 @@ class MessageSender(
         sendMsg(sessionId, "/queue/joined-existing-game", gameInfo)
     }
 
+    fun sendRematchRequestedMsg(sessionId: String, gameId: String) {
+        sendMsg(sessionId, "/queue/rematch-requested", gameId)
+    }
+
     private fun sendMsg(sessionId: String, destination: String, result: Any) {
         println("<-- $destination | $result")
         simpMessagingTemplate.convertAndSendToUser(

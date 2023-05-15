@@ -73,5 +73,9 @@ class GameEventHandler(
         }
     }
 
+    fun rematchRequested(sessionId: String, gameId: String) {
+        messageSender.sendRematchRequestedMsg(sessionId, gameId)
+    }
+
     private fun getSessionIds(gameId: String) = gamesRegister.getRelatedSessionIds(gameId)
 }
