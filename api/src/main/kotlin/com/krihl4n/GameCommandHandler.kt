@@ -21,17 +21,17 @@ class GameCommandHandler(
 ) : ConnectionListener {
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
-        val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
+        val newGame = GameOfChess("g-" + UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.registerNewGame(newGame, sessionId)
         gamesRegister.getGame(sessionId)?.let {
             it.setupChessboard(SetupProvider.getSetup(request.setup))
             it.registerGameEventListener(gameEventHandler)
             it.requestNewGame(fromCommand(request.mode))
         }
+        gamesRegister.debugPrint()
         return newGame.gameId
     }
 
-    // todo why player id changes?
     fun requestRematch(sessionId: String): String { // todo what to do with old games?
         val existingGame = gamesRegister.getGame(sessionId)
             ?: throw RuntimeException("No game to base rematch on") // todo specific exception
@@ -39,7 +39,7 @@ class GameCommandHandler(
             gamesRegister.getPlayerId(sessionId) ?: throw RuntimeException("No player registered") // todo test
         gamesRegister.deregisterGame(existingGame.gameId)
 
-        val newGame = GameOfChess(UUID.randomUUID().toString()) // TODO generate id inside
+        val newGame = GameOfChess("g-" + UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.registerNewGame(newGame, sessionId)
         gamesRegister.getGame(sessionId)?.let {
             it.setupChessboard(SetupProvider.getSetup(null))
@@ -54,6 +54,7 @@ class GameCommandHandler(
                 }
             }
         }
+        gamesRegister.debugPrint()
         return newGame.gameId
     }
 
@@ -70,15 +71,20 @@ class GameCommandHandler(
     }
 
     fun joinGame(sessionId: String, req: JoinGameRequest): String {
-        val playerId = UUID.randomUUID().toString()
-        gamesRegister.joinPlayer(sessionId, playerId)
-        gamesRegister.joinGame(sessionId, req.gameId)
         if (req.playerId == null) {
+            println("JOIN GAME")
+            val playerId = "p-" + UUID.randomUUID().toString()
+            gamesRegister.registerPlayer(sessionId, req.gameId, playerId)
             gamesRegister.getGameById(req.gameId).playerReady(playerId, req.colorPreference)
+            gamesRegister.debugPrint()
+            return playerId
         } else {
+            println("JOIN ONGOING GAME")
+            gamesRegister.registerPlayer(sessionId, req.gameId, req.playerId)
             gameEventHandler.joinedExistingGame(sessionId, req.gameId, req.playerId)
+            gamesRegister.debugPrint()
+            return req.playerId
         }
-        return playerId
     }
 
     override fun connectionEstablished(sessionId: String) {
