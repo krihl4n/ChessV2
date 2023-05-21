@@ -42,6 +42,9 @@ class GameEventHandler(
                 )
             )
         }
+        if(gameInfo.player1 == gameInfo.player2) {
+            return
+        }
         gamesRegister.getRelatedPlayerSessionIds(gameInfo.player2.id).forEach {
             messageSender.sendGameStartedMsg(
                 it,

@@ -16,8 +16,8 @@ class GamesRegister {
         entries.add(RegisteredGame(gameOfChess, sessionId))
     }
 
-    fun getRelatedSessionIds(gameId: String): List<String> { // todo change to set
-       return this.entries.find { it.gameId() == gameId }?.sessionIds()?.toList().orEmpty()
+    fun getRelatedSessionIds(gameId: String): Set<String> { // todo change to set
+       return this.entries.find { it.gameId() == gameId }?.sessionIds().orEmpty()
     }
 
     fun getRelatedPlayerSessionIds(playerId: String): List<String> { // todo just return string
@@ -86,7 +86,7 @@ class RegisteredGame(val game: GameOfChess, private var initialSessionId: String
     }
 
     override fun toString(): String {
-        return "RegisteredGame(\ngame=${game.gameId}, \ninitialSessionId=$initialSessionId, \nplayerSessions=\n${this.playerSessions.map { "\n\t$it" }})"
+        return "RegisteredGame(\ngame=${game.gameId}, \ninitialSessionId=$initialSessionId, \nplayerSessions=\n${this.playerSessions.map { "$it" }})"
     }
 }
 

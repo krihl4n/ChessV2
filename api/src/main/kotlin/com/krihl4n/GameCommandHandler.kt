@@ -37,6 +37,10 @@ class GameCommandHandler(
             ?: throw RuntimeException("No game to base rematch on") // todo specific exception
         val playerId =
             gamesRegister.getPlayerId(sessionId) ?: throw RuntimeException("No player registered") // todo test
+
+        val opponentSessionId = gamesRegister
+            .getRelatedSessionIds(existingGame.gameId)
+            .firstOrNull { it != sessionId }
         gamesRegister.deregisterGame(existingGame.gameId)
 
         val newGame = GameOfChess("g-" + UUID.randomUUID().toString()) // TODO generate id inside
@@ -47,13 +51,7 @@ class GameCommandHandler(
             it.requestNewGame(existingGame.getMode() ?: GameModeDto.TEST_MODE)
         }
 
-        existingGame.getPlayers().forEach { player ->
-            if (player.id != playerId) {
-                gamesRegister.getRelatedPlayerSessionId(player.id)?.let {
-                    this.gameEventHandler.rematchRequested(it, newGame.gameId)
-                }
-            }
-        }
+        opponentSessionId?.let { this.gameEventHandler.rematchRequested(opponentSessionId, newGame.gameId) }
         gamesRegister.debugPrint()
         return newGame.gameId
     }
