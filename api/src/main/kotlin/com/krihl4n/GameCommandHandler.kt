@@ -69,7 +69,7 @@ class GameCommandHandler(
     }
 
     fun joinGame(sessionId: String, req: JoinGameRequest): String {
-        if (req.playerId == null) {
+        if (!req.rejoin) {
             println("JOIN GAME")
             val playerId = "p-" + UUID.randomUUID().toString()
             gamesRegister.registerPlayer(sessionId, req.gameId, playerId)
@@ -78,7 +78,7 @@ class GameCommandHandler(
             return playerId
         } else {
             println("JOIN ONGOING GAME")
-            gamesRegister.registerPlayer(sessionId, req.gameId, req.playerId)
+            gamesRegister.registerPlayer(sessionId, req.gameId, req.playerId!!)
             gameEventHandler.joinedExistingGame(sessionId, req.gameId, req.playerId)
             gamesRegister.debugPrint()
             return req.playerId

@@ -39,7 +39,7 @@ class GamesRegister {
 
     fun deregisterSession(sessionId: String) {
         this.entries.forEach { it.deregisterSession(sessionId) }
-        this.entries.removeIf { it.sessionIds().isEmpty() } // todo rethink that
+     //   this.entries.removeIf { it.sessionIds().isEmpty() } // todo rethink that
     }
 
     fun getGameById(gameId: String): GameOfChess {
