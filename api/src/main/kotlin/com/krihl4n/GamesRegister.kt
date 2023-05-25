@@ -16,13 +16,8 @@ class GamesRegister {
         entries.add(RegisteredGame(gameOfChess, sessionId))
     }
 
-    fun getRelatedSessionIds(gameId: String): Set<String> { // todo change to set
+    fun getRelatedSessionIds(gameId: String): Set<String> {
        return this.entries.find { it.gameId() == gameId }?.sessionIds().orEmpty()
-    }
-
-    fun getRelatedPlayerSessionIds(playerId: String): List<String> { // todo just return string
-        val id =  this.entries.find { it.playerParticipates(playerId) }?.playerSessionId(playerId)
-        return if (id == null) emptyList() else listOf(id)
     }
 
     fun getRelatedPlayerSessionId(playerId: String): String? { // todo just return string

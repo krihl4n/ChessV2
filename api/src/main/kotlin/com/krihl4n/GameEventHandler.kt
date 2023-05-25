@@ -30,7 +30,7 @@ class GameEventHandler(
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        gamesRegister.getRelatedPlayerSessionIds(gameInfo.player1.id).forEach {
+        gamesRegister.getRelatedPlayerSessionId(gameInfo.player1.id)?.let {
             messageSender.sendGameStartedMsg(
                 it,
                 GameInfoEvent(
@@ -45,7 +45,7 @@ class GameEventHandler(
         if(gameInfo.player1 == gameInfo.player2) {
             return
         }
-        gamesRegister.getRelatedPlayerSessionIds(gameInfo.player2.id).forEach {
+        gamesRegister.getRelatedPlayerSessionId(gameInfo.player2.id)?.let {
             messageSender.sendGameStartedMsg(
                 it,
                 GameInfoEvent(
