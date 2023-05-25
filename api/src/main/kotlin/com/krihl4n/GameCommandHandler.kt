@@ -18,6 +18,7 @@ import java.util.*
 class GameCommandHandler(
     private val gameEventHandler: GameEventHandler,
     private val gamesRegister: GamesRegister,
+    private val rematchManager: RematchManager
 ) : ConnectionListener {
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
@@ -38,14 +39,20 @@ class GameCommandHandler(
         val playerId =
             gamesRegister.getPlayerId(sessionId) ?: throw RuntimeException("No player registered") // todo test
 
+        val opponentPlayerId = existingGame
+            .getPlayers()
+            .firstOrNull { it.id != playerId }?.id ?: existingGame.getPlayers().first().id
         val opponentSessionId = gamesRegister
             .getRelatedSessionIds(existingGame.gameId)
             .firstOrNull { it != sessionId }
+        val playerNextColor = existingGame.getPlayer(playerId)?.color?.opposite() ?: throw RuntimeException("Cannot establish rematch color")
+
         gamesRegister.deregisterGame(existingGame.gameId)
 
         val newGame = GameOfChess("g-" + UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.registerNewGame(newGame, sessionId)
         gamesRegister.getGame(sessionId)?.let {
+            this.rematchManager.createProposal(playerId, opponentPlayerId, playerNextColor)
             it.setupChessboard(SetupProvider.getSetup(null))
             it.registerGameEventListener(gameEventHandler)
             it.requestNewGame(existingGame.getMode() ?: GameModeDto.TEST_MODE)
@@ -71,9 +78,16 @@ class GameCommandHandler(
     fun joinGame(sessionId: String, req: JoinGameRequest): String {
         if (!req.rejoin) {
             println("JOIN GAME")
-            val playerId = "p-" + UUID.randomUUID().toString()
+            val playerId = req.playerId ?: ("p-" + UUID.randomUUID().toString())
             gamesRegister.registerPlayer(sessionId, req.gameId, playerId)
-            gamesRegister.getGameById(req.gameId).playerReady(playerId, req.colorPreference)
+
+            val colorPreference = rematchManager
+                .popRematchProposal(playerId)
+                ?.playerNextColor
+                ?.toString() ?: req.colorPreference
+
+            println("COLOR PREFERENCE: $colorPreference")
+            gamesRegister.getGameById(req.gameId).playerReady(playerId, colorPreference)
             gamesRegister.debugPrint()
             return playerId
         } else {
