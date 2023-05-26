@@ -1,6 +1,7 @@
 import com.krihl4n.GameCommandHandler
 import com.krihl4n.GameEventHandler
 import com.krihl4n.GamesRegister
+import com.krihl4n.RematchManager
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
 import com.krihl4n.requests.JoinGameRequest
@@ -17,12 +18,14 @@ class RematchSpec : FunSpec({
     val msgSender = mockk<MessageSender>(relaxed = true)
     var gamesRegister = GamesRegister()
     var eventSender = GameEventHandler(msgSender, gamesRegister)
-    var gameCommandHandler = GameCommandHandler(eventSender, gamesRegister)
+    var rematchManager = RematchManager()
+    var gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, rematchManager)
 
     beforeTest {
         gamesRegister = GamesRegister()
         eventSender = GameEventHandler(msgSender, gamesRegister)
-        gameCommandHandler = GameCommandHandler(eventSender, gamesRegister)
+        rematchManager = RematchManager()
+        gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, rematchManager)
     }
 
     afterTest { clearAllMocks() }

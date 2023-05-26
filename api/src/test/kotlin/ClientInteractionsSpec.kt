@@ -15,12 +15,14 @@ class ClientInteractionsSpec : FunSpec({
     val msgSender = mockk<MessageSender>(relaxed = true)
     var gamesRegister = GamesRegister()
     var eventSender = GameEventHandler(msgSender, gamesRegister)
-    var gameCommandHandler = GameCommandHandler(eventSender, gamesRegister)
+    var rematchManager = RematchManager()
+    var gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, rematchManager)
 
     beforeTest {
         gamesRegister = GamesRegister()
         eventSender = GameEventHandler(msgSender, gamesRegister)
-        gameCommandHandler = GameCommandHandler(eventSender, gamesRegister)
+        rematchManager = RematchManager()
+        gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, rematchManager)
     }
 
     afterTest { clearAllMocks() }
@@ -96,8 +98,8 @@ class ClientInteractionsSpec : FunSpec({
 
     test("should be able to join game with second session") {
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
-        val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
-        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId))
+        val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"), )
+        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId, true))
 
         gameCommandHandler.move("2222", playerId, "a2", "a3", null)
 
@@ -109,7 +111,7 @@ class ClientInteractionsSpec : FunSpec({
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
         val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.connectionClosed("1111")
-        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId))
+        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId, true))
 
         gameCommandHandler.move("2222", playerId, "a2", "a3", null)
 
@@ -123,7 +125,7 @@ class ClientInteractionsSpec : FunSpec({
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
         val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
 
-        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId))
+        gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId, true))
 
         verify(exactly = 1) { msgSender.sendJoinedExistingGameMsg("2222", any()) }
         verify(exactly = 0) { msgSender.sendJoinedExistingGameMsg("1111", any()) }
