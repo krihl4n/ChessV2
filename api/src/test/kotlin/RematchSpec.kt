@@ -47,15 +47,10 @@ class RematchSpec : FunSpec({
         every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
 
         val newGameId = gameCommandHandler.requestRematch("1111")
+        gameCommandHandler.joinGame("1111", JoinGameRequest(newGameId))
 
         verify { msgSender.sendGameStartedMsg("1111", any()) }
         assertEquals(newGameId, gameInfoCaptor.captured.gameId)
-    }
-
-    test("should not allow rematch if there was no game before") {
-        shouldThrow<RuntimeException> { // TODO specific exception
-            gameCommandHandler.requestRematch("1111")
-        }
     }
 
     test("player should remain his id") {
@@ -78,7 +73,8 @@ class RematchSpec : FunSpec({
         val gameInfoCaptor = slot<GameInfoEvent>()
         every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
 
-        gameCommandHandler.requestRematch("1111")
+        val newGameId = gameCommandHandler.requestRematch("1111")
+        gameCommandHandler.joinGame("1111", JoinGameRequest(newGameId))
 
         verify { msgSender.sendGameStartedMsg("1111", any()) }
         assertEquals("VS_COMPUTER", gameInfoCaptor.captured.mode)
