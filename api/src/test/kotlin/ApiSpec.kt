@@ -14,6 +14,9 @@ const val SESSION_ID_2 = "2222"
 const val WHITE = "white"
 const val BLACK = "black"
 
+const val VS_COMPUTER = "vs_computer"
+const val VS_FRIEND = "vs_friend"
+
 val msgSender = mockk<MessageSender>(relaxed = true)
 var gamesRegister = GamesRegister()
 var eventSender = GameEventHandler(msgSender, gamesRegister)

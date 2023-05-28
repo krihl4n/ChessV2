@@ -22,6 +22,14 @@ import static com.krihl4n.api.dto.GameModeDto.*
 
 class GameEventsListenerTest extends Specification {
 
+    public static final String WHITE_PLAYER_WON = "white_player_won"
+    public static final String CHECK_MATE = "check_mate"
+    public static final String BLACK_PLAYER_WON = "black_player_won"
+    public static final String DRAW = "draw"
+    public static final String STALEMATE = "stalemate"
+    public static final String DEAD_POSITION = "dead_position"
+    public static final String PLAYER_RESIGNED = "player_resigned"
+
     GameEventListener listener = Mock(GameEventListener)
     GameOfChess gameOfChess
 
@@ -305,7 +313,7 @@ class GameEventsListenerTest extends Specification {
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
-        1 * listener.gameFinished(GAME_ID, new GameResultDto("WHITE_PLAYER_WON", "CHECK_MATE"))
+        1 * listener.gameFinished(GAME_ID, new GameResultDto(WHITE_PLAYER_WON, CHECK_MATE))
     }
 
     def "should notify about game end after check mate by black player"() {
@@ -328,7 +336,7 @@ class GameEventsListenerTest extends Specification {
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
-        1 * listener.gameFinished(GAME_ID, new GameResultDto("BLACK_PLAYER_WON", "CHECK_MATE"))
+        1 * listener.gameFinished(GAME_ID, new GameResultDto(BLACK_PLAYER_WON, CHECK_MATE))
     }
 
     def "should notify about draw due to after stalemate"() {
@@ -342,7 +350,7 @@ class GameEventsListenerTest extends Specification {
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
-        1 * listener.gameFinished(GAME_ID, new GameResultDto("DRAW", "STALEMATE"))
+        1 * listener.gameFinished(GAME_ID, new GameResultDto(DRAW, STALEMATE))
     }
 
     def "should notify about draw due to dead position"() {
@@ -365,7 +373,7 @@ class GameEventsListenerTest extends Specification {
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
-        1 * listener.gameFinished(GAME_ID, new GameResultDto("DRAW", "DEAD_POSITION"))
+        1 * listener.gameFinished(GAME_ID, new GameResultDto(DRAW, DEAD_POSITION))
     }
 
     def "should notify about loss after player resigned"() {
@@ -379,7 +387,7 @@ class GameEventsListenerTest extends Specification {
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
-        1 * listener.gameFinished(GAME_ID, new GameResultDto("BLACK_PLAYER_WON", "PLAYER_RESIGNED"))
+        1 * listener.gameFinished(GAME_ID, new GameResultDto(BLACK_PLAYER_WON, PLAYER_RESIGNED))
     }
 
     def "should notify correctly about en passant attack"() {

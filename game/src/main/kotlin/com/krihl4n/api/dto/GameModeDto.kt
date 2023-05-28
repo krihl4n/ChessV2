@@ -4,6 +4,8 @@ enum class GameModeDto {
 
     TEST_MODE, VS_COMPUTER, VS_FRIEND;
 
+    override fun toString() = super.toString().lowercase()
+
     companion object {
         fun fromCommand(mode: String): GameModeDto {
             return when (mode.lowercase()) {

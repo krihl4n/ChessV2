@@ -113,8 +113,8 @@ class GameOfChess(val gameId: String) {
             override fun gameFinished(result: GameResult) {
                 listener.gameFinished(
                     gameId, GameResultDto(
-                        result = result.result.toString(),
-                        reason = result.reason.toString()
+                        result = result.result.toString().lowercase(),
+                        reason = result.reason.toString().lowercase()
                     )
                 )
             }

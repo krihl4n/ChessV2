@@ -45,7 +45,7 @@ class RematchSpec : FunSpec({
     }
 
     test("game mode should remain unchanged") {
-        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("vs_computer", null))
+        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(VS_COMPUTER, null))
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
         val gameInfoCaptor = gameStartedCaptor()
 
@@ -53,7 +53,7 @@ class RematchSpec : FunSpec({
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId))
 
         verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
-        assertEquals("VS_COMPUTER", gameInfoCaptor.captured.mode)
+        assertEquals(VS_COMPUTER, gameInfoCaptor.captured.mode)
     }
 
     // should notify all players about rematch
