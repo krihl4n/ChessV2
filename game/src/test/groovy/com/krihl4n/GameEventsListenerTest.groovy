@@ -135,7 +135,7 @@ class GameEventsListenerTest extends Specification {
                 new PiecePositionUpdateDto(
                         new PerformedMoveDto("c2", "d3"),
                         null,
-                        new PieceCaptureDto("d3", new PieceDto("black", "PAWN")),
+                        new PieceCaptureDto("d3", new PieceDto("black", "pawn")),
                         null,
                         false,
                         "white"
@@ -207,7 +207,7 @@ class GameEventsListenerTest extends Specification {
                 new PiecePositionUpdateDto(
                         new PerformedMoveDto("e4", "d3"),
                         null,
-                        new PieceCaptureDto("d4", new PieceDto("white", "PAWN")),
+                        new PieceCaptureDto("d4", new PieceDto("white", "pawn")),
                         null,
                         false,
                         "white"
@@ -222,7 +222,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move(new MoveDto("player", "d7", "d8", promotionReq))
+        gameOfChess.move(new MoveDto("player", "d7", "d8", pawnPromotion))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -237,11 +237,7 @@ class GameEventsListenerTest extends Specification {
         )
 
         where:
-        promotionReq || pawnPromotion
-        "queen"       || "QUEEN"
-        "knight"      || "KNIGHT"
-        "bishop"      || "BISHOP"
-        "rook"        || "ROOK"
+        pawnPromotion << ["queen", "knight", "bishop", "rook"]
     }
 
     def "should notify about pawn to queen promotion and attack"() {
@@ -258,8 +254,8 @@ class GameEventsListenerTest extends Specification {
                 new PiecePositionUpdateDto(
                         new PerformedMoveDto("d7", "e8"),
                         null,
-                        new PieceCaptureDto("e8", new PieceDto("black", "KNIGHT")),
-                        "QUEEN",
+                        new PieceCaptureDto("e8", new PieceDto("black", "knight")),
+                        "queen",
                         false,
                         "white"
                 )
@@ -413,7 +409,7 @@ class GameEventsListenerTest extends Specification {
                 new PiecePositionUpdateDto(
                         new PerformedMoveDto("e5", "d6"),
                         null,
-                        new PieceCaptureDto("d5", new PieceDto("black", "PAWN")),
+                        new PieceCaptureDto("d5", new PieceDto("black", "pawn")),
                         null,
                         false,
                         "white"

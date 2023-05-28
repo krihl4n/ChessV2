@@ -29,6 +29,8 @@ enum class Color {
 enum class Type {
     PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING;
 
+    override fun toString(): String = super.toString().lowercase()
+
     companion object {
         fun of(typeString: String): Type {
             return when (typeString) {

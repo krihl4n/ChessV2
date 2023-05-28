@@ -29,11 +29,11 @@ data class PiecePositionUpdateDto(
                         field = positionUpdate.pieceCapture.field.token(),
                         capturedPiece = PieceDto(
                             positionUpdate.pieceCapture.piece.color.toString(),
-                            positionUpdate.pieceCapture.piece.type.name
+                            positionUpdate.pieceCapture.piece.type.toString()
                         )
                     )
                 },
-                pawnPromotion = positionUpdate.pawnPromotion?.name,
+                pawnPromotion = positionUpdate.pawnPromotion?.toString(),
                 reverted = positionUpdate.reverted,
                 turn = turn
             )

@@ -27,7 +27,7 @@ internal class FieldsOccupationMapper {
                 if (piece == null) {
                     occupations.add(FieldOccupationDto(field, null))
                 } else {
-                    occupations.add(FieldOccupationDto(field, PieceDto(piece.color.toString(), piece.type.name)))
+                    occupations.add(FieldOccupationDto(field, PieceDto(piece.color.toString(), piece.type.toString())))
                 }
             }
             return occupations
