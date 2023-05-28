@@ -1,4 +1,3 @@
-import com.krihl4n.events.GameInfoEvent
 import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
 import io.kotest.core.spec.style.FunSpec
@@ -24,8 +23,7 @@ class RematchSpec : FunSpec({
     test("should start a new game") {
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("", null))
         gameCommandHandler.joinGame("1111", JoinGameRequest(gameId))
-        val gameInfoCaptor = slot<GameInfoEvent>()
-        every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
+        val gameInfoCaptor = gameStartedCaptor()
 
         val newGameId = gameCommandHandler.requestRematch("1111")
         gameCommandHandler.joinGame("1111", JoinGameRequest(newGameId))
@@ -35,9 +33,7 @@ class RematchSpec : FunSpec({
     }
 
     test("player should remain his id") {
-        val gameInfoCaptor = slot<GameInfoEvent>()
-        every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
-
+        val gameInfoCaptor = gameStartedCaptor()
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("", null))
         gameCommandHandler.joinGame("1111", JoinGameRequest(gameId))
         val originalGamePlayer = gameInfoCaptor.captured.player
@@ -51,8 +47,7 @@ class RematchSpec : FunSpec({
     test("game mode should remain unchanged") {
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer", null))
         gameCommandHandler.joinGame("1111", JoinGameRequest(gameId))
-        val gameInfoCaptor = slot<GameInfoEvent>()
-        every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
+        val gameInfoCaptor = gameStartedCaptor()
 
         val newGameId = gameCommandHandler.requestRematch("1111")
         gameCommandHandler.joinGame("1111", JoinGameRequest(newGameId))

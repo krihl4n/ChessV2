@@ -19,18 +19,18 @@ class ClientInteractionsSpec : FunSpec({
     }
 
     test("should notify player 1 that game has started when playing vs computer") {
-        val gameInfoCaptor = slot<GameInfoEvent>()
-        every { msgSender.sendGameStartedMsg(any(), capture(gameInfoCaptor)) } returns Unit
+        val gameInfoCaptor = gameStartedCaptor()
 
         val gameId = gameCommandHandler.requestNewGame("999", StartGameRequest("vs_computer"))
         gameCommandHandler.joinGame("999", JoinGameRequest(gameId, "white"))
 
         verify { msgSender.sendGameStartedMsg("999", any()) }
-        assertNotEquals("999", gameInfoCaptor.captured.gameId)
-        assertEquals(gameId, gameInfoCaptor.captured.gameId)
-        assertEquals("VS_COMPUTER", gameInfoCaptor.captured.mode)
-        assertEquals("WHITE", gameInfoCaptor.captured.player.color)
-        assertEquals("WHITE", gameInfoCaptor.captured.turn)
+        val gameInfo = gameInfoCaptor.captured
+        assertNotEquals("999", gameInfo.gameId)
+        assertEquals(gameId, gameInfo.gameId)
+        assertEquals("VS_COMPUTER", gameInfo.mode)
+        assertEquals("WHITE", gameInfo.player.color)
+        assertEquals("WHITE", gameInfo.turn)
     }
 
     test("should game ids be unique") {
@@ -41,14 +41,14 @@ class ClientInteractionsSpec : FunSpec({
     }
 
     test("should return correct game id") {
-        val gameInfoCaptor = slot<String>()
-        every { msgSender.sendWaitingForOtherPlayerMsg("888", capture(gameInfoCaptor)) } returns Unit
+        val gameIdCaptor = slot<String>()
+        every { msgSender.sendWaitingForOtherPlayerMsg("888", capture(gameIdCaptor)) } returns Unit
 
         val gameId = startGame("888")
         gameCommandHandler.joinGame("888", JoinGameRequest(gameId, "white"))
 
         assertNotEquals("", gameId)
-        assertEquals(gameId, gameInfoCaptor.captured)
+        assertEquals(gameId, gameIdCaptor.captured)
     }
 
     test("should discard session id if session closed") {
@@ -67,25 +67,23 @@ class ClientInteractionsSpec : FunSpec({
     }
 
     test("should send game started event when second player joins") {
-        val gameInfoPlayer1Captor = slot<GameInfoEvent>()
-        every { msgSender.sendGameStartedMsg("1111", capture(gameInfoPlayer1Captor)) } returns Unit
-        val gameInfoPlayer2Captor = slot<GameInfoEvent>()
-        every { msgSender.sendGameStartedMsg("2222", capture(gameInfoPlayer2Captor)) } returns Unit
+        val p1Captor = gameStartedCaptor("1111")
+        val p2Captor = gameStartedCaptor("2222")
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_friend"))
 
         gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null))
 
-        assertNotEquals(gameInfoPlayer1Captor.captured.player.id, gameInfoPlayer2Captor.captured.player.id)
-        assertEquals("WHITE", gameInfoPlayer1Captor.captured.player.color)
-        assertEquals("BLACK", gameInfoPlayer2Captor.captured.player.color)
-        assertEquals("WHITE", gameInfoPlayer1Captor.captured.turn)
-        assertEquals("WHITE", gameInfoPlayer2Captor.captured.turn)
+        assertNotEquals(p1Captor.captured.player.id, p2Captor.captured.player.id)
+        assertEquals("WHITE", p1Captor.captured.player.color)
+        assertEquals("BLACK", p2Captor.captured.player.color)
+        assertEquals("WHITE", p1Captor.captured.turn)
+        assertEquals("WHITE", p2Captor.captured.turn)
     }
 
     test("should be able to join game with second session") {
         val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer"))
-        val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"), )
+        val playerId = gameCommandHandler.joinGame("1111", JoinGameRequest(gameId, "white"))
         gameCommandHandler.joinGame("2222", JoinGameRequest(gameId, null, playerId, true))
 
         gameCommandHandler.move("2222", playerId, "a2", "a3", null)
