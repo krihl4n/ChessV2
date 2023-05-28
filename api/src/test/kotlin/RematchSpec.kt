@@ -11,48 +11,48 @@ class RematchSpec : FunSpec({
     afterTest(afterApiTest)
 
     test("should initialize a new game") {
-        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("", null))
-        gameCommandHandler.joinGame("1111", JoinGameRequest(gameId))
+        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("", null))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
 
-        val newGameId = gameCommandHandler.requestRematch("1111")
+        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
 
-        assertNotNull(gamesRegister.getGame("1111"))
-        assertEquals(newGameId, gamesRegister.getGame("1111")?.gameId)
+        assertNotNull(gamesRegister.getGame(SESSION_ID_1))
+        assertEquals(newGameId, gamesRegister.getGame(SESSION_ID_1)?.gameId)
     }
 
     test("should start a new game") {
-        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("", null))
-        gameCommandHandler.joinGame("1111", JoinGameRequest(gameId))
+        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("", null))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
         val gameInfoCaptor = gameStartedCaptor()
 
-        val newGameId = gameCommandHandler.requestRematch("1111")
-        gameCommandHandler.joinGame("1111", JoinGameRequest(newGameId))
+        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId))
 
-        verify { msgSender.sendGameStartedMsg("1111", any()) }
+        verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
         assertEquals(newGameId, gameInfoCaptor.captured.gameId)
     }
 
     test("player should remain his id") {
         val gameInfoCaptor = gameStartedCaptor()
-        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("", null))
-        gameCommandHandler.joinGame("1111", JoinGameRequest(gameId))
+        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("", null))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
         val originalGamePlayer = gameInfoCaptor.captured.player
 
-        gameCommandHandler.requestRematch("1111")
+        gameCommandHandler.requestRematch(SESSION_ID_1)
 
-        verify { msgSender.sendGameStartedMsg("1111", any()) }
+        verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
         assertEquals(originalGamePlayer.id, gameInfoCaptor.captured.player.id)
     }
 
     test("game mode should remain unchanged") {
-        val gameId = gameCommandHandler.requestNewGame("1111", StartGameRequest("vs_computer", null))
-        gameCommandHandler.joinGame("1111", JoinGameRequest(gameId))
+        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("vs_computer", null))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
         val gameInfoCaptor = gameStartedCaptor()
 
-        val newGameId = gameCommandHandler.requestRematch("1111")
-        gameCommandHandler.joinGame("1111", JoinGameRequest(newGameId))
+        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId))
 
-        verify { msgSender.sendGameStartedMsg("1111", any()) }
+        verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
         assertEquals("VS_COMPUTER", gameInfoCaptor.captured.mode)
     }
 

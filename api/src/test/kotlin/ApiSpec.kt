@@ -8,6 +8,9 @@ import io.kotest.core.spec.AfterTest
 import io.kotest.core.spec.BeforeTest
 import io.mockk.*
 
+const val SESSION_ID_1 = "1111"
+const val SESSION_ID_2 = "2222"
+
 val msgSender = mockk<MessageSender>(relaxed = true)
 var gamesRegister = GamesRegister()
 var eventSender = GameEventHandler(msgSender, gamesRegister)
