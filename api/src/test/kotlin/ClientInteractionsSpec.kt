@@ -22,15 +22,15 @@ class ClientInteractionsSpec : FunSpec({
         val gameInfoCaptor = gameStartedCaptor()
 
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("vs_computer"))
-        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, "white"))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
 
         verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
         val gameInfo = gameInfoCaptor.captured
         assertNotEquals(SESSION_ID_1, gameInfo.gameId)
         assertEquals(gameId, gameInfo.gameId)
         assertEquals("VS_COMPUTER", gameInfo.mode)
-        assertEquals("WHITE", gameInfo.player.color)
-        assertEquals("WHITE", gameInfo.turn)
+        assertEquals(WHITE, gameInfo.player.color)
+        assertEquals(WHITE, gameInfo.turn)
     }
 
     test("should game ids be unique") {
@@ -45,7 +45,7 @@ class ClientInteractionsSpec : FunSpec({
         every { msgSender.sendWaitingForOtherPlayerMsg(SESSION_ID_1, capture(gameIdCaptor)) } returns Unit
 
         val gameId = startGame(SESSION_ID_1)
-        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, "white"))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
 
         assertNotEquals("", gameId)
         assertEquals(gameId, gameIdCaptor.captured)
@@ -71,19 +71,19 @@ class ClientInteractionsSpec : FunSpec({
         val p2Captor = gameStartedCaptor(SESSION_ID_2)
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("vs_friend"))
 
-        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, "white"))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null))
 
         assertNotEquals(p1Captor.captured.player.id, p2Captor.captured.player.id)
-        assertEquals("WHITE", p1Captor.captured.player.color)
-        assertEquals("BLACK", p2Captor.captured.player.color)
-        assertEquals("WHITE", p1Captor.captured.turn)
-        assertEquals("WHITE", p2Captor.captured.turn)
+        assertEquals(WHITE, p1Captor.captured.player.color)
+        assertEquals(BLACK, p2Captor.captured.player.color)
+        assertEquals(WHITE, p1Captor.captured.turn)
+        assertEquals(WHITE, p2Captor.captured.turn)
     }
 
     test("should be able to join game with second session") {
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("vs_computer"))
-        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, "white"))
+        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null, playerId, true))
 
         gameCommandHandler.move(SESSION_ID_2, playerId, "a2", "a3", null)
@@ -94,7 +94,7 @@ class ClientInteractionsSpec : FunSpec({
 
     test("should be able to deregister session and then rejoin game") {
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("vs_computer"))
-        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, "white"))
+        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
         gameCommandHandler.connectionClosed(SESSION_ID_1)
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null, playerId, true))
 
@@ -108,7 +108,7 @@ class ClientInteractionsSpec : FunSpec({
         val gameInfoCaptor = slot<GameInfoEvent>()
         every { msgSender.sendJoinedExistingGameMsg(SESSION_ID_2, capture(gameInfoCaptor)) } returns Unit
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("vs_computer"))
-        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, "white"))
+        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
 
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null, playerId, true))
 
@@ -116,13 +116,13 @@ class ClientInteractionsSpec : FunSpec({
         verify(exactly = 0) { msgSender.sendJoinedExistingGameMsg(SESSION_ID_1, any()) }
         assertEquals(gameId, gameInfoCaptor.captured.gameId)
         assertEquals(playerId, gameInfoCaptor.captured.player.id)
-        assertEquals("WHITE", gameInfoCaptor.captured.player.color)
-        assertEquals("WHITE", gameInfoCaptor.captured.turn)
+        assertEquals(WHITE, gameInfoCaptor.captured.player.color)
+        assertEquals(WHITE, gameInfoCaptor.captured.turn)
     }
 
     test("should notify player moved including info about current turn") {
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("vs_friend"))
-        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, "white"))
+        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null))
 
         gameCommandHandler.move(SESSION_ID_1, playerId, "a2", "a4", null)
@@ -133,7 +133,7 @@ class ClientInteractionsSpec : FunSpec({
             pieceCapture = null,
             pawnPromotion = null,
             reverted = false,
-            turn = "BLACK"
+            turn = BLACK
         )
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_1, expectedUpdate) }
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_2, expectedUpdate) }
@@ -141,7 +141,7 @@ class ClientInteractionsSpec : FunSpec({
 
     test("should be able to resign from the game and loose") {
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("vs_friend"))
-        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, "white"))
+        val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null))
 
         gameCommandHandler.resign(SESSION_ID_1, playerId)

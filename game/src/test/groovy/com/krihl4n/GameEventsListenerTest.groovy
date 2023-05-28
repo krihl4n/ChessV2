@@ -56,7 +56,7 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         false,
-                        "WHITE"))
+                        "white"))
     }
 
     def "having two games, only one is notified about moving piece"() {
@@ -80,7 +80,7 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         false,
-                        "WHITE"))
+                        "white"))
         0 * listener.piecePositionUpdate(GAME_ID,
                 new PiecePositionUpdateDto(
                         new PerformedMoveDto("a2", "a3"),
@@ -88,7 +88,7 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         false,
-                        "WHITE"))
+                        "white"))
     }
 
     def "should notify about two moves when castling"() {
@@ -108,7 +108,7 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         false,
-                        "WHITE"
+                        "white"
                 )
         )
     }
@@ -127,10 +127,10 @@ class GameEventsListenerTest extends Specification {
                 new PiecePositionUpdateDto(
                         new PerformedMoveDto("c2", "d3"),
                         null,
-                        new PieceCaptureDto("d3", new PieceDto("BLACK", "PAWN")),
+                        new PieceCaptureDto("d3", new PieceDto("black", "PAWN")),
                         null,
                         false,
-                        "WHITE"
+                        "white"
                 )
         )
     }
@@ -155,7 +155,7 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         true,
-                        "WHITE"))
+                        "white"))
     }
 
     def "should send event when redoing a move"() {
@@ -179,7 +179,7 @@ class GameEventsListenerTest extends Specification {
                         null,
                         null,
                         false,
-                        "WHITE"))
+                        "white"))
     }
 
     def "should notify about en passant capture"() {
@@ -199,10 +199,10 @@ class GameEventsListenerTest extends Specification {
                 new PiecePositionUpdateDto(
                         new PerformedMoveDto("e4", "d3"),
                         null,
-                        new PieceCaptureDto("d4", new PieceDto("WHITE", "PAWN")),
+                        new PieceCaptureDto("d4", new PieceDto("white", "PAWN")),
                         null,
                         false,
-                        "WHITE"
+                        "white"
                 )
         )
     }
@@ -224,7 +224,7 @@ class GameEventsListenerTest extends Specification {
                         null,
                         pawnPromotion,
                         false,
-                        "WHITE"
+                        "white"
                 )
         )
 
@@ -250,10 +250,10 @@ class GameEventsListenerTest extends Specification {
                 new PiecePositionUpdateDto(
                         new PerformedMoveDto("d7", "e8"),
                         null,
-                        new PieceCaptureDto("e8", new PieceDto("BLACK", "KNIGHT")),
+                        new PieceCaptureDto("e8", new PieceDto("black", "KNIGHT")),
                         "QUEEN",
                         false,
-                        "WHITE"
+                        "white"
                 )
         )
     }
@@ -405,10 +405,10 @@ class GameEventsListenerTest extends Specification {
                 new PiecePositionUpdateDto(
                         new PerformedMoveDto("e5", "d6"),
                         null,
-                        new PieceCaptureDto("d5", new PieceDto("BLACK", "PAWN")),
+                        new PieceCaptureDto("d5", new PieceDto("black", "PAWN")),
                         null,
                         false,
-                        "WHITE"
+                        "white"
                 )
         )
     }

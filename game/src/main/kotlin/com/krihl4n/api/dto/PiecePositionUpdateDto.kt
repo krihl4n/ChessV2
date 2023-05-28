@@ -28,7 +28,7 @@ data class PiecePositionUpdateDto(
                     PieceCaptureDto(
                         field = positionUpdate.pieceCapture.field.token(),
                         capturedPiece = PieceDto(
-                            positionUpdate.pieceCapture.piece.color.name,
+                            positionUpdate.pieceCapture.piece.color.toString(),
                             positionUpdate.pieceCapture.piece.type.name
                         )
                     )

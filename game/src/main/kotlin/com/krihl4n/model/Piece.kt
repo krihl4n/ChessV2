@@ -16,6 +16,8 @@ enum class Color {
 
     abstract fun opposite(): Color
 
+    override fun toString(): String = super.toString().lowercase()
+
     companion object {
         fun of(colorString: String): Color {
             return if (colorString.lowercase() == "white") WHITE
