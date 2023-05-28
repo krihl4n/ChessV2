@@ -1,8 +1,6 @@
-import com.krihl4n.*
 import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.PerformedMoveDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
-import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
 import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
@@ -12,20 +10,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 
 class ClientInteractionsSpec : FunSpec({
-    val msgSender = mockk<MessageSender>(relaxed = true)
-    var gamesRegister = GamesRegister()
-    var eventSender = GameEventHandler(msgSender, gamesRegister)
-    var rematchManager = RematchManager()
-    var gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, rematchManager)
 
-    beforeTest {
-        gamesRegister = GamesRegister()
-        eventSender = GameEventHandler(msgSender, gamesRegister)
-        rematchManager = RematchManager()
-        gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, rematchManager)
-    }
-
-    afterTest { clearAllMocks() }
+    beforeTest(beforeApiTest)
+    afterTest(afterApiTest)
 
     fun startGame(sessionId: String = "1111"): String {
         return gameCommandHandler.requestNewGame(sessionId, StartGameRequest("vs_computer"))
