@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service
 class GameEventHandler(
     private val messageSender: MessageSender,
     private val gamesRegister: GamesRegister,
+    private val rematchManager: RematchManager
 ) : GameEventListener {
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
@@ -57,6 +58,7 @@ class GameEventHandler(
                 )
             )
         }
+        rematchManager.clearProposals(gameInfo.gameId) // todo separate listener?
     }
     override fun gameFinished(gameId: String, result: GameResultDto) {
         getSessionIds(gameId).forEach { messageSender.sendGameFinishedMsg(it, result) }

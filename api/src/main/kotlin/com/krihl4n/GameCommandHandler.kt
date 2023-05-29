@@ -52,7 +52,7 @@ class GameCommandHandler(
         val newGame = GameOfChess("g-" + UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.registerNewGame(newGame, sessionId)
         gamesRegister.getGame(sessionId)?.let {
-            this.rematchManager.createProposal(playerId, opponentPlayerId, playerNextColor)
+            this.rematchManager.createProposal(playerId, opponentPlayerId, playerNextColor, newGame.gameId)
             it.setupChessboard(SetupProvider.getSetup(null))
             it.registerGameEventListener(gameEventHandler)
             it.requestNewGame(existingGame.getMode() ?: GameModeDto.TEST_MODE)
@@ -77,21 +77,18 @@ class GameCommandHandler(
 
     fun joinGame(sessionId: String, req: JoinGameRequest): String {
         if (!req.rejoin) {
-            println("JOIN GAME")
             val playerId = req.playerId ?: ("p-" + UUID.randomUUID().toString())
             gamesRegister.registerPlayer(sessionId, req.gameId, playerId)
 
             val colorPreference = rematchManager
-                .popRematchProposal(playerId)
+                .getRematchProposal(playerId)
                 ?.playerNextColor
                 ?.toString() ?: req.colorPreference
 
-            println("COLOR PREFERENCE: $colorPreference")
             gamesRegister.getGameById(req.gameId).playerReady(playerId, colorPreference)
             gamesRegister.debugPrint()
             return playerId
         } else {
-            println("JOIN ONGOING GAME")
             gamesRegister.registerPlayer(sessionId, req.gameId, req.playerId!!)
             gameEventHandler.joinedExistingGame(sessionId, req.gameId, req.playerId)
             gamesRegister.debugPrint()
