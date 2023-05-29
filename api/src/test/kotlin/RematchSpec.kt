@@ -2,8 +2,7 @@ import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.*
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.*
 
 class RematchSpec : FunSpec({
 
@@ -26,7 +25,7 @@ class RematchSpec : FunSpec({
         val gameInfoCaptor = gameStartedCaptor()
 
         val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
-        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!))
 
         verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
         assertEquals(newGameId, gameInfoCaptor.captured.gameId)
@@ -39,7 +38,7 @@ class RematchSpec : FunSpec({
         val gameInfoCaptor = gameStartedCaptor()
 
         val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
-        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(newGameId))
 
         verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
@@ -65,7 +64,7 @@ class RematchSpec : FunSpec({
         val gameInfoCaptor = gameStartedCaptor()
 
         val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
-        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!))
 
         verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
         assertEquals(VS_COMPUTER, gameInfoCaptor.captured.mode)
@@ -79,17 +78,30 @@ class RematchSpec : FunSpec({
         val gameInfoCaptorP2 = gameStartedCaptor(SESSION_ID_2)
 
         val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
-        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId, playerId = "p1"))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!, playerId = "p1"))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(newGameId, playerId = "p2"))
 
         assertEquals(BLACK, gameInfoCaptorP1.captured.player.color)
         assertEquals(WHITE, gameInfoCaptorP2.captured.player.color)
     }
 
+    test("should not generate 2 games if players propose rematch at the same time") {
+        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(VS_FRIEND, null))
+        gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE, playerId = "p1"))
+        gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, playerId = "p2"))
+
+        val newGameId1 = gameCommandHandler.requestRematch(SESSION_ID_1)
+        val newGameId2 = gameCommandHandler.requestRematch(SESSION_ID_2)
+
+        assertNotNull(newGameId1)
+        assertNull(newGameId2)
+        verify(exactly = 1) { msgSender.sendRematchRequestedMsg(SESSION_ID_2, any()) }
+        verify(exactly = 0) { msgSender.sendRematchRequestedMsg(SESSION_ID_1, any()) }
+    }
 
 //    test("should not allow rematch if game is not finished") {
-//
+//    move rematch generation do Game module and use the state machine?
 //    }
-//
-// two players propose rematch at the same time
+
+// computer rematch proposals
 })

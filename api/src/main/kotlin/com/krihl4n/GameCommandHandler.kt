@@ -33,9 +33,9 @@ class GameCommandHandler(
         return newGame.gameId
     }
 
-    fun requestRematch(sessionId: String): String { // todo what to do with old games?
+    fun requestRematch(sessionId: String): String? { // todo what to do with old games?
         val existingGame = gamesRegister.getGame(sessionId)
-            ?: throw RuntimeException("No game to base rematch on") // todo specific exception
+            ?: return null
         val playerId =
             gamesRegister.getPlayerId(sessionId) ?: throw RuntimeException("No player registered") // todo test
 
