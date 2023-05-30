@@ -18,8 +18,18 @@ internal class Game(
 ) : StateHolder, GameResultObserver {
 
     private var gameState: State = GameState.UNINITIALIZED
-
     private val gameStateListeners = mutableListOf<GameStateUpdateListener>()
+    private val gameControl: GameControl = GameControl(
+        moveValidator,
+        commandCoordinator,
+        commandFactory,
+        positionTracker,
+        gameResultEvaluator
+    )
+
+    init {
+        gameResultEvaluator.registerObserver(this)
+    }
 
     override fun setState(state: State, gameMode: GameModeDto?) {
         this.gameState = state
@@ -33,41 +43,15 @@ internal class Game(
         }
     }
 
-    private val gameControl: GameControl = GameControl(
-        moveValidator,
-        commandCoordinator,
-        commandFactory,
-        positionTracker,
-        gameResultEvaluator
-    )
-
-    init {
-        gameResultEvaluator.registerObserver(this)
-    }
-
-    fun isGameFinished() = gameState == GameState.FINISHED
-
-    fun getResult() = gameResultEvaluator.getGameResult()
+    @JvmOverloads
+    fun initialize(gameMode: GameModeDto = GameModeDto.TEST_MODE) = gameState.initializeGame(this, gameControl, gameMode)
 
     fun setupChessboard(pieceSetup: PieceSetup?) {
         gameControl.setupChessboard(pieceSetup)
     }
 
-    fun getMode() = this.gameControl.fetchGameMode()
-
-    fun colorAllowedToMove() = this.gameControl.fetchColorAllowedToMove()
-
-    @JvmOverloads
-    fun initialize(gameMode: GameModeDto = GameModeDto.TEST_MODE) = gameState.initializeGame(this, gameControl, gameMode)
-
     fun playerReady(playerId: String, colorPreference: String? = null) =
         gameState.playerReady(this, gameControl, playerId, colorPreference)
-
-    fun fetchPlayer(playerId: String) = gameControl.fetchPlayer(playerId)
-
-    fun fetchPlayerOne() = gameControl.fetchPlayerOne()
-
-    fun fetchPlayerTwo() = gameControl.fetchPlayerTwo()
 
     fun resign(playerId: String) = gameState.resign(this, gameControl, playerId)
 
@@ -77,6 +61,22 @@ internal class Game(
     fun undoMove() = gameState.undo(this, gameControl)
 
     fun redoMove() = gameState.redo(this, gameControl)
+
+    fun isGameFinished() = gameState == GameState.FINISHED // todo remove, used only in tests
+
+    fun getResult() = gameResultEvaluator.getGameResult()
+
+    fun getMode() = this.gameControl.fetchGameMode()
+
+    fun colorAllowedToMove() = this.gameControl.fetchColorAllowedToMove()
+
+    fun fetchPlayer(playerId: String) = gameControl.fetchPlayer(playerId)
+
+    fun fetchPlayerOne() = gameControl.fetchPlayerOne()
+
+    fun fetchPlayerTwo() = gameControl.fetchPlayerTwo()
+
+    fun fetchColorAllowedToMove() = gameControl.fetchColorAllowedToMove().toString()
 
     fun getFieldOccupationInfo() = gameControl.getFieldOccupationInfo()
 
@@ -89,6 +89,4 @@ internal class Game(
     fun registerGameStateUpdateListener(gameStateUpdateListener: GameStateUpdateListener) {
         gameStateListeners.add(gameStateUpdateListener)
     }
-
-    fun fetchColorAllowedToMove() = gameControl.fetchColorAllowedToMove().toString()
 }
