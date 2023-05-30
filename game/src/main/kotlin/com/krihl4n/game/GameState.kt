@@ -19,7 +19,8 @@ enum class GameState : State {
             stateHolder: StateHolder,
             gameCommand: GameCommand,
             playerId: String,
-            colorPreference: String?
+            colorPreference: String?,
+            gameMode: GameModeDto?
         ) {
             throw IllegalStateException("Game not started yet")
         }
@@ -57,11 +58,12 @@ enum class GameState : State {
             stateHolder: StateHolder,
             gameCommand: GameCommand,
             playerId: String,
-            colorPreference: String?
+            colorPreference: String?,
+            gameMode: GameModeDto?
         ) {
             val allPlayersRegistered = gameCommand.executePlayerReady(playerId, colorPreference)
             if (allPlayersRegistered) {
-                stateHolder.setState(IN_PROGRESS, gameCommand.fetchGameMode())
+                stateHolder.setState(IN_PROGRESS, gameMode)
             }
         }
 
@@ -87,7 +89,7 @@ enum class GameState : State {
     },
     IN_PROGRESS {
         override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
-            println("Game already started")
+            throw IllegalStateException("Cannot initialize, game already in progress")
         }
 
         override fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
@@ -99,7 +101,8 @@ enum class GameState : State {
             stateHolder: StateHolder,
             gameCommand: GameCommand,
             playerId: String,
-            colorPreference: String?
+            colorPreference: String?,
+            gameMode: GameModeDto?
         ) {
             throw IllegalStateException("Cannot register another player, game is already in progress")
         }
@@ -138,7 +141,8 @@ enum class GameState : State {
             stateHolder: StateHolder,
             gameCommand: GameCommand,
             playerId: String,
-            colorPreference: String?
+            colorPreference: String?,
+            gameMode: GameModeDto?
         ) {
             throw IllegalStateException("Cannot register if the game is finished")
         }
@@ -169,7 +173,13 @@ interface State {
 
     fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto)
     fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String)
-    fun playerReady(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String, colorPreference: String?)
+    fun playerReady(
+        stateHolder: StateHolder,
+        gameCommand: GameCommand,
+        playerId: String,
+        colorPreference: String?,
+        gameMode: GameModeDto?
+    )
     fun move(stateHolder: StateHolder, gameCommand: GameCommand, move: MoveDto)
     fun undo(stateHolder: StateHolder, gameCommand: GameCommand)
     fun redo(stateHolder: StateHolder, gameCommand: GameCommand)

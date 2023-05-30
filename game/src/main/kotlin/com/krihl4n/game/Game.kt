@@ -18,6 +18,7 @@ internal class Game(
 ) : StateHolder, GameResultObserver {
 
     private var gameState: State = GameState.UNINITIALIZED
+    private var gameMode: GameModeDto? = null
     private val gameStateListeners = mutableListOf<GameStateUpdateListener>()
     private val gameControl: GameControl = GameControl(
         moveValidator,
@@ -44,14 +45,17 @@ internal class Game(
     }
 
     @JvmOverloads
-    fun initialize(gameMode: GameModeDto = GameModeDto.TEST_MODE) = gameState.initializeGame(this, gameControl, gameMode)
+    fun initialize(gameMode: GameModeDto = GameModeDto.TEST_MODE) {
+        gameState.initializeGame(this, gameControl, gameMode)
+        this.gameMode = gameMode
+    }
 
     fun setupChessboard(pieceSetup: PieceSetup?) {
         gameControl.setupChessboard(pieceSetup)
     }
 
     fun playerReady(playerId: String, colorPreference: String? = null) =
-        gameState.playerReady(this, gameControl, playerId, colorPreference)
+        gameState.playerReady(this, gameControl, playerId, colorPreference, this.gameMode)
 
     fun resign(playerId: String) = gameState.resign(this, gameControl, playerId)
 
@@ -66,7 +70,7 @@ internal class Game(
 
     fun getResult() = gameResultEvaluator.getGameResult()
 
-    fun getMode() = this.gameControl.fetchGameMode()
+    fun getMode() = this.gameMode
 
     fun colorAllowedToMove() = this.gameControl.fetchColorAllowedToMove()
 

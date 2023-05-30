@@ -17,8 +17,6 @@ interface GameCommand {
 
     fun fetchPlayerTwo(): Player
 
-    fun fetchGameMode(): GameModeDto?
-
     fun fetchColorAllowedToMove(): Color
 
     fun executeResign(playerId: String)

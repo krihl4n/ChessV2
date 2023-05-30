@@ -31,6 +31,7 @@ class GameEventHandler(
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
+        rematchManager.clearProposals(gameInfo.gameId) // todo separate listener?
         gamesRegister.getRelatedPlayerSessionId(gameInfo.player1.id)?.let {
             messageSender.sendGameStartedMsg(
                 it,
@@ -58,7 +59,6 @@ class GameEventHandler(
                 )
             )
         }
-        rematchManager.clearProposals(gameInfo.gameId) // todo separate listener?
     }
     override fun gameFinished(gameId: String, result: GameResultDto) {
         getSessionIds(gameId).forEach { messageSender.sendGameFinishedMsg(it, result) }

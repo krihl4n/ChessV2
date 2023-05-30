@@ -31,7 +31,6 @@ internal class GameControl(
 
     private var movePolicy: MovePolicy = FreeMovePolicy()
     private var playersManager: PlayersManager = FreeMovePlayersManager()
-    private var gameMode: GameModeDto? = null
 
     fun setupChessboard(pieceSetup: PieceSetup?) = positionTracker.resetInitialGameSetup(pieceSetup)
 
@@ -84,7 +83,6 @@ internal class GameControl(
             this.commandCoordinator.registerObserver(policy)
         }
 
-        this.gameMode = gameMode
         DebugLogger.printChessboard(positionTracker)
     }
 
@@ -99,8 +97,6 @@ internal class GameControl(
 
     override fun fetchPlayerTwo(): Player =
         this.playersManager.getPlayerTwo()
-
-    override fun fetchGameMode(): GameModeDto? = this.gameMode
 
     override fun fetchColorAllowedToMove(): Color = this.movePolicy.colorAllowedToMove()
 
