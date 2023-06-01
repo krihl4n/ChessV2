@@ -11,6 +11,14 @@ interface GameCommand {
 
     fun executePlayerReady(playerId: String, colorPreference: String?): Boolean
 
+    fun executePerformMove(move: MoveDto)
+
+    fun executeUndo()
+
+    fun executeRedo()
+
+    fun executeResign(playerId: String)
+
     fun fetchPlayer(playerId: String): Player? // todo separate query from commands?
 
     fun fetchPlayerOne(): Player
@@ -18,12 +26,4 @@ interface GameCommand {
     fun fetchPlayerTwo(): Player
 
     fun fetchColorAllowedToMove(): Color
-
-    fun executeResign(playerId: String)
-
-    fun executePerformMove(move: MoveDto)
-
-    fun executeUndo()
-
-    fun executeRedo()
 }
