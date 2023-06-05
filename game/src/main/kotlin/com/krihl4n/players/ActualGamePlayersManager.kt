@@ -7,7 +7,7 @@ import kotlin.random.Random
 
 class ActualGamePlayersManager : PlayersManager {
 
-    private var player1Id: String? = null
+    private var player1Id: String? = null // todo do not hold state here. make an adapter to storage maybe?
     private var player2Id: String? = null
     private var player1: Player? = null
     private var player2: Player? = null
