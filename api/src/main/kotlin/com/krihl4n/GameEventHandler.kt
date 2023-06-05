@@ -18,13 +18,10 @@ class GameEventHandler(
     }
 
     override fun gameStateUpdate(gameId: String, update: GameStateUpdateDto) {
-        getSessionIds(gameId).forEach { messageSender.sendGameStateUpdateMsg(it, update) }
-        if (update.gameState == "WAITING_FOR_PLAYERS") {
-            getSessionIds(gameId).forEach {
-                messageSender.sendWaitingForOtherPlayerMsg(
-                    it,
-                    gameId
-                )
+        getSessionIds(gameId).forEach {
+            messageSender.sendGameStateUpdateMsg(it, update)
+            if (update.gameState == "WAITING_FOR_PLAYERS") {
+                messageSender.sendWaitingForOtherPlayerMsg(it, gameId)
             }
         }
     }
