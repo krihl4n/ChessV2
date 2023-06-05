@@ -31,35 +31,24 @@ class GameEventHandler(
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        rematchManager.clearProposals(gameInfo.gameId) // todo separate listener?
-        gamesRegister.getRelatedPlayerSessionId(gameInfo.player1.id)?.let {
-            messageSender.sendGameStartedMsg(
-                it,
-                GameInfoEvent(
-                    gameInfo.gameId,
-                    gameInfo.mode,
-                    gameInfo.player1,
-                    gameInfo.piecePositions,
-                    gameInfo.turn
+        rematchManager.clearProposals(gameInfo.gameId)
+
+        for (player in setOf(gameInfo.player1, gameInfo.player2)) {
+            gamesRegister.getRelatedPlayerSessionId(player.id)?.let {
+                messageSender.sendGameStartedMsg(
+                    it,
+                    GameInfoEvent(
+                        gameInfo.gameId,
+                        gameInfo.mode,
+                        player,
+                        gameInfo.piecePositions,
+                        gameInfo.turn
+                    )
                 )
-            )
-        }
-        if(gameInfo.player1 == gameInfo.player2) {
-            return
-        }
-        gamesRegister.getRelatedPlayerSessionId(gameInfo.player2.id)?.let {
-            messageSender.sendGameStartedMsg(
-                it,
-                GameInfoEvent(
-                    gameInfo.gameId,
-                    gameInfo.mode,
-                    gameInfo.player2,
-                    gameInfo.piecePositions,
-                    gameInfo.turn
-                )
-            )
+            }
         }
     }
+
     override fun gameFinished(gameId: String, result: GameResultDto) {
         getSessionIds(gameId).forEach { messageSender.sendGameFinishedMsg(it, result) }
     }
