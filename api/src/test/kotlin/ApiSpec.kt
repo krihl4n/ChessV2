@@ -20,14 +20,14 @@ const val VS_FRIEND = "vs_friend"
 val msgSender = mockk<MessageSender>(relaxed = true)
 var gamesRegister = GamesRegister()
 var rematchManager = RematchManager()
-var eventSender = GameEventHandler(msgSender, gamesRegister, rematchManager)
-var gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, rematchManager)
+var eventhandler = GameEventHandler(msgSender, gamesRegister, rematchManager)
+var gameCommandHandler = GameCommandHandler(eventhandler, gamesRegister, rematchManager, msgSender)
 
 val beforeApiTest: BeforeTest = {
     gamesRegister = GamesRegister()
     rematchManager = RematchManager()
-    eventSender = GameEventHandler(msgSender, gamesRegister, rematchManager)
-    gameCommandHandler = GameCommandHandler(eventSender, gamesRegister, rematchManager)
+    eventhandler = GameEventHandler(msgSender, gamesRegister, rematchManager)
+    gameCommandHandler = GameCommandHandler(eventhandler, gamesRegister, rematchManager, msgSender)
 }
 
 val afterApiTest: AfterTest = { clearAllMocks() }

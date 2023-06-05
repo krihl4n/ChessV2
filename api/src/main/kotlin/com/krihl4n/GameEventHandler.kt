@@ -1,7 +1,6 @@
 package com.krihl4n
 
 import com.krihl4n.api.GameEventListener
-import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
@@ -51,20 +50,6 @@ class GameEventHandler(
 
     override fun gameFinished(gameId: String, result: GameResultDto) {
         getSessionIds(gameId).forEach { messageSender.sendGameFinishedMsg(it, result) }
-    }
-
-    fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {
-        val game: GameOfChess = gamesRegister.getGameById(gameId)
-        game.getPlayer(playerId)?.let {
-            val gameInfo = GameInfoEvent(
-                gameId = gameId,
-                mode = "", // todo needed?
-                player = PlayerDto(playerId, it.color.toString()),
-                piecePositions = game.getFieldOccupationInfo(),
-                turn = game.getColorAllowedToMove()
-            )
-            messageSender.sendJoinedExistingGameMsg(sessionId, gameInfo)
-        }
     }
 
     fun rematchRequested(sessionId: String, gameId: String) {

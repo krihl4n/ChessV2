@@ -1,13 +1,12 @@
 package com.krihl4n
 
 import com.krihl4n.api.GameOfChess
-import com.krihl4n.api.dto.FieldOccupationDto
-import com.krihl4n.api.dto.GameModeDto
+import com.krihl4n.api.dto.*
 import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
-import com.krihl4n.api.dto.MoveDto
-import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.*
 import com.krihl4n.app.ConnectionListener
+import com.krihl4n.app.MessageSender
+import com.krihl4n.events.GameInfoEvent
 import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
 import org.springframework.stereotype.Service
@@ -18,7 +17,8 @@ import java.util.*
 class GameCommandHandler(
     private val gameEventHandler: GameEventHandler,
     private val gamesRegister: GamesRegister,
-    private val rematchManager: RematchManager
+    private val rematchManager: RematchManager,
+    private val messageSender: MessageSender
 ) : ConnectionListener {
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
@@ -90,7 +90,7 @@ class GameCommandHandler(
             return playerId
         } else {
             gamesRegister.registerPlayer(sessionId, req.gameId, req.playerId!!)
-            gameEventHandler.joinedExistingGame(sessionId, req.gameId, req.playerId)
+            joinedExistingGame(sessionId, req.gameId, req.playerId)
             gamesRegister.debugPrint()
             return req.playerId
         }
@@ -114,5 +114,19 @@ class GameCommandHandler(
 
     fun redoMove(sessionId: String, playerId: String) {
         gamesRegister.getGame(sessionId)?.redoMove()
+    }
+
+    private fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {
+        val game: GameOfChess = gamesRegister.getGameById(gameId)
+        game.getPlayer(playerId)?.let {
+            val gameInfo = GameInfoEvent(
+                gameId = gameId,
+                mode = "", // todo needed?
+                player = PlayerDto(playerId, it.color.toString()),
+                piecePositions = game.getFieldOccupationInfo(),
+                turn = game.getColorAllowedToMove()
+            )
+            messageSender.sendJoinedExistingGameMsg(sessionId, gameInfo)
+        }
     }
 }

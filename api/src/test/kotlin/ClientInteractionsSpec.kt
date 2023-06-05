@@ -58,7 +58,7 @@ class ClientInteractionsSpec : FunSpec({
         val gameId = startGame(SESSION_ID_1)
         gameCommandHandler.connectionClosed(SESSION_ID_1)
 
-        eventSender.gameFinished(gameId, GameResultDto("", ""))
+        eventhandler.gameFinished(gameId, GameResultDto("", ""))
 
         verify(exactly = 0) { msgSender.sendGameFinishedMsg(SESSION_ID_1, any()) }
     }
