@@ -2,10 +2,9 @@ package com.krihl4n.players
 
 import com.krihl4n.model.Color
 import java.lang.UnsupportedOperationException
-import java.util.*
 import kotlin.random.Random
 
-class ActualGamePlayersManager : PlayersManager {
+internal class ActualGamePlayersManager : PlayersManager {
 
     private var player1Id: String? = null // todo do not hold state here. make an adapter to storage maybe?
     private var player2Id: String? = null

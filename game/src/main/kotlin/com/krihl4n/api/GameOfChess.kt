@@ -18,6 +18,7 @@ import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import com.krihl4n.players.Player
 import java.util.UUID
 
 class GameOfChess(val gameId: String) {
@@ -67,9 +68,9 @@ class GameOfChess(val gameId: String) {
 
     fun getMode() = game.getMode()
 
-    fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)
+    fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)?.toDto()
 
-    fun getPlayers() = listOf(this.game.fetchPlayerOne(), this.game.fetchPlayerTwo())
+    fun getPlayers() = listOf(this.game.fetchPlayerOne().toDto(), this.game.fetchPlayerTwo().toDto())
 
     fun getColorAllowedToMove() = this.game.colorAllowedToMove().toString()
 
@@ -101,8 +102,8 @@ class GameOfChess(val gameId: String) {
                         GameInfoDto(
                             gameId = gameId,
                             mode = update.gameMode?.toString() ?: "",
-                            player1 = PlayerDto.from(game.fetchPlayerOne()),
-                            player2 = PlayerDto.from(game.fetchPlayerTwo()),
+                            player1 = game.fetchPlayerOne().toDto(),
+                            player2 = game.fetchPlayerTwo().toDto(),
                             piecePositions = game.getFieldOccupationInfo(),
                             turn = game.fetchColorAllowedToMove()
                         )
@@ -122,4 +123,6 @@ class GameOfChess(val gameId: String) {
             }
         })
     }
+
+    private fun Player.toDto() = PlayerDto(this.id, this.color.toString())
 }

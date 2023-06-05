@@ -2,7 +2,7 @@ package com.krihl4n.model
 
 internal data class Piece(val color: Color, val type: Type)
 
-enum class Color {
+internal enum class Color {
     WHITE {
         override fun opposite(): Color {
             return BLACK

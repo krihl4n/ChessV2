@@ -3,7 +3,7 @@ package com.krihl4n.game
 import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.MoveDto
 
-enum class GameState : State {
+internal enum class GameState : State {
 
     UNINITIALIZED {
         override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
@@ -169,7 +169,7 @@ enum class GameState : State {
     }
 }
 
-interface State {
+internal interface State {
 
     fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto)
     fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String)

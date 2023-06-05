@@ -52,7 +52,8 @@ class GameCommandHandler(
         val opponentSessionId = gamesRegister
             .getRelatedSessionIds(existingGame.gameId)
             .firstOrNull { it != sessionId }
-        val playerNextColor = existingGame.getPlayer(playerId)?.color?.opposite() ?: throw RuntimeException("Cannot establish rematch color")
+        val playerNextColor = existingGame.getPlayer(playerId)?.color?.let { ColorDto(it.lowercase()) }?.opposite()
+            ?: throw RuntimeException("Cannot establish rematch color")
 
         gamesRegister.deregisterGame(existingGame.gameId)
 
@@ -78,7 +79,7 @@ class GameCommandHandler(
             val colorPreference = rematchManager
                 .getRematchProposal(playerId)
                 ?.playerNextColor
-                ?.toString() ?: req.colorPreference
+                ?.value ?: req.colorPreference
 
             gamesRegister.getGameById(req.gameId).playerReady(playerId, colorPreference)
             gamesRegister.debugPrint()
@@ -122,7 +123,7 @@ class GameCommandHandler(
             val gameInfo = GameInfoEvent(
                 gameId = gameId,
                 mode = "", // todo needed?
-                player = PlayerDto(playerId, it.color.toString()),
+                player = PlayerDto(playerId, it.color),
                 piecePositions = game.getFieldOccupationInfo(),
                 turn = game.getColorAllowedToMove()
             )

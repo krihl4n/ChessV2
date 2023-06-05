@@ -1,9 +1,8 @@
 package com.krihl4n.players
 
 import com.krihl4n.model.Color
-import java.util.*
 
-class FreeMovePlayersManager : PlayersManager {
+internal class FreeMovePlayersManager : PlayersManager {
 
     private var playerId: String? = null
     private var player: Player? = null

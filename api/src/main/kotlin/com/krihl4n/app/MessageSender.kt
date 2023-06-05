@@ -1,8 +1,6 @@
 package com.krihl4n.app
 
-import com.krihl4n.api.dto.GameResultDto
-import com.krihl4n.api.dto.GameStateUpdateDto
-import com.krihl4n.api.dto.PiecePositionUpdateDto
+import com.krihl4n.api.dto.*
 import com.krihl4n.events.GameInfoEvent
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
