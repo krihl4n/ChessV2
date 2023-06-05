@@ -21,6 +21,13 @@ class GameCommandHandler(
     private val messageSender: MessageSender
 ) : ConnectionListener {
 
+    override fun connectionEstablished(sessionId: String) {
+    }
+
+    override fun connectionClosed(sessionId: String) {
+        gamesRegister.deregisterSession(sessionId)
+    }
+
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         val newGame = GameOfChess("g-" + UUID.randomUUID().toString()) // TODO generate id inside
         gamesRegister.registerNewGame(newGame, sessionId)
@@ -58,25 +65,13 @@ class GameCommandHandler(
             it.requestNewGame(existingGame.getMode() ?: GameModeDto.TEST_MODE)
         }
 
-        opponentSessionId?.let { this.gameEventHandler.rematchRequested(opponentSessionId, newGame.gameId) }
+        opponentSessionId?.let { this.messageSender.sendRematchRequestedMsg(opponentSessionId, newGame.gameId) }
         gamesRegister.debugPrint()
         return newGame.gameId
     }
 
-    fun move(sessionId: String, playerId: String, from: String, to: String, pawnPromotion: String?) {
-        gamesRegister.getGame(sessionId)?.move(MoveDto(playerId, from, to, pawnPromotion))
-    }
-
-    fun getPositions(sessionId: String): List<FieldOccupationDto>? {
-        return gamesRegister.getGame(sessionId)?.getFieldOccupationInfo()
-    }
-
-    fun getPossibleMoves(sessionId: String, field: String): PossibleMovesDto? {
-        return gamesRegister.getGame(sessionId)?.getPossibleMoves(field)
-    }
-
     fun joinGame(sessionId: String, req: JoinGameRequest): String {
-        if (!req.rejoin) {
+        if (!req.rejoin) { // todo separate those cases
             val playerId = req.playerId ?: ("p-" + UUID.randomUUID().toString())
             gamesRegister.registerPlayer(sessionId, req.gameId, playerId)
 
@@ -96,11 +91,16 @@ class GameCommandHandler(
         }
     }
 
-    override fun connectionEstablished(sessionId: String) {
+    fun move(sessionId: String, playerId: String, from: String, to: String, pawnPromotion: String?) {
+        gamesRegister.getGame(sessionId)?.move(MoveDto(playerId, from, to, pawnPromotion))
     }
 
-    override fun connectionClosed(sessionId: String) {
-        gamesRegister.deregisterSession(sessionId)
+    fun getPositions(sessionId: String): List<FieldOccupationDto>? {
+        return gamesRegister.getGame(sessionId)?.getFieldOccupationInfo()
+    }
+
+    fun getPossibleMoves(sessionId: String, field: String): PossibleMovesDto? {
+        return gamesRegister.getGame(sessionId)?.getPossibleMoves(field)
     }
 
     fun resign(sessionId: String, playerId: String) {
