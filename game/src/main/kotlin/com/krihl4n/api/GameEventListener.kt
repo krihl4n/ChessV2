@@ -14,4 +14,6 @@ interface GameEventListener {
     fun gameStarted(gameId: String, gameInfo: GameInfoDto)
 
     fun gameFinished(gameId: String, result: GameResultDto)
+
+    fun waitingForOtherPlayer(gameId: String)
 }

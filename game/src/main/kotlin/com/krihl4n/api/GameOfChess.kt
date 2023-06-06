@@ -109,6 +109,10 @@ class GameOfChess(val gameId: String) {
                         )
                     )
                 }
+
+                if(update.gameState == "WAITING_FOR_PLAYERS") {
+                    listener.waitingForOtherPlayer(gameId)
+                }
             }
         })
 

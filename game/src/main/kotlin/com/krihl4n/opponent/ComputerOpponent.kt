@@ -36,11 +36,15 @@ class ComputerOpponent(private val game: GameOfChess, private val playerId: Stri
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        TODO("Not yet implemented")
+
     }
 
     override fun gameFinished(gameId: String, result: GameResultDto) {
         // do nothing?
+    }
+
+    override fun waitingForOtherPlayer(gameId: String) {
+
     }
 
     private fun attackIfPossible(): Boolean{

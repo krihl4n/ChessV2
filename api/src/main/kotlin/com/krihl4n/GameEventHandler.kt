@@ -18,12 +18,7 @@ class GameEventHandler(
     }
 
     override fun gameStateUpdate(gameId: String, update: GameStateUpdateDto) {
-        getSessionIds(gameId).forEach {
-            messageSender.sendGameStateUpdateMsg(it, update)
-            if (update.gameState == "WAITING_FOR_PLAYERS") {
-                messageSender.sendWaitingForOtherPlayerMsg(it, gameId)
-            }
-        }
+        getSessionIds(gameId).forEach { messageSender.sendGameStateUpdateMsg(it, update) }
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
@@ -47,6 +42,10 @@ class GameEventHandler(
 
     override fun gameFinished(gameId: String, result: GameResultDto) {
         getSessionIds(gameId).forEach { messageSender.sendGameFinishedMsg(it, result) }
+    }
+
+    override fun waitingForOtherPlayer(gameId: String) {
+        getSessionIds(gameId).forEach { messageSender.sendWaitingForOtherPlayerMsg(it, gameId) }
     }
 
     private fun getSessionIds(gameId: String) = gamesRegister.getRelatedSessionIds(gameId)
