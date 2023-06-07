@@ -1,5 +1,7 @@
 package com.krihl4n.game
 
+import java.lang.RuntimeException
+
 internal enum class GameMode {
 
     TEST_MODE, VS_COMPUTER, VS_FRIEND;
@@ -11,7 +13,8 @@ internal enum class GameMode {
             return when (mode.lowercase()) {
                 "vs_computer" -> VS_COMPUTER
                 "vs_friend" -> VS_FRIEND
-                else -> TEST_MODE
+                "test_mode" -> TEST_MODE
+                else -> throw RuntimeException("unknown game mode: $mode")
             }
         }
     }

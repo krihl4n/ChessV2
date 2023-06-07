@@ -10,7 +10,7 @@ class RematchSpec : FunSpec({
     afterTest(afterApiTest)
 
     test("should initialize a new game") {
-        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("", null))
+        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(TEST_MODE, null))
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
 
         val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
@@ -20,7 +20,7 @@ class RematchSpec : FunSpec({
     }
 
     test("should start a new game") {
-        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("", null))
+        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(TEST_MODE, null))
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
         val gameInfoCaptor = gameStartedCaptor()
 
@@ -48,7 +48,7 @@ class RematchSpec : FunSpec({
 
     test("player should remain his id") {
         val gameInfoCaptor = gameStartedCaptor()
-        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest("", null))
+        val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(TEST_MODE, null))
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
         val originalGamePlayer = gameInfoCaptor.captured.player
 

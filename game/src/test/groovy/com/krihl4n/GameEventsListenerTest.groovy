@@ -18,8 +18,6 @@ import com.krihl4n.api.pieceSetups.WhitePawnPromotionSetup
 import com.krihl4n.api.pieceSetups.SimpleAttackSetup
 import spock.lang.Specification
 
-import static com.krihl4n.game.GameMode.*
-
 class GameEventsListenerTest extends Specification {
 
     public static final String WHITE_PLAYER_WON = "white_player_won"
@@ -50,7 +48,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about basic move"() {
         given:
         gameOfChess.setupChessboard(null)
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -70,11 +68,11 @@ class GameEventsListenerTest extends Specification {
     def "having two games, only one is notified about moving piece"() {
         given:
         gameOfChess.setupChessboard(null)
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
         and:
         secondGameOfChess.setupChessboard(null)
-        secondGameOfChess.requestNewGame("")
+        secondGameOfChess.requestNewGame("test_mode")
         secondGameOfChess.playerReady("player2", null)
 
         when:
@@ -102,7 +100,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about two moves when castling"() {
         given:
         gameOfChess.setupChessboard(new CastlingPieceSetup())
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -124,7 +122,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about attacks"() {
         given:
         gameOfChess.setupChessboard(new SimpleAttackSetup())
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -146,7 +144,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify when undoing basic move"() {
         given:
         gameOfChess.setupChessboard(null)
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         and:
@@ -169,7 +167,7 @@ class GameEventsListenerTest extends Specification {
     def "should send event when redoing a move"() {
         given:
         gameOfChess.setupChessboard(null)
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         and:
@@ -193,7 +191,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about en passant capture"() {
         given:
         gameOfChess.setupChessboard(new EnPassantSetup())
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         and:
@@ -218,7 +216,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about pawn promotion"() {
         given:
         gameOfChess.setupChessboard(new WhitePawnPromotionSetup())
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -243,7 +241,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about pawn to queen promotion and attack"() {
         given:
         gameOfChess.setupChessboard(new WhitePawnPromotionSetup())
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -267,7 +265,7 @@ class GameEventsListenerTest extends Specification {
         gameOfChess.setupChessboard(new AboutToCheckMateSetup())
 
         when:
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         then:
@@ -301,7 +299,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about game end after check mate by white player"() {
         given:
         gameOfChess.setupChessboard(new AboutToCheckMateSetup())
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -324,7 +322,7 @@ class GameEventsListenerTest extends Specification {
                 ]
             }
         })
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -338,7 +336,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about draw due to after stalemate"() {
         given:
         gameOfChess.setupChessboard(new AboutToStalemateSetup())
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -361,7 +359,7 @@ class GameEventsListenerTest extends Specification {
                 ]
             }
         })
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -375,7 +373,7 @@ class GameEventsListenerTest extends Specification {
     def "should notify about loss after player resigned"() {
         given:
         gameOfChess.setupChessboard(null)
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:
@@ -397,7 +395,7 @@ class GameEventsListenerTest extends Specification {
                 ]
             }
         })
-        gameOfChess.requestNewGame("")
+        gameOfChess.requestNewGame("test_mode")
         gameOfChess.playerReady("player", null)
 
         when:

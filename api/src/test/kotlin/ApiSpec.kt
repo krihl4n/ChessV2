@@ -14,6 +14,7 @@ const val SESSION_ID_2 = "2222"
 const val WHITE = "white"
 const val BLACK = "black"
 
+const val TEST_MODE = "test_mode"
 const val VS_COMPUTER = "vs_computer"
 const val VS_FRIEND = "vs_friend"
 
