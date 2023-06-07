@@ -43,7 +43,7 @@ class GameOfChess(val gameId: String) {
 
     fun setupChessboard(pieceSetup: PieceSetup? = null) = game.setupChessboard(pieceSetup)
 
-    fun requestNewGame(mode: String) {
+    fun initialize(mode: String) {
         game.initialize(GameMode.fromCommand(mode))
     }
 
