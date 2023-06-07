@@ -1,11 +1,11 @@
 package com.krihl4n
 
-import com.krihl4n.api.dto.GameModeDto
+import com.krihl4n.game.GameMode
 
 class ActualGameModeSpec extends BaseGameSpec {
 
     void setup() {
-        game.initialize(GameModeDto.VS_FRIEND)
+        game.initialize(GameMode.VS_FRIEND)
         game.playerReady("player1", "white")
         game.playerReady("player2", "black")
     }

@@ -43,14 +43,14 @@ class GameOfChess(val gameId: String) {
 
     fun setupChessboard(pieceSetup: PieceSetup? = null) = game.setupChessboard(pieceSetup)
 
-    fun requestNewGame(mode: GameModeDto) {
-        game.initialize(mode)
+    fun requestNewGame(mode: String) {
+        game.initialize(GameMode.fromCommand(mode))
     }
 
     fun playerReady(playerId: String, colorPreference: String?) {
         game.playerReady(playerId, colorPreference)
         game.getMode()?.let {
-            if (it == GameModeDto.VS_COMPUTER) {
+            if (it == GameMode.VS_COMPUTER) {
                 game.playerReady(UUID.randomUUID().toString())
                 val computerPlayer = game.fetchPlayerTwo()
                 registerGameEventListener(ComputerOpponent(this, computerPlayer.id, computerPlayer.color.toString()))
@@ -66,7 +66,7 @@ class GameOfChess(val gameId: String) {
 
     fun redoMove() = game.redoMove()
 
-    fun getMode() = game.getMode()
+    fun getMode() = game.getMode().toString()
 
     fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)?.toDto()
 
@@ -92,11 +92,11 @@ class GameOfChess(val gameId: String) {
             override fun gameStateUpdated(update: GameStateUpdate) {
                 listener.gameStateUpdate(
                     gameId, GameStateUpdateDto(
-                        gameState = update.gameState
+                        gameState = update.gameState.toString()
                     )
                 )
 
-                if (update.gameState == "IN_PROGRESS") {
+                if (update.gameState == GameState.IN_PROGRESS) {
                     listener.gameStarted(
                         gameId,
                         GameInfoDto(
@@ -110,7 +110,7 @@ class GameOfChess(val gameId: String) {
                     )
                 }
 
-                if(update.gameState == "WAITING_FOR_PLAYERS") {
+                if(update.gameState == GameState.WAITING_FOR_PLAYERS) {
                     listener.waitingForOtherPlayer(gameId)
                 }
             }

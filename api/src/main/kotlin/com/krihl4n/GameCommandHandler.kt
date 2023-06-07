@@ -2,7 +2,6 @@ package com.krihl4n
 
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.*
-import com.krihl4n.api.dto.GameModeDto.Companion.fromCommand
 import com.krihl4n.api.pieceSetups.*
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
@@ -34,7 +33,7 @@ class GameCommandHandler(
         gamesRegister.getGame(sessionId)?.let {
             it.setupChessboard(SetupProvider.getSetup(request.setup))
             it.registerGameEventListener(gameEventHandler)
-            it.requestNewGame(fromCommand(request.mode))
+            it.requestNewGame(request.mode)
         }
         gamesRegister.debugPrint()
         return newGame.gameId
@@ -63,7 +62,7 @@ class GameCommandHandler(
             this.rematchManager.createProposal(playerId, opponentPlayerId, playerNextColor, newGame.gameId)
             it.setupChessboard(SetupProvider.getSetup(null))
             it.registerGameEventListener(gameEventHandler)
-            it.requestNewGame(existingGame.getMode() ?: GameModeDto.TEST_MODE)
+            it.requestNewGame(existingGame.getMode())
         }
 
         opponentSessionId?.let { this.messageSender.sendRematchRequestedMsg(opponentSessionId, newGame.gameId) }

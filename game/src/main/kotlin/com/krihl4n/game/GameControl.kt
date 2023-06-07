@@ -3,7 +3,6 @@ package com.krihl4n.game
 import com.krihl4n.DebugLogger
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
-import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.mappers.FieldsOccupationMapper
@@ -72,8 +71,8 @@ internal class GameControl(
         return PossibleMovesDto.noMovesFrom(field)
     }
 
-    override fun executeInitNewGame(gameMode: GameModeDto) {
-        if (gameMode == GameModeDto.TEST_MODE) {
+    override fun executeInitNewGame(gameMode: GameMode) {
+        if (gameMode == GameMode.TEST_MODE) {
             this.movePolicy = FreeMovePolicy()
             this.playersManager = FreeMovePlayersManager()
         } else {

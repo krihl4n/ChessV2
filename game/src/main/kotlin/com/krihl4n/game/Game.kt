@@ -2,7 +2,6 @@ package com.krihl4n.game
 
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
-import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.model.GameStateUpdate
@@ -18,7 +17,7 @@ internal class Game(
 ) : StateHolder, GameResultObserver {
 
     private var gameState: State = GameState.UNINITIALIZED
-    private var gameMode: GameModeDto? = null
+    private var gameMode: GameMode? = null
     private val gameStateListeners = mutableListOf<GameStateUpdateListener>()
     private val gameControl: GameControl = GameControl(
         moveValidator,
@@ -32,12 +31,12 @@ internal class Game(
         gameResultEvaluator.registerObserver(this)
     }
 
-    override fun setState(state: State, gameMode: GameModeDto?) {
+    override fun setState(state: State, gameMode: GameMode?) {
         this.gameState = state
         gameStateListeners.forEach {
             it.gameStateUpdated(
                 GameStateUpdate(
-                    gameState = state.toString(),
+                    gameState = state,
                     gameMode = gameMode
                 )
             )
@@ -45,7 +44,7 @@ internal class Game(
     }
 
     @JvmOverloads
-    fun initialize(gameMode: GameModeDto = GameModeDto.TEST_MODE) {
+    fun initialize(gameMode: GameMode = GameMode.TEST_MODE) {
         gameState.initializeGame(this, gameControl, gameMode)
         this.gameMode = gameMode
     }

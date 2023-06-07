@@ -1,11 +1,13 @@
 package com.krihl4n.model
 
-import com.krihl4n.api.dto.GameModeDto
+import com.krihl4n.game.GameMode
+import com.krihl4n.game.GameState
+import com.krihl4n.game.State
 
-class GameStateUpdate(
-    val gameState: String, // todo separate class?
+internal class GameStateUpdate(
+    val gameState: State, // todo separate class?
     val updateReason: StateUpdateReason = StateUpdateReason.CHECK_MATE,
-    val gameMode: GameModeDto? = null
+    val gameMode: GameMode? = null
 )
 
 enum class StateUpdateReason {

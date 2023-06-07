@@ -1,12 +1,11 @@
 package com.krihl4n.game
 
-import com.krihl4n.api.dto.GameModeDto
 import com.krihl4n.api.dto.MoveDto
 
 internal enum class GameState : State {
 
     UNINITIALIZED {
-        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
             stateHolder.setState(WAITING_FOR_PLAYERS)
             gameCommand.executeInitNewGame(gameMode)
         }
@@ -20,7 +19,7 @@ internal enum class GameState : State {
             gameCommand: GameCommand,
             playerId: String,
             colorPreference: String?,
-            gameMode: GameModeDto?
+            gameMode: GameMode?
         ) {
             throw IllegalStateException("Game not started yet")
         }
@@ -46,7 +45,7 @@ internal enum class GameState : State {
         }
     },
     WAITING_FOR_PLAYERS {
-        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
             throw IllegalStateException("Cannot start, waiting for players")
         }
 
@@ -59,7 +58,7 @@ internal enum class GameState : State {
             gameCommand: GameCommand,
             playerId: String,
             colorPreference: String?,
-            gameMode: GameModeDto?
+            gameMode: GameMode?
         ) {
             val allPlayersRegistered = gameCommand.executePlayerReady(playerId, colorPreference)
             if (allPlayersRegistered) {
@@ -88,7 +87,7 @@ internal enum class GameState : State {
         }
     },
     IN_PROGRESS {
-        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
             throw IllegalStateException("Cannot initialize, game already in progress")
         }
 
@@ -102,7 +101,7 @@ internal enum class GameState : State {
             gameCommand: GameCommand,
             playerId: String,
             colorPreference: String?,
-            gameMode: GameModeDto?
+            gameMode: GameMode?
         ) {
             throw IllegalStateException("Cannot register another player, game is already in progress")
         }
@@ -128,7 +127,7 @@ internal enum class GameState : State {
         }
     },
     FINISHED {
-        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto) {
+        override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
             stateHolder.setState(IN_PROGRESS, gameMode = gameMode)
             gameCommand.executeInitNewGame(gameMode)
         }
@@ -142,7 +141,7 @@ internal enum class GameState : State {
             gameCommand: GameCommand,
             playerId: String,
             colorPreference: String?,
-            gameMode: GameModeDto?
+            gameMode: GameMode?
         ) {
             throw IllegalStateException("Cannot register if the game is finished")
         }
@@ -171,14 +170,14 @@ internal enum class GameState : State {
 
 internal interface State {
 
-    fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameModeDto)
+    fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode)
     fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String)
     fun playerReady(
         stateHolder: StateHolder,
         gameCommand: GameCommand,
         playerId: String,
         colorPreference: String?,
-        gameMode: GameModeDto?
+        gameMode: GameMode?
     )
     fun move(stateHolder: StateHolder, gameCommand: GameCommand, move: MoveDto)
     fun undo(stateHolder: StateHolder, gameCommand: GameCommand)
