@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 class GameEventHandler(
     private val messageSender: MessageSender,
     private val gamesRegister: GamesRegister,
-    private val rematchManager: RematchManager
+    private val rematchProposals: RematchProposals
 ) : GameEventListener {
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
@@ -22,7 +22,7 @@ class GameEventHandler(
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        rematchManager.clearProposals(gameInfo.gameId)
+        rematchProposals.clearProposals(gameInfo.gameId)
 
         for (player in setOf(gameInfo.player1, gameInfo.player2)) {
             gamesRegister.getRelatedPlayerSessionId(player.id)?.let {

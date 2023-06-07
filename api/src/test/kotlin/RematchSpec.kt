@@ -110,8 +110,8 @@ class RematchSpec : FunSpec({
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!, playerId = "p1"))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(newGameId, playerId = "p2"))
 
-        assertNull(rematchManager.getRematchProposal("p1"))
-        assertNull(rematchManager.getRematchProposal("p2"))
+        assertNull(rematchProposals.getRematchProposal("p1"))
+        assertNull(rematchProposals.getRematchProposal("p2"))
     }
 
 //    test("should not allow rematch if game is not finished") {

@@ -1,7 +1,7 @@
 import com.krihl4n.GameCommandHandler
 import com.krihl4n.GameEventHandler
 import com.krihl4n.GamesRegister
-import com.krihl4n.RematchManager
+import com.krihl4n.RematchProposals
 import com.krihl4n.app.MessageSender
 import com.krihl4n.events.GameInfoEvent
 import io.kotest.core.spec.AfterTest
@@ -20,15 +20,15 @@ const val VS_FRIEND = "vs_friend"
 
 val msgSender = mockk<MessageSender>(relaxed = true)
 var gamesRegister = GamesRegister()
-var rematchManager = RematchManager()
-var eventhandler = GameEventHandler(msgSender, gamesRegister, rematchManager)
-var gameCommandHandler = GameCommandHandler(eventhandler, gamesRegister, rematchManager, msgSender)
+var rematchProposals = RematchProposals()
+var eventhandler = GameEventHandler(msgSender, gamesRegister, rematchProposals)
+var gameCommandHandler = GameCommandHandler(eventhandler, gamesRegister, rematchProposals, msgSender)
 
 val beforeApiTest: BeforeTest = {
     gamesRegister = GamesRegister()
-    rematchManager = RematchManager()
-    eventhandler = GameEventHandler(msgSender, gamesRegister, rematchManager)
-    gameCommandHandler = GameCommandHandler(eventhandler, gamesRegister, rematchManager, msgSender)
+    rematchProposals = RematchProposals()
+    eventhandler = GameEventHandler(msgSender, gamesRegister, rematchProposals)
+    gameCommandHandler = GameCommandHandler(eventhandler, gamesRegister, rematchProposals, msgSender)
 }
 
 val afterApiTest: AfterTest = { clearAllMocks() }

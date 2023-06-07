@@ -13,6 +13,7 @@ object GameOfChessCreator {
 
     fun createRematch(existingGame: GameOfChess, listener: GameEventListener): RematchDto {
         return RematchDto(
+            previousGameId = existingGame.gameId,
             gameOfChess = setupNewGame(listener),
             players = existingGame
                 .getPlayers()
@@ -29,6 +30,7 @@ object GameOfChessCreator {
 }
 
 data class RematchDto(
+    val previousGameId: String,
     val gameOfChess: GameOfChess,
     val players: List<PlayerDto>
 ) {

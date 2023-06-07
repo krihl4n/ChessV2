@@ -9,14 +9,13 @@ import com.krihl4n.events.GameInfoEvent
 import com.krihl4n.requests.JoinGameRequest
 import com.krihl4n.requests.StartGameRequest
 import org.springframework.stereotype.Service
-import java.lang.RuntimeException
 import java.util.*
 
 @Service
 class GameCommandHandler(
     private val gameEventHandler: GameEventHandler,
     private val register: GamesRegister,
-    private val rematchManager: RematchManager,
+    private val rematchProposals: RematchProposals,
     private val messageSender: MessageSender
 ) : ConnectionListener {
 
@@ -41,22 +40,15 @@ class GameCommandHandler(
     fun requestRematch(sessionId: String): String? { // todo what to do with old games?
         val existingGame = register.getGame(sessionId)
             ?: return null
-        if (this.rematchManager.proposalExists(existingGame.gameId)) {
+        if (this.rematchProposals.proposalExists(existingGame.gameId)) {
             return null
         }
         val rematch = GameOfChessCreator.createRematch(existingGame, gameEventHandler)
-        val playerId = register.getPlayerId(sessionId) ?: throw RuntimeException("No player registered") // todo test
         val newGame = rematch.gameOfChess.also {
             register.registerNewGame(it, sessionId)
             it.initialize(existingGame.getMode())
         }
-        this.rematchManager.createProposal(
-            playerId,
-            rematch.opponentPlayerId(playerId),
-            ColorDto(rematch.colorOf(playerId)),
-            newGame.gameId,
-            existingGame.gameId
-        )
+        this.rematchProposals.createProposal(rematch)
 
         register
             .getRelatedSessionIds(existingGame.gameId)
@@ -72,10 +64,10 @@ class GameCommandHandler(
             val playerId = req.playerId ?: ("p-" + UUID.randomUUID().toString())
             register.registerPlayer(sessionId, req.gameId, playerId)
 
-            val colorPreference = rematchManager
+            val colorPreference = rematchProposals
                 .getRematchProposal(playerId)
                 ?.playerNextColor
-                ?.value ?: req.colorPreference
+                ?: req.colorPreference
 
             register.getGameById(req.gameId).playerReady(playerId, colorPreference)
             register.debugPrint()
