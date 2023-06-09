@@ -28,10 +28,10 @@ class GameCommandHandler(
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         val newGame = GameOfChessCreator
-            .createGame(request.setup, gameEventHandler)
+            .createGame(request.mode, request.setup, gameEventHandler)
             .also {
                 register.registerNewGame(it, sessionId)
-                it.initialize(request.mode)
+                it.initialize()
             }
         register.debugPrint()
         return newGame.gameId
@@ -46,7 +46,7 @@ class GameCommandHandler(
         val rematch = GameOfChessCreator.createRematch(existingGame, gameEventHandler)
         val newGame = rematch.gameOfChess.also {
             register.registerNewGame(it, sessionId)
-            it.initialize(existingGame.getMode())
+            it.initialize()
         }
         this.rematchProposals.createProposal(rematch)
 

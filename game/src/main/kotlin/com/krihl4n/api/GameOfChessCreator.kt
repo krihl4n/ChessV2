@@ -7,23 +7,22 @@ import java.util.*
 
 object GameOfChessCreator {
 
-    fun createGame(setup: String?, listener: GameEventListener): GameOfChess {
-        return setupNewGame(listener)
+    fun createGame(mode: String, setup: String?, listener: GameEventListener): GameOfChess {
+        return setupNewGame(mode, setup, listener)
     }
 
     fun createRematch(existingGame: GameOfChess, listener: GameEventListener): RematchDto {
         return RematchDto(
             previousGameId = existingGame.gameId,
-            gameOfChess = setupNewGame(listener),
+            gameOfChess = setupNewGame(existingGame.getMode(), null, listener),
             players = existingGame
                 .getPlayers()
                 .map { PlayerDto(it.id, Color.of(it.color).opposite().toString()) }
         )
     }
 
-    private fun setupNewGame(listener: GameEventListener): GameOfChess {
-        val newGame = GameOfChess("g-" + UUID.randomUUID().toString())
-        newGame.setupChessboard(SetupProvider.getSetup(null))
+    private fun setupNewGame(mode: String, setup: String?, listener: GameEventListener): GameOfChess {
+        val newGame = GameOfChess("g-" + UUID.randomUUID().toString(), mode, SetupProvider.getSetup(setup))
         newGame.registerGameEventListener(listener)
         return newGame
     }

@@ -27,32 +27,37 @@ class GameEventsListenerTest extends Specification {
     public static final String STALEMATE = "stalemate"
     public static final String DEAD_POSITION = "dead_position"
     public static final String PLAYER_RESIGNED = "player_resigned"
+    public static final String TEST_MODE = "test_mode"
+    public static final String PLAYER_ID = "player"
 
     GameEventListener listener = Mock(GameEventListener)
-    GameOfChess gameOfChess
-
     GameEventListener secondListener = Mock(GameEventListener)
-    GameOfChess secondGameOfChess
 
     String GAME_ID = "game-id"
     String SECOND_GAME_ID = "second-game-id"
 
     void setup() {
-        gameOfChess = new GameOfChess(GAME_ID)
-        gameOfChess.registerGameEventListener(listener)
 
-        secondGameOfChess = new GameOfChess(SECOND_GAME_ID)
-        secondGameOfChess.registerGameEventListener(secondListener)
+    }
+
+    def initGame(PieceSetup setup) {
+        return initGame(GAME_ID, TEST_MODE, setup, listener)
+    }
+
+    def initGame(String id = GAME_ID, String mode = TEST_MODE, PieceSetup setup = null, GameEventListener listener = listener) {
+        def game = new GameOfChess(id, mode, setup)
+        game.registerGameEventListener(listener)
+        game.initialize()
+        game.playerReady(PLAYER_ID, null)
+        return game
     }
 
     def "should notify about basic move"() {
         given:
-        gameOfChess.setupChessboard(null)
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame()
 
         when:
-        gameOfChess.move(new MoveDto("player", "a2", "a3", null))
+        game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -67,16 +72,11 @@ class GameEventsListenerTest extends Specification {
 
     def "having two games, only one is notified about moving piece"() {
         given:
-        gameOfChess.setupChessboard(null)
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
-        and:
-        secondGameOfChess.setupChessboard(null)
-        secondGameOfChess.initialize("test_mode")
-        secondGameOfChess.playerReady("player2", null)
+        def g1 = initGame(GAME_ID, TEST_MODE, null, listener)
+        def g2 = initGame(SECOND_GAME_ID, TEST_MODE, null, secondListener)
 
         when:
-        secondGameOfChess.move(new MoveDto("player", "a2", "a3", null))
+        g2.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
 
         then:
         1 * secondListener.piecePositionUpdate(SECOND_GAME_ID,
@@ -99,12 +99,10 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about two moves when castling"() {
         given:
-        gameOfChess.setupChessboard(new CastlingPieceSetup())
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame(new CastlingPieceSetup())
 
         when:
-        gameOfChess.move(new MoveDto("player", "e1", "g1", null))
+        game.move(new MoveDto(PLAYER_ID, "e1", "g1", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -121,12 +119,10 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about attacks"() {
         given:
-        gameOfChess.setupChessboard(new SimpleAttackSetup())
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame(new SimpleAttackSetup())
 
         when:
-        gameOfChess.move(new MoveDto("player", "c2", "d3", null))
+        game.move(new MoveDto(PLAYER_ID, "c2", "d3", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -143,15 +139,13 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify when undoing basic move"() {
         given:
-        gameOfChess.setupChessboard(null)
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame()
 
         and:
-        gameOfChess.move(new MoveDto("player", "a2", "a3", null))
+        game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
 
         when:
-        gameOfChess.undoMove()
+        game.undoMove()
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -166,16 +160,14 @@ class GameEventsListenerTest extends Specification {
 
     def "should send event when redoing a move"() {
         given:
-        gameOfChess.setupChessboard(null)
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame()
 
         and:
-        gameOfChess.move(new MoveDto("player", "a2", "a3", null))
-        gameOfChess.undoMove()
+        game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
+        game.undoMove()
 
         when:
-        gameOfChess.redoMove()
+        game.redoMove()
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -190,15 +182,13 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about en passant capture"() {
         given:
-        gameOfChess.setupChessboard(new EnPassantSetup())
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame(new EnPassantSetup())
 
         and:
-        gameOfChess.move(new MoveDto("player", "d2", "d4", null))
+        game.move(new MoveDto(PLAYER_ID, "d2", "d4", null))
 
         when:
-        gameOfChess.move(new MoveDto("player", "e4", "d3", null))
+        game.move(new MoveDto(PLAYER_ID, "e4", "d3", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -215,12 +205,10 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about pawn promotion"() {
         given:
-        gameOfChess.setupChessboard(new WhitePawnPromotionSetup())
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame(new WhitePawnPromotionSetup())
 
         when:
-        gameOfChess.move(new MoveDto("player", "d7", "d8", pawnPromotion))
+        game.move(new MoveDto(PLAYER_ID, "d7", "d8", pawnPromotion))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -240,12 +228,10 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about pawn to queen promotion and attack"() {
         given:
-        gameOfChess.setupChessboard(new WhitePawnPromotionSetup())
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame(new WhitePawnPromotionSetup())
 
         when:
-        gameOfChess.move(new MoveDto("player", "d7", "e8", "queen"))
+        game.move(new MoveDto(PLAYER_ID, "d7", "e8", "queen"))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
@@ -262,11 +248,12 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about game start"() {
         given:
-        gameOfChess.setupChessboard(new AboutToCheckMateSetup())
+        def game = new GameOfChess(GAME_ID, TEST_MODE, null)
+        game.registerGameEventListener(listener)
 
         when:
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        game.initialize()
+        game.playerReady(PLAYER_ID, null)
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("IN_PROGRESS"))
@@ -274,10 +261,11 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about waiting for players state change"() {
         given:
-        gameOfChess.setupChessboard(new AboutToCheckMateSetup())
+        def game = new GameOfChess(GAME_ID, "vs_friend", null)
+        game.registerGameEventListener(listener)
 
         when:
-        gameOfChess.initialize("vs_friend")
+        game.initialize()
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("WAITING_FOR_PLAYERS"))
@@ -285,12 +273,13 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about game start after player two joins"() {
         given:
-        gameOfChess.setupChessboard(new AboutToCheckMateSetup())
-        gameOfChess.initialize("vs_friend")
-        gameOfChess.playerReady("player1", null)
+        def game = new GameOfChess(GAME_ID, "vs_friend", null)
+        game.registerGameEventListener(listener)
+        game.initialize()
+        game.playerReady("player1", null)
 
         when:
-        gameOfChess.playerReady("player2", null)
+        game.playerReady("player2", null)
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("IN_PROGRESS"))
@@ -298,12 +287,10 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about game end after check mate by white player"() {
         given:
-        gameOfChess.setupChessboard(new AboutToCheckMateSetup())
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame(new AboutToCheckMateSetup())
 
         when:
-        gameOfChess.move(new MoveDto("player", "h2", "h1", null))
+        game.move(new MoveDto(PLAYER_ID, "h2", "h1", null))
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
@@ -312,7 +299,7 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about game end after check mate by black player"() {
         given:
-        gameOfChess.setupChessboard(new PieceSetup() {
+        def game = initGame(new PieceSetup() {
             @Override
             List<String> get() {
                 return [
@@ -322,11 +309,9 @@ class GameEventsListenerTest extends Specification {
                 ]
             }
         })
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move(new MoveDto("player", "h2", "h1", null))
+        game.move(new MoveDto(PLAYER_ID, "h2", "h1", null))
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
@@ -335,12 +320,10 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about draw due to after stalemate"() {
         given:
-        gameOfChess.setupChessboard(new AboutToStalemateSetup())
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame(new AboutToStalemateSetup())
 
         when:
-        gameOfChess.move(new MoveDto("player", "f6", "f7", null))
+        game.move(new MoveDto(PLAYER_ID, "f6", "f7", null))
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
@@ -349,7 +332,7 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about draw due to dead position"() {
         given:
-        gameOfChess.setupChessboard(new PieceSetup() {
+        def game = initGame(new PieceSetup() {
             @Override
             List<String> get() {
                 return [
@@ -359,11 +342,9 @@ class GameEventsListenerTest extends Specification {
                 ]
             }
         })
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move(new MoveDto("player", "a1", "a2", null))
+        game.move(new MoveDto(PLAYER_ID, "a1", "a2", null))
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
@@ -372,12 +353,10 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify about loss after player resigned"() {
         given:
-        gameOfChess.setupChessboard(null)
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
+        def game = initGame()
 
         when:
-        gameOfChess.resign("player")
+        game.resign(PLAYER_ID)
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
@@ -386,7 +365,7 @@ class GameEventsListenerTest extends Specification {
 
     def "should notify correctly about en passant attack"() {
         given:
-        gameOfChess.setupChessboard(new PieceSetup() {
+        def game = initGame( new PieceSetup() {
             @Override
             List<String> get() {
                 return [
@@ -395,12 +374,10 @@ class GameEventsListenerTest extends Specification {
                 ]
             }
         })
-        gameOfChess.initialize("test_mode")
-        gameOfChess.playerReady("player", null)
 
         when:
-        gameOfChess.move(new MoveDto("player", "d7", "d5", null))
-        gameOfChess.move(new MoveDto("player", "e5", "d6", null))
+        game.move(new MoveDto(PLAYER_ID, "d7", "d5", null))
+        game.move(new MoveDto(PLAYER_ID, "e5", "d6", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,
