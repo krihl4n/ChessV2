@@ -8,8 +8,8 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.13'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.20-RC'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.16'
     testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
 }
 

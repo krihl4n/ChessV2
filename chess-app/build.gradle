@@ -9,17 +9,17 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.20-RC'
     implementation('org.springframework:spring-messaging:5.3.14')
     implementation('org.springframework:spring-websocket:5.3.14')
-    implementation('com.fasterxml.jackson.core:jackson-databind:2.14.0')
-    implementation('com.fasterxml.jackson.core:jackson-core:2.14.0')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.15.1')
+    implementation('com.fasterxml.jackson.core:jackson-core:2.14.2')
     implementation('org.springframework.boot:spring-boot-starter-websocket:2.6.2')
 
     implementation project(':chess-game')
 
-    testImplementation group: 'io.kotest', name: 'kotest-runner-junit5-jvm', version: '5.5.4'
-    testImplementation "io.mockk:mockk:1.13.3"
+    testImplementation group: 'io.kotest', name: 'kotest-runner-junit5-jvm', version: '5.5.5'
+    testImplementation 'io.mockk:mockk:1.13.4'
 }
 
 test {
