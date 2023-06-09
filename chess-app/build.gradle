@@ -16,7 +16,7 @@ dependencies {
     implementation('com.fasterxml.jackson.core:jackson-core:2.14.0')
     implementation('org.springframework.boot:spring-boot-starter-websocket:2.6.2')
 
-    implementation project(':game')
+    implementation project(':chess-game')
 
     testImplementation group: 'io.kotest', name: 'kotest-runner-junit5-jvm', version: '5.5.4'
     testImplementation "io.mockk:mockk:1.13.3"
