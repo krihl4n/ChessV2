@@ -103,8 +103,6 @@ class RematchSpec : FunSpec({
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(VS_FRIEND, null))
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE, playerId = "p1"))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, playerId = "p2"))
-        val gameInfoCaptorP1 = gameStartedCaptor(SESSION_ID_1)
-        val gameInfoCaptorP2 = gameStartedCaptor(SESSION_ID_2)
 
         val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!, playerId = "p1"))
@@ -113,8 +111,4 @@ class RematchSpec : FunSpec({
         assertNull(rematchProposals.getRematchProposal("p1"))
         assertNull(rematchProposals.getRematchProposal("p2"))
     }
-
-//    test("should not allow rematch if game is not finished") {
-//    move rematch generation do Game module and use the state machine?
-//    }
 })
