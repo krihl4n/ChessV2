@@ -3,9 +3,9 @@ package com.krihl4n.game
 import com.krihl4n.DebugLogger
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
+import com.krihl4n.api.dto.FieldsOccupationMapper
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PossibleMovesDto
-import com.krihl4n.api.mappers.FieldsOccupationMapper
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
