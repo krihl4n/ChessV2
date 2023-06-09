@@ -3,7 +3,7 @@ package com.krihl4n
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.MessageSender
-import com.krihl4n.events.GameInfoEvent
+import com.krihl4n.messages.GameInfoEvent
 import org.springframework.stereotype.Service
 
 @Service

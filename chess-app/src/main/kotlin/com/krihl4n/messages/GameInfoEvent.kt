@@ -1,4 +1,4 @@
-package com.krihl4n.events
+package com.krihl4n.messages
 
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.PlayerDto

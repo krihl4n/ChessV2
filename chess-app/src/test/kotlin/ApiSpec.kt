@@ -3,7 +3,7 @@ import com.krihl4n.GameEventHandler
 import com.krihl4n.GamesRegister
 import com.krihl4n.RematchProposals
 import com.krihl4n.app.MessageSender
-import com.krihl4n.events.GameInfoEvent
+import com.krihl4n.messages.GameInfoEvent
 import io.kotest.core.spec.AfterTest
 import io.kotest.core.spec.BeforeTest
 import io.mockk.*

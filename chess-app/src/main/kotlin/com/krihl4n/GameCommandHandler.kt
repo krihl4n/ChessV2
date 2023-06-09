@@ -5,9 +5,9 @@ import com.krihl4n.api.GameOfChessCreator
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
-import com.krihl4n.events.GameInfoEvent
-import com.krihl4n.requests.JoinGameRequest
-import com.krihl4n.requests.StartGameRequest
+import com.krihl4n.messages.GameInfoEvent
+import com.krihl4n.messages.JoinGameRequest
+import com.krihl4n.messages.StartGameRequest
 import org.springframework.stereotype.Service
 import java.util.*
 

@@ -1,4 +1,4 @@
-package com.krihl4n.requests
+package com.krihl4n.messages
 
 data class JoinGameRequest(
     val gameId: String = "",

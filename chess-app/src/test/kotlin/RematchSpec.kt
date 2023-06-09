@@ -1,5 +1,5 @@
-import com.krihl4n.requests.JoinGameRequest
-import com.krihl4n.requests.StartGameRequest
+import com.krihl4n.messages.JoinGameRequest
+import com.krihl4n.messages.StartGameRequest
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.*
