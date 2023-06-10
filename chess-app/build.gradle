@@ -8,8 +8,12 @@ repositories {
     mavenCentral()
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.20-RC'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
     implementation('org.springframework:spring-messaging:5.3.14')
     implementation('org.springframework:spring-websocket:5.3.14')
     implementation('com.fasterxml.jackson.core:jackson-databind:2.15.1')

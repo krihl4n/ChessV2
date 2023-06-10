@@ -7,9 +7,12 @@ repositories {
     mavenCentral()
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.20-RC'
-// https://mvnrepository.com/artifact/org.apache.groovy/groovy-all
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
     testImplementation group: 'org.apache.groovy', name: 'groovy-all', version: '4.0.12', ext: 'pom'
     testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-4.0'
 }
