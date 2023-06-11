@@ -7,6 +7,7 @@ import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
 import com.krihl4n.messages.GameInfoEvent
 import com.krihl4n.messages.JoinGameRequest
+import com.krihl4n.messages.RejoinGameRequest
 import com.krihl4n.messages.StartGameRequest
 import org.springframework.stereotype.Service
 import java.util.*
@@ -33,7 +34,6 @@ class GameCommandHandler(
                 register.registerNewGame(it, sessionId)
                 it.initialize()
             }
-        register.debugPrint()
         return newGame.gameId
     }
 
@@ -55,29 +55,25 @@ class GameCommandHandler(
             .firstOrNull { it != sessionId }
             ?.let { this.messageSender.sendRematchRequestedMsg(it, newGame.gameId) }
         register.deregisterGame(existingGame.gameId)
-        register.debugPrint()
         return newGame.gameId
     }
 
     fun joinGame(sessionId: String, req: JoinGameRequest): String {
-        if (!req.rejoin) { // todo separate those cases
-            val playerId = req.playerId ?: ("p-" + UUID.randomUUID().toString())
-            register.registerPlayer(sessionId, req.gameId, playerId)
+        val playerId = req.playerId ?: ("p-" + UUID.randomUUID().toString())
+        register.registerPlayer(sessionId, req.gameId, playerId)
 
-            val colorPreference = rematchProposals
-                .getRematchProposal(playerId)
-                ?.playerNextColor
-                ?: req.colorPreference
+        val colorPreference = rematchProposals
+            .getRematchProposal(playerId)
+            ?.playerNextColor
+            ?: req.colorPreference
 
-            register.getGameById(req.gameId).playerReady(playerId, colorPreference)
-            register.debugPrint()
-            return playerId
-        } else {
-            register.registerPlayer(sessionId, req.gameId, req.playerId!!)
-            joinedExistingGame(sessionId, req.gameId, req.playerId)
-            register.debugPrint()
-            return req.playerId
-        }
+        register.getGameById(req.gameId).playerReady(playerId, colorPreference)
+        return playerId
+    }
+
+    fun rejoinGame(sessionId: String, req: RejoinGameRequest) {
+        register.registerPlayer(sessionId, req.gameId, req.playerId)
+        joinedExistingGame(sessionId, req.gameId, req.playerId)
     }
 
     fun move(sessionId: String, playerId: String, from: String, to: String, pawnPromotion: String?) {

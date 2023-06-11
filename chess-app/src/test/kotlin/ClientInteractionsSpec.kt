@@ -3,6 +3,7 @@ import com.krihl4n.api.dto.PerformedMoveDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
 import com.krihl4n.messages.GameInfoEvent
 import com.krihl4n.messages.JoinGameRequest
+import com.krihl4n.messages.RejoinGameRequest
 import com.krihl4n.messages.StartGameRequest
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.*
@@ -87,7 +88,7 @@ class ClientInteractionsSpec : FunSpec({
     test("should be able to join game with second session") {
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(VS_COMPUTER))
         val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
-        gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null, playerId, true))
+        gameCommandHandler.rejoinGame(SESSION_ID_2, RejoinGameRequest(gameId, playerId))
 
         gameCommandHandler.move(SESSION_ID_2, playerId, "a2", "a3", null)
 
@@ -99,7 +100,7 @@ class ClientInteractionsSpec : FunSpec({
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(VS_COMPUTER))
         val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
         gameCommandHandler.connectionClosed(SESSION_ID_1)
-        gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null, playerId, true))
+        gameCommandHandler.rejoinGame(SESSION_ID_2, RejoinGameRequest(gameId, playerId))
 
         gameCommandHandler.move(SESSION_ID_2, playerId, "a2", "a3", null)
 
@@ -113,7 +114,7 @@ class ClientInteractionsSpec : FunSpec({
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(VS_COMPUTER))
         val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
 
-        gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null, playerId, true))
+        gameCommandHandler.rejoinGame(SESSION_ID_2, RejoinGameRequest(gameId, playerId))
 
         verify(exactly = 1) { msgSender.sendJoinedExistingGameMsg(SESSION_ID_2, any()) }
         verify(exactly = 0) { msgSender.sendJoinedExistingGameMsg(SESSION_ID_1, any()) }

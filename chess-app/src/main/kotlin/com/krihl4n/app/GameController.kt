@@ -3,6 +3,7 @@ package com.krihl4n.app
 import com.krihl4n.GameCommandHandler
 import com.krihl4n.messages.JoinGameRequest
 import com.krihl4n.messages.Move
+import com.krihl4n.messages.RejoinGameRequest
 import com.krihl4n.messages.StartGameRequest
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.handler.annotation.Header
@@ -41,6 +42,13 @@ class GameController(
     fun joinGame(@Payload request: JoinGameRequest, @Header("simpSessionId") sessionId: String) {
         println("--> /join-game | sessionId=$sessionId | $request")
         gameCommandHandler.joinGame(sessionId, request)
+    }
+
+    @MessageMapping("/rejoin-game")
+    @Throws(Exception::class)
+    fun joinGame(@Payload request: RejoinGameRequest, @Header("simpSessionId") sessionId: String) {
+        println("--> /rejoin-game | sessionId=$sessionId | $request")
+        gameCommandHandler.rejoinGame(sessionId, request)
     }
 
     @MessageMapping("/rematch")
