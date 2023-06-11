@@ -1,9 +1,11 @@
 package com.krihl4n
 
+import com.krihl4n.game.GameMode
+
 class CapturesSpec extends BaseGameSpec {
 
     void setup() {
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
     }
 

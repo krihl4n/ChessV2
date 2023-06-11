@@ -31,22 +31,21 @@ internal class Game(
         gameResultEvaluator.registerObserver(this)
     }
 
-    override fun setState(state: State, gameMode: GameMode?) {
+    override fun setState(state: State) {
         this.gameState = state
         gameStateListeners.forEach {
             it.gameStateUpdated(
                 GameStateUpdate(
                     gameState = state,
-                    gameMode = gameMode
+                    gameMode = this.gameMode ?: throw RuntimeException("No game mode!")
                 )
             )
         }
     }
 
-    @JvmOverloads
-    fun initialize(gameMode: GameMode = GameMode.TEST_MODE) {
-        gameState.initializeGame(this, gameControl, gameMode)
+    fun initialize(gameMode: GameMode) {
         this.gameMode = gameMode
+        gameState.initializeGame(this, gameControl, gameMode)
     }
 
     fun setupChessboard(pieceSetup: PieceSetup?) {

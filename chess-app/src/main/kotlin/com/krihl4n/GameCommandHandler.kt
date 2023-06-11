@@ -106,7 +106,7 @@ class GameCommandHandler(
         game.getPlayer(playerId)?.let {
             val gameInfo = GameInfoEvent(
                 gameId = gameId,
-                mode = "", // todo needed?
+                mode = game.getMode(),
                 player = PlayerDto(playerId, it.color),
                 piecePositions = game.getFieldOccupationInfo(),
                 turn = game.getColorAllowedToMove()

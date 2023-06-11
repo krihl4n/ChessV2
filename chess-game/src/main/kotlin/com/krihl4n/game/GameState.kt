@@ -62,7 +62,7 @@ internal enum class GameState : State {
         ) {
             val allPlayersRegistered = gameCommand.executePlayerReady(playerId, colorPreference)
             if (allPlayersRegistered) {
-                stateHolder.setState(IN_PROGRESS, gameMode)
+                stateHolder.setState(IN_PROGRESS)
             }
         }
 
@@ -128,7 +128,7 @@ internal enum class GameState : State {
     },
     FINISHED {
         override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
-            stateHolder.setState(IN_PROGRESS, gameMode = gameMode)
+            stateHolder.setState(IN_PROGRESS)
             gameCommand.executeInitNewGame(gameMode)
         }
 

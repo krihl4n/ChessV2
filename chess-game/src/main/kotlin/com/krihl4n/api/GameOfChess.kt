@@ -101,7 +101,7 @@ class GameOfChess(val gameId: String, val gameMode: String, val pieceSetup: Piec
                         gameId,
                         GameInfoDto(
                             gameId = gameId,
-                            mode = update.gameMode?.toString() ?: "",
+                            mode = update.gameMode.toString(),
                             player1 = game.fetchPlayerOne().toDto(),
                             player2 = game.fetchPlayerTwo().toDto(),
                             piecePositions = game.getFieldOccupationInfo(),

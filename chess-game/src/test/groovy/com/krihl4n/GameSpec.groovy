@@ -1,5 +1,7 @@
 package com.krihl4n
 
+import com.krihl4n.game.GameMode
+
 class GameSpec extends BaseGameSpec {
 
     void setup() {
@@ -16,7 +18,7 @@ class GameSpec extends BaseGameSpec {
 
     def "can perform move when game is started"() {
         given:
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
 
         when:
@@ -28,7 +30,7 @@ class GameSpec extends BaseGameSpec {
 
     def "can't perform move if game has been finished"() {
         given:
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
         game.resign("player")
 
@@ -41,7 +43,7 @@ class GameSpec extends BaseGameSpec {
 
     def "position tracker should be updated when move performed"() {
         given:
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
 
         when:
@@ -53,7 +55,7 @@ class GameSpec extends BaseGameSpec {
 
     def "should return false if move couldn't be performed"() {
         given:
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
         positionTracker.removePieceFromField(aField("a2"))
 
@@ -66,7 +68,7 @@ class GameSpec extends BaseGameSpec {
 
     def "should undo move"() {
         given:
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
 
         when:
@@ -81,7 +83,7 @@ class GameSpec extends BaseGameSpec {
 
     def "should redo move"() {
         given:
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
 
         when:
@@ -97,7 +99,7 @@ class GameSpec extends BaseGameSpec {
 
     def "should not be able to perform illegal moves"() {
         given:
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
         and:
         positionTracker.setPieceAtField(aWhitePawn(), aField("a2"))

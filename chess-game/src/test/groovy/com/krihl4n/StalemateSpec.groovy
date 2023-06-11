@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.game.GameMode
 import com.krihl4n.game.GameResult
 import com.krihl4n.game.Result
 import com.krihl4n.game.ResultReason
@@ -8,7 +9,7 @@ class StalemateSpec extends BaseGameSpec {
 
     void setup() {
         gameCanBeFinished()
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
     }
 

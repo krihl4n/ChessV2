@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.game.GameMode
 import com.krihl4n.game.GameResult
 
 import static com.krihl4n.game.Result.BLACK_PLAYER_WON
@@ -10,7 +11,7 @@ class GameEndingCommandsSpec extends BaseGameSpec {
 
     void setup() {
         gameCanBeFinished()
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
     }
 
     def "game resigned by white player"() {

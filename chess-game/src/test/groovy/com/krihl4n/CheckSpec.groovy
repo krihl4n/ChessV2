@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.game.GameMode
 import com.krihl4n.model.Color
 import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
@@ -7,7 +8,7 @@ import com.krihl4n.model.Type
 class CheckSpec extends BaseGameSpec {
 
     void setup() {
-        game.initialize()
+        game.initialize(GameMode.TEST_MODE)
         game.playerReady("player", null)
     }
 
