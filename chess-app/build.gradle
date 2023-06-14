@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.kotlin.jvm' // apply plugin instead? add spring boot plugin?
 }
 
 version 'unspecified'
@@ -19,6 +19,8 @@ dependencies {
     implementation('com.fasterxml.jackson.core:jackson-databind:2.15.2')
     implementation('com.fasterxml.jackson.core:jackson-core:2.15.2')
     implementation('org.springframework.boot:spring-boot-starter-websocket:3.1.0')
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb:3.1.0")
+    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.7.0") // fixes mongo bean issue
 
     implementation project(':chess-game')
 

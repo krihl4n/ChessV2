@@ -47,3 +47,5 @@ clean up mess with the beans in api module. what should be @Service and what sho
 command query separation. maybe queries don't have to be pushed through same classes
 
 refresh while waiting for other player
+
+Uc8bFLRvYTCHJpF2

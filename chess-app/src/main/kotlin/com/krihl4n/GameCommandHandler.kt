@@ -9,6 +9,8 @@ import com.krihl4n.messages.GameInfoEvent
 import com.krihl4n.messages.JoinGameRequest
 import com.krihl4n.messages.RejoinGameRequest
 import com.krihl4n.messages.StartGameRequest
+import com.krihl4n.persistence.GameDocument
+import com.krihl4n.persistence.GameRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -17,7 +19,8 @@ class GameCommandHandler(
     private val gameEventHandler: GameEventHandler,
     private val register: GamesRegister,
     private val rematchProposals: RematchProposals,
-    private val messageSender: MessageSender
+    private val messageSender: MessageSender,
+    private val repo: GameRepository
 ) : ConnectionListener {
 
     override fun connectionEstablished(sessionId: String) {
@@ -32,6 +35,7 @@ class GameCommandHandler(
             .createGame(request.mode, request.setup, gameEventHandler)
             .also {
                 register.registerNewGame(it, sessionId)
+                repo.save(GameDocument(it.gameId))
                 it.initialize()
             }
         return newGame.gameId

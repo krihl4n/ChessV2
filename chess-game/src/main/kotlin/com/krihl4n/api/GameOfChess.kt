@@ -4,7 +4,6 @@ import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.*
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.api.pieceSetups.SetupProvider
 import com.krihl4n.game.*
 import com.krihl4n.game.Game
 import com.krihl4n.game.GameResultEvaluator
