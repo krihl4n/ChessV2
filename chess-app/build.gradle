@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' // apply plugin instead? add spring boot plugin?
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 version 'unspecified'
