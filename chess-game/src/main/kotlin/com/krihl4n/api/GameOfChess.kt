@@ -21,7 +21,7 @@ import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.players.Player
 import java.util.UUID
 
-class GameOfChess(val gameId: String, val gameMode: String, val pieceSetup: PieceSetup?) {
+class GameOfChess(val gameId: String, val gameMode: String, val pieceSetup: PieceSetup?): GameOfChessCommand {
 
     private val positionTracker = PositionTracker()
     private val commandCoordinator = CommandCoordinator()
@@ -41,12 +41,12 @@ class GameOfChess(val gameId: String, val gameMode: String, val pieceSetup: Piec
         commandCoordinator.registerObserver(this.gameResultEvaluator)
     }
 
-    fun initialize() {
+    override fun initialize() {
         game.setupChessboard(pieceSetup)
         game.initialize(GameMode.fromCommand(gameMode))
     }
 
-    fun playerReady(playerId: String, colorPreference: String?) {
+    override fun playerReady(playerId: String, colorPreference: String?) {
         game.playerReady(playerId, colorPreference)
         game.getMode()?.let {
             if (it == GameMode.VS_COMPUTER) {
@@ -57,13 +57,13 @@ class GameOfChess(val gameId: String, val gameMode: String, val pieceSetup: Piec
         }
     }
 
-    fun resign(playerId: String) = game.resign(playerId)
+    override fun resign(playerId: String) = game.resign(playerId)
 
-    fun move(move: MoveDto) = game.performMove(move)
+    override fun move(move: MoveDto) = game.performMove(move)
 
-    fun undoMove() = game.undoMove()
+    override fun undoMove() = game.undoMove()
 
-    fun redoMove() = game.redoMove()
+    override fun redoMove() = game.redoMove()
 
     fun getMode() = game.getMode().toString()
 

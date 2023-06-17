@@ -9,8 +9,6 @@ import com.krihl4n.messages.GameInfoEvent
 import com.krihl4n.messages.JoinGameRequest
 import com.krihl4n.messages.RejoinGameRequest
 import com.krihl4n.messages.StartGameRequest
-import com.krihl4n.persistence.GameDocument
-import com.krihl4n.persistence.GameRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -20,7 +18,6 @@ class GameCommandHandler(
     private val register: GamesRegister,
     private val rematchProposals: RematchProposals,
     private val messageSender: MessageSender,
-    private val repo: GameRepository
 ) : ConnectionListener {
 
     override fun connectionEstablished(sessionId: String) {
@@ -35,14 +32,13 @@ class GameCommandHandler(
             .createGame(request.mode, request.setup, gameEventHandler)
             .also {
                 register.registerNewGame(it, sessionId)
-                repo.save(GameDocument(it.gameId))
-                it.initialize()
             }
+        register.getGameForCommand(newGame.gameId)?.initialize()
         return newGame.gameId
     }
 
     fun requestRematch(sessionId: String): String? { // todo what to do with old games?
-        val existingGame = register.getGame(sessionId)
+        val existingGame = register.getGameForQuery(sessionId)
             ?: return null
         if (this.rematchProposals.proposalExists(existingGame.gameId)) {
             return null
@@ -71,7 +67,7 @@ class GameCommandHandler(
             ?.playerNextColor
             ?: req.colorPreference
 
-        register.getGameById(req.gameId).playerReady(playerId, colorPreference)
+        register.getGameForCommand(req.gameId)?.playerReady(playerId, colorPreference)
         return playerId
     }
 
@@ -85,11 +81,11 @@ class GameCommandHandler(
     }
 
     fun getPositions(sessionId: String): List<FieldOccupationDto>? {
-        return register.getGame(sessionId)?.getFieldOccupationInfo()
+        return register.getGameForQuery(sessionId)?.getFieldOccupationInfo()
     }
 
     fun getPossibleMoves(sessionId: String, field: String): PossibleMovesDto? {
-        return register.getGame(sessionId)?.getPossibleMoves(field)
+        return register.getGameForQuery(sessionId)?.getPossibleMoves(field)
     }
 
     fun resign(sessionId: String, playerId: String) {
@@ -106,7 +102,7 @@ class GameCommandHandler(
     }
 
     private fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {
-        val game: GameOfChess = register.getGameById(gameId)
+        val game: GameOfChess = register.getGameForQuery(gameId)?:throw RuntimeException("no existing game")
         game.getPlayer(playerId)?.let {
             val gameInfo = GameInfoEvent(
                 gameId = gameId,

@@ -1,19 +1,22 @@
 package com.krihl4n
 
 import com.krihl4n.api.GameOfChess
+import com.krihl4n.persistence.GamesRepository
+import com.krihl4n.persistence.PersistableGameOfChess
 import org.springframework.stereotype.Service
 
 @Service
-class GamesRegister {
+class GamesRegister(val repo: GamesRepository) {
 
-    private val entries = mutableListOf<RegisteredGame>()
+    private val entries = mutableListOf<RegisteredSession>()
 
     fun debugPrint() {
         entries.forEach { println("\n$it") }
     }
 
     fun registerNewGame(gameOfChess: GameOfChess, sessionId: String) {
-        entries.add(RegisteredGame(gameOfChess, sessionId))
+        entries.add(RegisteredSession(gameOfChess.gameId, sessionId))
+        repo.saveNewGame(gameOfChess)
     }
 
     fun getRelatedSessionIds(gameId: String): Set<String> {
@@ -24,8 +27,16 @@ class GamesRegister {
         return  this.entries.find { it.playerParticipates(playerId) }?.playerSessionId(playerId)
     }
 
-    fun getGame(sessionId: String): GameOfChess? {
-        return entries.find { it.sessionParticipates(sessionId) }?.game
+    fun getGame(sessionId: String): PersistableGameOfChess? { // todo not nullable?
+        return entries.find { it.sessionParticipates(sessionId) }?.let { repo.getById(it.gameId) }
+    }
+
+    fun getGameForCommand(gameId: String): PersistableGameOfChess? { // todo not nullable?
+        return repo.getById(gameId)
+    }
+
+    fun getGameForQuery(sessionId: String): GameOfChess? {
+        return entries.find { it.sessionParticipates(sessionId) }?.let { repo.getForQuery(it.gameId) }
     }
 
     fun deregisterGame(gameId: String) {
@@ -37,9 +48,9 @@ class GamesRegister {
      //   this.entries.removeIf { it.sessionIds().isEmpty() } // todo rethink that
     }
 
-    fun getGameById(gameId: String): GameOfChess {
-        return this.entries.first{it.gameId() == gameId}.game
-    }
+//    fun getGameById(gameId: String): GameOfChess {
+//        return this.entries.first{it.gameId() == gameId}.game
+//    }
 
     fun registerPlayer(sessionId: String, gameId: String, playerId: String) {
         this.entries.find { it.gameId() == gameId }?.registerPlayer(playerId, sessionId)
@@ -50,10 +61,10 @@ class GamesRegister {
     }
 }
 
-class RegisteredGame(val game: GameOfChess, private var initialSessionId: String?) {
+class RegisteredSession(val gameId: String, private var initialSessionId: String?) {
     private val playerSessions = mutableListOf<PlayerSession>()
 
-    fun gameId() = this.game.gameId
+    fun gameId() = this.gameId
 
     fun sessionIds() : Set<String> {
         val sessions = playerSessions.map { it.sessionId }.toMutableSet()
@@ -81,7 +92,7 @@ class RegisteredGame(val game: GameOfChess, private var initialSessionId: String
     }
 
     override fun toString(): String {
-        return "RegisteredGame(\ngame=${game.gameId}, \ninitialSessionId=$initialSessionId, \nplayerSessions=\n${this.playerSessions.map { "$it" }})"
+        return "RegisteredGame(\ngame=${gameId}, \ninitialSessionId=$initialSessionId, \nplayerSessions=\n${this.playerSessions.map { "$it" }})"
     }
 }
 
