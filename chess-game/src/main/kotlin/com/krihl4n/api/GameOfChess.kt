@@ -4,6 +4,7 @@ import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.*
 import com.krihl4n.api.pieceSetups.PieceSetup
+import com.krihl4n.api.pieceSetups.SetupProvider
 import com.krihl4n.game.*
 import com.krihl4n.game.Game
 import com.krihl4n.game.GameResultEvaluator
@@ -21,7 +22,7 @@ import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.players.Player
 import java.util.UUID
 
-class GameOfChess(val gameId: String, val gameMode: String, val pieceSetup: PieceSetup?): GameOfChessCommand {
+class GameOfChess(val gameId: String, val gameMode: String, private val pieceSetup: PieceSetup?): GameOfChessCommand {
 
     private val positionTracker = PositionTracker()
     private val commandCoordinator = CommandCoordinator()

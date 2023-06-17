@@ -10,7 +10,7 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
 
     fun saveNewGame(gameOfChess: GameOfChess) {
         tmpList.add(gameOfChess)
-        mongoGamesRepository.save(GameDocument(gameOfChess.gameId, emptyList()))
+        mongoGamesRepository.save(GameDocument(gameOfChess.gameId, gameOfChess.gameMode, emptyList()))
     }
 
     fun getById(gameId: String): PersistableGameOfChess? {
