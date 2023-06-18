@@ -1,5 +1,6 @@
 package com.krihl4n.persistence
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
@@ -9,6 +10,14 @@ data class GameDocument(@Id val id: String, val gameMode: String, val commands: 
 
 data class Command(val type: String, val timestamp: Instant, val data: String? = null)
 
-data class PlayerReadyData(val colorPreference: String?)
+data class PlayerReadyData(
+    @JsonProperty("playerId") val playerId: String,
+    @JsonProperty("colorPreference") val colorPreference: String?
+)
 
-data class MoveData(val playerId: String, val from: String, val to: String, val pawnPromotion: String?)
+data class MoveData(
+    @JsonProperty("playerId") val playerId: String,
+    @JsonProperty("from") val from: String,
+    @JsonProperty("to") val to: String,
+    @JsonProperty("pawnPromotion") val pawnPromotion: String?
+)

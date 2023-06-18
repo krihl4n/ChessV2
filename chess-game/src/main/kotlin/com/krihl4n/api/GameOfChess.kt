@@ -78,7 +78,7 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
 
     fun getPossibleMoves(field: String) = game.getPossibleMoves(field)
 
-    fun registerGameEventListener(listener: GameEventListener) {
+    override fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
             override fun positionsUpdated(update: PiecePositionUpdate) {
                 listener.piecePositionUpdate(

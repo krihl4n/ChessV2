@@ -7,7 +7,7 @@ import java.util.*
 
 object GameOfChessCreator {
 
-    fun createGame(mode: String, setup: String?, listener: GameEventListener): GameOfChess {
+    fun createGame(mode: String, setup: String?, listener: GameEventListener): GameOfChess { // todo listener moze nie byc potrzebny
         return setupNewGame(mode, setup, listener)
     }
 

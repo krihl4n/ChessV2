@@ -39,6 +39,10 @@ class GamesRegister(val repo: GamesRepository) {
         return entries.find { it.sessionParticipates(sessionId) }?.let { repo.getForQuery(it.gameId) }
     }
 
+    fun getGameForQueryById(gameId: String): GameOfChess {
+        return repo.getForQuery(gameId)
+    }
+
     fun deregisterGame(gameId: String) {
         this.entries.removeIf { it.gameId() == gameId }
     }
@@ -53,6 +57,9 @@ class GamesRegister(val repo: GamesRepository) {
 //    }
 
     fun registerPlayer(sessionId: String, gameId: String, playerId: String) {
+        if(this.entries.find { it.gameId() == gameId } == null) {
+            entries.add(RegisteredSession(gameId, sessionId))
+        }
         this.entries.find { it.gameId() == gameId }?.registerPlayer(playerId, sessionId)
     }
 

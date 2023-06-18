@@ -21,6 +21,7 @@ class GameCommandHandler(
 ) : ConnectionListener {
 
     override fun connectionEstablished(sessionId: String) {
+        // todo send rejoin on connection established from frontend?
     }
 
     override fun connectionClosed(sessionId: String) {
@@ -33,7 +34,10 @@ class GameCommandHandler(
             .also {
                 register.registerNewGame(it, sessionId)
             }
-        register.getGameForCommand(newGame.gameId)?.initialize()
+        register.getGameForCommand(newGame.gameId)?.let {
+            it.registerGameEventListener(gameEventHandler)
+            it.initialize()
+        }
         return newGame.gameId
     }
 
@@ -67,7 +71,10 @@ class GameCommandHandler(
             ?.playerNextColor
             ?: req.colorPreference
 
-        register.getGameForCommand(req.gameId)?.playerReady(playerId, colorPreference)
+        register.getGameForCommand(req.gameId)?.let {
+            it.registerGameEventListener(gameEventHandler)
+            it.playerReady(playerId, colorPreference)
+        }
         return playerId
     }
 
@@ -77,10 +84,13 @@ class GameCommandHandler(
     }
 
     fun move(sessionId: String, playerId: String, from: String, to: String, pawnPromotion: String?) {
-        register.getGame(sessionId)?.move(MoveDto(playerId, from, to, pawnPromotion))
+        register.getGame(sessionId)?.let {
+            it.registerGameEventListener(gameEventHandler)
+            it.move(MoveDto(playerId, from, to, pawnPromotion))
+        }
     }
 
-    fun getPositions(sessionId: String): List<FieldOccupationDto>? {
+    fun getPositions(sessionId: String): List<FieldOccupationDto>? { // todo all commands by game id, not session id
         return register.getGameForQuery(sessionId)?.getFieldOccupationInfo()
     }
 
@@ -102,7 +112,7 @@ class GameCommandHandler(
     }
 
     private fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {
-        val game: GameOfChess = register.getGameForQuery(gameId)?:throw RuntimeException("no existing game")
+        val game: GameOfChess = register.getGameForQueryById(gameId)
         game.getPlayer(playerId)?.let {
             val gameInfo = GameInfoEvent(
                 gameId = gameId,
