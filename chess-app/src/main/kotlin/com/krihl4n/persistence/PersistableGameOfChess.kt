@@ -1,17 +1,24 @@
 package com.krihl4n.persistence
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.GameOfChessCommand
 import com.krihl4n.api.dto.MoveDto
+import java.time.Instant
+import kotlin.jvm.optionals.getOrNull
 
-class PersistableGameOfChess(private val delegate: GameOfChess, private val repo: MongoGamesRepository): GameOfChessCommand {
+class PersistableGameOfChess(private val delegate: GameOfChess, private val repo: MongoGamesRepository) :
+    GameOfChessCommand {
+
+    private val objectMapper = ObjectMapper()
 
     override fun initialize() {
-        println("!!! persist")
-        delegate.initialize()
+        save("INITIALIZE")
+        delegate.initialize() // todo check if thrown exception rollbacks saved doc
     }
 
     override fun playerReady(playerId: String, colorPreference: String?) {
+        save("PLAYER_READY", PlayerReadyData(colorPreference))
         delegate.playerReady(playerId, colorPreference)
     }
 
@@ -20,6 +27,7 @@ class PersistableGameOfChess(private val delegate: GameOfChess, private val repo
     }
 
     override fun move(move: MoveDto) {
+        save("MOVE", MoveData(move.playerId, move.from, move.to, move.pawnPromotion))
         delegate.move(move)
     }
 
@@ -30,6 +38,17 @@ class PersistableGameOfChess(private val delegate: GameOfChess, private val repo
     override fun redoMove() {
         delegate.redoMove()
     }
+
+    private fun save(type: String, data: Any? = null) {
+        repo.findById(delegate.gameId).getOrNull()
+            ?.let {
+                it.commands.add(
+                    Command(
+                        type,
+                        Instant.now(),
+                        data?.let { objectMapper.writeValueAsString(data) })
+                )
+                repo.save(it)
+            }
+    }
 }
-
-

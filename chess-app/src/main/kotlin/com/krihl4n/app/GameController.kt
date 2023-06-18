@@ -27,7 +27,7 @@ class GameController(
     @Throws(Exception::class)
     fun move(@Payload move: Move, @Header("simpSessionId") sessionId: String) {
         println("--> /move | sessionId=$sessionId | $move")
-        gameCommandHandler.move(sessionId, move.playerId, move.from, move.to, move.pawnPromotion ?: "knight")
+        gameCommandHandler.move(sessionId, move.playerId, move.from, move.to, move.pawnPromotion)
     }
 
     @MessageMapping("/start-new-game") // request-new-game
