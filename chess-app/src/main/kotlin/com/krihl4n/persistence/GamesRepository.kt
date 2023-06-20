@@ -3,6 +3,7 @@ package com.krihl4n.persistence
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.MoveDto
+import com.krihl4n.persistence.GamesRepository.CommandType.*
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
@@ -39,19 +40,28 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
 
         for (command in persistedGame.commands) {
             when (command.type) {
-                "INITIALIZE" -> {
-                    gameOfChess.initialize()
-                }
-                "PLAYER_READY" -> {
+                INITIALIZE -> gameOfChess.initialize()
+                PLAYER_READY -> {
                     val data = objectMapper.readValue(command.data, PlayerReadyData::class.java)
                     gameOfChess.playerReady(data.playerId, data.colorPreference)
                 }
-                "MOVE" -> {
+                MOVE -> {
                     val data = objectMapper.readValue(command.data, MoveData::class.java)
                     gameOfChess.move(MoveDto(data.playerId, data.from, data.to, data.pawnPromotion))
+                }
+
+                UNDO_MOVE -> gameOfChess.undoMove()
+                REDO_MOVE -> gameOfChess.redoMove()
+                RESIGN -> {
+                    val data = objectMapper.readValue(command.data, ResignData::class.java)
+                    gameOfChess.resign(data.playerId)
                 }
             }
         }
         return gameOfChess
+    }
+
+    enum class CommandType {
+        INITIALIZE, PLAYER_READY, MOVE, UNDO_MOVE, REDO_MOVE, RESIGN
     }
 }

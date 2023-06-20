@@ -8,7 +8,7 @@ import java.time.Instant
 @Document(collection = "games")
 data class GameDocument(@Id val id: String, val gameMode: String, val commands: MutableList<Command> = mutableListOf())
 
-data class Command(val type: String, val timestamp: Instant, val data: String? = null)
+data class Command(val type: GamesRepository.CommandType, val timestamp: Instant, val data: String? = null)
 
 data class PlayerReadyData(
     @JsonProperty("playerId") val playerId: String,
@@ -20,4 +20,8 @@ data class MoveData(
     @JsonProperty("from") val from: String,
     @JsonProperty("to") val to: String,
     @JsonProperty("pawnPromotion") val pawnPromotion: String?
+)
+
+data class ResignData(
+    @JsonProperty("playerId") val playerId: String,
 )
