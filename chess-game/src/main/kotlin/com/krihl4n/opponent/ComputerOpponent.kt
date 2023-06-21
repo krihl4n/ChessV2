@@ -7,6 +7,7 @@ import kotlin.random.Random
 import java.util.Timer
 import kotlin.concurrent.schedule
 
+// todo move out computer opponent
 class ComputerOpponent(private val game: GameOfChess, private val playerId: String, private val playerColor: String) :
     GameEventListener {
 

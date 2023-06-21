@@ -39,6 +39,7 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
         val gameOfChess = GameOfChess(persistedGame.id, persistedGame.gameMode, null)
 
         for (command in persistedGame.commands) {
+            println("process --> $command")
             when (command.type) {
                 INITIALIZE -> gameOfChess.initialize()
                 PLAYER_READY -> {

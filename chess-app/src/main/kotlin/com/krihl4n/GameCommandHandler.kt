@@ -50,6 +50,9 @@ class GameCommandHandler(
         val rematch = GameOfChessCreator.createRematch(existingGame, gameEventHandler)
         val newGame = rematch.gameOfChess.also {
             register.registerNewGame(it, sessionId)
+        }
+        register.getGameForCommand(newGame.gameId)?.let {
+            it.registerGameEventListener(gameEventHandler)
             it.initialize()
         }
         this.rematchProposals.createProposal(rematch)
@@ -63,7 +66,7 @@ class GameCommandHandler(
     }
 
     fun joinGame(sessionId: String, req: JoinGameRequest): String {
-        val playerId = req.playerId ?: ("p-" + UUID.randomUUID().toString())
+        val playerId = req.playerId ?: (UUID.randomUUID().toString())
         register.registerPlayer(sessionId, req.gameId, playerId)
 
         val colorPreference = rematchProposals

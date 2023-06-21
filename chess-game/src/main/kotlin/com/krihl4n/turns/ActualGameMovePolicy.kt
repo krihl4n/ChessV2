@@ -7,7 +7,7 @@ import com.krihl4n.players.PlayersManager
 
 internal class ActualGameMovePolicy(private val playersManager: PlayersManager) : MovePolicy, MoveObserver {
 
-    private var colorAllowedToMove = Color.WHITE // todo do not hold state here. make an adapter to storage maybe?
+    private var colorAllowedToMove = Color.WHITE
 
     override fun moveAllowedBy(playerId: String, move: Move): Boolean {
         val playerColor = playersManager.getPlayer(playerId)?.color

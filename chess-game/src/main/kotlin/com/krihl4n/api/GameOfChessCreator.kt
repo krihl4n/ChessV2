@@ -22,7 +22,7 @@ object GameOfChessCreator {
     }
 
     private fun setupNewGame(mode: String, setup: String?, listener: GameEventListener): GameOfChess {
-        val newGame = GameOfChess("g-" + UUID.randomUUID().toString(), mode, SetupProvider.getSetup(setup))
+        val newGame = GameOfChess(UUID.randomUUID().toString(), mode, SetupProvider.getSetup(setup))
         newGame.registerGameEventListener(listener)
         return newGame
     }
