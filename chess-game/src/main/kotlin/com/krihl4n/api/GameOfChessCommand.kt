@@ -10,4 +10,4 @@ interface GameOfChessCommand {
     fun move(move: MoveDto)
     fun undoMove()
     fun redoMove()
-    fun registerGameEventListener(listener: GameEventListener)}
+}

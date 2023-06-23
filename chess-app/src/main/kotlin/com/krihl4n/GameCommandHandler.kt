@@ -5,6 +5,7 @@ import com.krihl4n.api.GameOfChessCreator
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
+import com.krihl4n.computerOpponent.ComputerOpponent
 import com.krihl4n.messages.GameInfoEvent
 import com.krihl4n.messages.JoinGameRequest
 import com.krihl4n.messages.RejoinGameRequest
@@ -18,6 +19,7 @@ class GameCommandHandler(
     private val register: GamesRegister,
     private val rematchProposals: RematchProposals,
     private val messageSender: MessageSender,
+    private val computerOpponent: ComputerOpponent
 ) : ConnectionListener {
 
     override fun connectionEstablished(sessionId: String) {
@@ -30,14 +32,9 @@ class GameCommandHandler(
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         val newGame = GameOfChessCreator
-            .createGame(request.mode, request.setup, gameEventHandler)
-            .also {
-                register.registerNewGame(it, sessionId)
-            }
-        register.getGameForCommand(newGame.gameId)?.let {
-            it.registerGameEventListener(gameEventHandler)
-            it.initialize()
-        }
+            .createGame(request.mode, request.setup, listOf(gameEventHandler, computerOpponent))
+        register.registerNewGame(newGame, sessionId)
+        register.getGameForCommand(newGame.gameId)?.initialize()
         return newGame.gameId
     }
 
@@ -47,14 +44,11 @@ class GameCommandHandler(
         if (this.rematchProposals.proposalExists(existingGame.gameId)) {
             return null
         }
-        val rematch = GameOfChessCreator.createRematch(existingGame, gameEventHandler)
+        val rematch = GameOfChessCreator.createRematch(existingGame, listOf(gameEventHandler, computerOpponent))
         val newGame = rematch.gameOfChess.also {
             register.registerNewGame(it, sessionId)
         }
-        register.getGameForCommand(newGame.gameId)?.let {
-            it.registerGameEventListener(gameEventHandler)
-            it.initialize()
-        }
+        register.getGameForCommand(newGame.gameId)?.initialize()
         this.rematchProposals.createProposal(rematch)
 
         register
@@ -74,10 +68,7 @@ class GameCommandHandler(
             ?.playerNextColor
             ?: req.colorPreference
 
-        register.getGameForCommand(req.gameId)?.let {
-            it.registerGameEventListener(gameEventHandler)
-            it.playerReady(playerId, colorPreference)
-        }
+        register.getGameForCommand(req.gameId)?.playerReady(playerId, colorPreference)
         return playerId
     }
 
@@ -87,10 +78,7 @@ class GameCommandHandler(
     }
 
     fun move(sessionId: String, playerId: String, from: String, to: String, pawnPromotion: String?) {
-        register.getGame(sessionId)?.let {
-            it.registerGameEventListener(gameEventHandler)
-            it.move(MoveDto(playerId, from, to, pawnPromotion))
-        }
+        register.getGame(sessionId)?.move(MoveDto(playerId, from, to, pawnPromotion))
     }
 
     fun getPositions(sessionId: String): List<FieldOccupationDto>? { // todo all commands by game id, not session id

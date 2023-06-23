@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.persistence.GamesRepository
 import com.krihl4n.persistence.PersistableGameOfChess
@@ -9,6 +10,10 @@ import org.springframework.stereotype.Service
 class GamesRegister(val repo: GamesRepository) {
 
     private val entries = mutableListOf<RegisteredSession>()
+
+    fun observeGames(eventListener: GameEventListener) {
+        this.repo.observeNewGames(eventListener)
+    }
 
     fun debugPrint() {
         entries.forEach { println("\n$it") }

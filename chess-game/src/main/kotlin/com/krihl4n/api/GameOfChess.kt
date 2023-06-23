@@ -4,14 +4,12 @@ import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.*
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.api.pieceSetups.SetupProvider
 import com.krihl4n.game.*
 import com.krihl4n.game.Game
 import com.krihl4n.game.GameResultEvaluator
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.moveCommands.PiecePositionUpdateListener
-import com.krihl4n.opponent.ComputerOpponent
 import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.guards.EnPassantGuard
@@ -20,7 +18,6 @@ import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.players.Player
-import java.util.UUID
 
 class GameOfChess(val gameId: String, val gameMode: String, private val pieceSetup: PieceSetup?): GameOfChessCommand {
 
@@ -49,13 +46,6 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
 
     override fun playerReady(playerId: String, colorPreference: String?) {
         game.playerReady(playerId, colorPreference)
-        game.getMode()?.let {
-            if (it == GameMode.VS_COMPUTER) {
-                game.playerReady(UUID.randomUUID().toString())
-                val computerPlayer = game.fetchPlayerTwo()
-                registerGameEventListener(ComputerOpponent(this, computerPlayer.id, computerPlayer.color.toString()))
-            }
-        }
     }
 
     override fun resign(playerId: String) = game.resign(playerId)
@@ -78,7 +68,7 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
 
     fun getPossibleMoves(field: String) = game.getPossibleMoves(field)
 
-    override fun registerGameEventListener(listener: GameEventListener) {
+    fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
             override fun positionsUpdated(update: PiecePositionUpdate) {
                 listener.piecePositionUpdate(

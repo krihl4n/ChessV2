@@ -6,8 +6,8 @@ internal enum class GameState : State {
 
     UNINITIALIZED {
         override fun initializeGame(stateHolder: StateHolder, gameCommand: GameCommand, gameMode: GameMode) {
-            stateHolder.setState(WAITING_FOR_PLAYERS)
             gameCommand.executeInitNewGame(gameMode)
+            stateHolder.setState(WAITING_FOR_PLAYERS)
         }
 
         override fun resign(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {

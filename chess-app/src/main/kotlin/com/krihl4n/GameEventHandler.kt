@@ -4,6 +4,7 @@ import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.MessageSender
 import com.krihl4n.messages.GameInfoEvent
+import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Service
 
 @Service
@@ -12,6 +13,11 @@ class GameEventHandler(
     private val gamesRegister: GamesRegister,
     private val rematchProposals: RematchProposals
 ) : GameEventListener {
+
+    @PostConstruct
+    fun post() {
+        gamesRegister.observeGames(this)
+    }
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
         getSessionIds(gameId).forEach { messageSender.sendPiecePositionUpdateMsg(it, update) }

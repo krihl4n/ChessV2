@@ -1,7 +1,6 @@
 package com.krihl4n.persistence
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.GameOfChessCommand
 import com.krihl4n.api.dto.MoveDto
@@ -43,10 +42,6 @@ class PersistableGameOfChess(private val delegate: GameOfChess, private val repo
     override fun redoMove() {
         save(REDO_MOVE)
         delegate.redoMove()
-    }
-
-    override fun registerGameEventListener(listener: GameEventListener) {
-        delegate.registerGameEventListener(listener)
     }
 
     private fun save(type: CommandType, data: Any? = null) {

@@ -49,3 +49,7 @@ command query separation. maybe queries don't have to be pushed through same cla
 refresh while waiting for other player
 
 Uc8bFLRvYTCHJpF2
+
+maybe just cpu, player1 and player2 as player ids?
+
+sometimes color selection black doesn't work for cpu mode

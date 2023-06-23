@@ -1,6 +1,7 @@
 package com.krihl4n.persistence
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.persistence.GamesRepository.CommandType.*
@@ -11,7 +12,12 @@ import kotlin.jvm.optionals.getOrNull
 class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
 
     private val games = mutableListOf<GameOfChess>()
+    private var gameListeners = mutableSetOf<GameEventListener>()
     private val objectMapper: ObjectMapper = ObjectMapper()
+
+    fun observeNewGames(listener: GameEventListener) {
+        gameListeners.add(listener)
+    }
 
     fun saveNewGame(gameOfChess: GameOfChess) {
         games.add(gameOfChess)
@@ -21,7 +27,9 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
     fun getById(gameId: String): PersistableGameOfChess? {
         val gameOfChess =
             games.find { it.gameId == gameId }?:
-            retrieveGameOfChess(gameId).also { games.add(it) }
+            retrieveGameOfChess(gameId).also {
+                games.add(it)
+            }
         return PersistableGameOfChess(gameOfChess, mongoGamesRepository)
        // return tmpList.firstOrNull{it.gameId == gameId}?.let { PersistableGameOfChess(it, mongoGamesRepository) }
     }
@@ -59,6 +67,8 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
                 }
             }
         }
+
+        gameListeners.forEach{gameOfChess.registerGameEventListener(it)}
         return gameOfChess
     }
 
