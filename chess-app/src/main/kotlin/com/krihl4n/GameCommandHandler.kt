@@ -16,7 +16,7 @@ import java.util.*
 @Service
 class GameCommandHandler(
     private val gameEventHandler: GameEventHandler,
-    private val register: GamesRegister,
+    private val register: GamesRegistry,
     private val rematchProposals: RematchProposals,
     private val messageSender: MessageSender,
     private val computerOpponent: ComputerOpponent

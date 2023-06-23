@@ -1,12 +1,16 @@
 import com.krihl4n.GameCommandHandler
 import com.krihl4n.GameEventHandler
-import com.krihl4n.GamesRegister
+import com.krihl4n.GamesRegistry
 import com.krihl4n.RematchProposals
 import com.krihl4n.app.MessageSender
+import com.krihl4n.computerOpponent.ComputerOpponent
 import com.krihl4n.messages.GameInfoEvent
+import com.krihl4n.persistence.GamesRepository
+import com.krihl4n.persistence.MongoGamesRepository
 import io.kotest.core.spec.AfterTest
 import io.kotest.core.spec.BeforeTest
 import io.mockk.*
+import java.util.*
 
 const val SESSION_ID_1 = "1111"
 const val SESSION_ID_2 = "2222"
@@ -19,16 +23,19 @@ const val VS_COMPUTER = "vs_computer"
 const val VS_FRIEND = "vs_friend"
 
 val msgSender = mockk<MessageSender>(relaxed = true)
-var gamesRegister = GamesRegister()
+val repo = mockk<MongoGamesRepository>(relaxed = false)
+var gamesRegistry = GamesRegistry(GamesRepository(repo))
 var rematchProposals = RematchProposals()
-var eventhandler = GameEventHandler(msgSender, gamesRegister, rematchProposals)
-var gameCommandHandler = GameCommandHandler(eventhandler, gamesRegister, rematchProposals, msgSender)
+var eventhandler = GameEventHandler(msgSender, gamesRegistry, rematchProposals)
+var gameCommandHandler = GameCommandHandler(eventhandler, gamesRegistry, rematchProposals, msgSender, ComputerOpponent(gamesRegistry))
 
 val beforeApiTest: BeforeTest = {
-    gamesRegister = GamesRegister()
+    gamesRegistry = GamesRegistry(GamesRepository(repo))
     rematchProposals = RematchProposals()
-    eventhandler = GameEventHandler(msgSender, gamesRegister, rematchProposals)
-    gameCommandHandler = GameCommandHandler(eventhandler, gamesRegister, rematchProposals, msgSender)
+    eventhandler = GameEventHandler(msgSender, gamesRegistry, rematchProposals)
+    gameCommandHandler = GameCommandHandler(eventhandler, gamesRegistry, rematchProposals, msgSender, ComputerOpponent(gamesRegistry))
+    every { repo.save(any()) }.returnsArgument(0)
+    every { repo.findById(any()) }.returns(Optional.empty())
 }
 
 val afterApiTest: AfterTest = { clearAllMocks() }

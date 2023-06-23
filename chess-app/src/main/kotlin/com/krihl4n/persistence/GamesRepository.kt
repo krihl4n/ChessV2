@@ -31,15 +31,11 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
                 games.add(it)
             }
         return PersistableGameOfChess(gameOfChess, mongoGamesRepository)
-       // return tmpList.firstOrNull{it.gameId == gameId}?.let { PersistableGameOfChess(it, mongoGamesRepository) }
     }
 
     fun getForQuery(gameId: String): GameOfChess { // todo interface for query?
         return games.find { it.gameId == gameId } ?:
         retrieveGameOfChess(gameId).also { games.add(it) }
-
-    //return retrieveGameOfChess(gameId)
-        //return tmpList.first{it.gameId == gameId}
     }
 
     private fun retrieveGameOfChess(gameId: String): GameOfChess {

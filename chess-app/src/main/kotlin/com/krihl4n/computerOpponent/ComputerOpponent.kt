@@ -1,6 +1,6 @@
 package com.krihl4n.computerOpponent
 
-import com.krihl4n.GamesRegister
+import com.krihl4n.GamesRegistry
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.*
@@ -12,7 +12,7 @@ import kotlin.concurrent.schedule
 import kotlin.random.Random
 
 @Service
-class ComputerOpponent(private val gamesRegistry: GamesRegister): GameEventListener {
+class ComputerOpponent(private val gamesRegistry: GamesRegistry): GameEventListener {
 
     @PostConstruct
     fun post() {

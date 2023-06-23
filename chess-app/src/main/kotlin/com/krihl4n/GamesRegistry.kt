@@ -7,16 +7,12 @@ import com.krihl4n.persistence.PersistableGameOfChess
 import org.springframework.stereotype.Service
 
 @Service
-class GamesRegister(val repo: GamesRepository) {
+class GamesRegistry(private val repo: GamesRepository) {
 
     private val entries = mutableListOf<RegisteredSession>()
 
     fun observeGames(eventListener: GameEventListener) {
         this.repo.observeNewGames(eventListener)
-    }
-
-    fun debugPrint() {
-        entries.forEach { println("\n$it") }
     }
 
     fun registerNewGame(gameOfChess: GameOfChess, sessionId: String) {
@@ -56,10 +52,6 @@ class GamesRegister(val repo: GamesRepository) {
         this.entries.forEach { it.deregisterSession(sessionId) }
      //   this.entries.removeIf { it.sessionIds().isEmpty() } // todo rethink that
     }
-
-//    fun getGameById(gameId: String): GameOfChess {
-//        return this.entries.first{it.gameId() == gameId}.game
-//    }
 
     fun registerPlayer(sessionId: String, gameId: String, playerId: String) {
         if(this.entries.find { it.gameId() == gameId } == null) {

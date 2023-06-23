@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service
 @Service
 class GameEventHandler(
     private val messageSender: MessageSender,
-    private val gamesRegister: GamesRegister,
+    private val gamesRegistry: GamesRegistry,
     private val rematchProposals: RematchProposals
 ) : GameEventListener {
 
     @PostConstruct
     fun post() {
-        gamesRegister.observeGames(this)
+        gamesRegistry.observeGames(this)
     }
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
@@ -31,7 +31,7 @@ class GameEventHandler(
         rematchProposals.clearProposals(gameInfo.gameId)
 
         for (player in setOf(gameInfo.player1, gameInfo.player2)) {
-            gamesRegister.getRelatedPlayerSessionId(player.id)?.let {
+            gamesRegistry.getRelatedPlayerSessionId(player.id)?.let {
                 messageSender.sendGameStartedMsg(
                     it,
                     GameInfoEvent(
@@ -54,5 +54,5 @@ class GameEventHandler(
         getSessionIds(gameId).forEach { messageSender.sendWaitingForOtherPlayerMsg(it, gameId) }
     }
 
-    private fun getSessionIds(gameId: String) = gamesRegister.getRelatedSessionIds(gameId)
+    private fun getSessionIds(gameId: String) = gamesRegistry.getRelatedSessionIds(gameId)
 }
