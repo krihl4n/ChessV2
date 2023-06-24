@@ -6,19 +6,21 @@ import kotlin.random.Random
 
 internal class ActualGamePlayersManager : PlayersManager {
 
-    private var player1Id: String? = null // todo do not hold state here. make an adapter to storage maybe?
+    private var player1Id: String? = null
     private var player2Id: String? = null
+    private var p1ColorPreference: Color? = null
     private var player1: Player? = null
     private var player2: Player? = null
 
     override fun registerPlayer(playerId: String, colorPreference: Color?): Boolean {
         if (player1 == null) {
+            p1ColorPreference = colorPreference
             registerPlayerOne(colorPreference, playerId)
             return false
         }
 
         if (player2 == null) {
-            registerPlayerTwo(playerId)
+            registerPlayerTwo(playerId, colorPreference)
             return true
         }
 
@@ -45,11 +47,16 @@ internal class ActualGamePlayersManager : PlayersManager {
         player1 = Player(id, color)
     }
 
-    private fun registerPlayerTwo(id: String) {
+    private fun registerPlayerTwo(id: String, colorPreference: Color?) {
         if (player1Id == id) {
             throw IllegalArgumentException("players cannot have same ids")
         }
-        val color = player1?.color?.opposite() ?: throw IllegalStateException("cannot determine player's color")
+        val color = if(p1ColorPreference == null && colorPreference != null) {
+            player1 = Player(player1Id!!, colorPreference.opposite())
+            colorPreference
+        } else {
+            player1?.color?.opposite() ?: throw IllegalStateException("cannot determine player's color")
+        }
         player2Id = id
         player2 = Player(id, color)
     }
