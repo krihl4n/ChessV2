@@ -1,7 +1,6 @@
 package com.krihl4n
 
 import com.krihl4n.api.GameOfChess
-import com.krihl4n.api.GameOfChessCreator
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
@@ -48,9 +47,10 @@ class GameCommandHandler(
         val newGame = rematch.gameOfChess.also {
             register.registerNewGame(it, sessionId)
         }
-        register.getGameForCommand(newGame.gameId)?.initialize()
+//        register.getGameForCommand(newGame.gameId)?.initialize()
+        println("create proposal")
         this.rematchProposals.createProposal(rematch)
-
+        register.getGameForCommand(newGame.gameId)?.initialize()
         register
             .getRelatedSessionIds(existingGame.gameId)
             .firstOrNull { it != sessionId }
@@ -63,6 +63,7 @@ class GameCommandHandler(
         val playerId = req.playerId ?: (UUID.randomUUID().toString())
         register.registerPlayer(sessionId, req.gameId, playerId)
 
+        println("get proposal")
         val colorPreference = rematchProposals
             .getRematchProposal(playerId)
             ?.playerNextColor

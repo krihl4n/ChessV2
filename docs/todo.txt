@@ -17,12 +17,6 @@
 * security, accounts etc
  //todo later on it will have to be send to specific user who can have multiple sessions
 
-* persistence
- save played games to a file
- mongo
- optimistic locking
- reversing moves will be a pain.. need to store commands? o_0 <== event sourcing
-
 * bugs
 ** move observer not notified when redoing the move, bug probably with right to castle
 
@@ -51,5 +45,3 @@ refresh while waiting for other player
 Uc8bFLRvYTCHJpF2
 
 maybe just cpu, player1 and player2 as player ids?
-
-sometimes color selection black doesn't work for cpu mode

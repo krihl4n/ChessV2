@@ -1,8 +1,10 @@
-package com.krihl4n.api
+package com.krihl4n
 
+import com.krihl4n.api.GameEventListener
+import com.krihl4n.api.GameOfChess
+import com.krihl4n.api.dto.ColorDto
 import com.krihl4n.api.dto.PlayerDto
 import com.krihl4n.api.pieceSetups.SetupProvider
-import com.krihl4n.model.Color
 import java.util.*
 
 object GameOfChessCreator {
@@ -17,7 +19,7 @@ object GameOfChessCreator {
             gameOfChess = setupNewGame(existingGame.getMode(), null, listeners),
             players = existingGame
                 .getPlayers()
-                .map { PlayerDto(it.id, Color.of(it.color).opposite().toString()) }
+                .map { PlayerDto(it.id, ColorDto(it.color).opposite().value) }
         )
     }
 

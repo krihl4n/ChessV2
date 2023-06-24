@@ -1,6 +1,5 @@
 package com.krihl4n
 
-import com.krihl4n.api.RematchDto
 import org.springframework.stereotype.Service
 
 @Service
