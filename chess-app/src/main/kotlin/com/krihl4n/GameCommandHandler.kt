@@ -35,9 +35,8 @@ class GameCommandHandler(
         return newGame.gameId
     }
 
-    fun requestRematch(sessionId: String): String? { // todo what to do with old games?
-        val existingGame = register.getGameForQuery(sessionId)
-            ?: return null
+    fun requestRematch(sessionId: String, gameId: String): String? { // todo what to do with old games?
+        val existingGame = register.getGameForQueryById(gameId)
         if (this.rematchProposals.proposalExists(existingGame.gameId)) {
             return null
         }

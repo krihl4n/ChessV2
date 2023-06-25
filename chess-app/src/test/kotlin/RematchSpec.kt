@@ -13,7 +13,7 @@ class RematchSpec : FunSpec({
         val gameId = gameCommandHandler.requestNewGame(SESSION_ID_1, StartGameRequest(TEST_MODE, null))
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
 
-        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
+        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
 
         assertNotNull(gamesRegistry.getGame(SESSION_ID_1))
         assertEquals(newGameId, gamesRegistry.getGameForQuery(SESSION_ID_1)?.gameId)
@@ -24,7 +24,7 @@ class RematchSpec : FunSpec({
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
         val gameInfoCaptor = gameStartedCaptor()
 
-        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
+        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!))
 
         verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
@@ -37,7 +37,7 @@ class RematchSpec : FunSpec({
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId))
         val gameInfoCaptor = gameStartedCaptor()
 
-        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
+        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(newGameId))
 
@@ -52,7 +52,7 @@ class RematchSpec : FunSpec({
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
         val originalGamePlayer = gameInfoCaptor.captured.player
 
-        gameCommandHandler.requestRematch(SESSION_ID_1)
+        gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
 
         verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
         assertEquals(originalGamePlayer.id, gameInfoCaptor.captured.player.id)
@@ -63,7 +63,7 @@ class RematchSpec : FunSpec({
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId))
         val gameInfoCaptor = gameStartedCaptor()
 
-        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
+        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!))
 
         verify { msgSender.sendGameStartedMsg(SESSION_ID_1, any()) }
@@ -77,7 +77,7 @@ class RematchSpec : FunSpec({
         val gameInfoCaptorP1 = gameStartedCaptor(SESSION_ID_1)
         val gameInfoCaptorP2 = gameStartedCaptor(SESSION_ID_2)
 
-        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
+        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!, playerId = "p1"))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(newGameId, playerId = "p2"))
 
@@ -90,8 +90,8 @@ class RematchSpec : FunSpec({
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE, playerId = "p1"))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, playerId = "p2"))
 
-        val newGameId1 = gameCommandHandler.requestRematch(SESSION_ID_1)
-        val newGameId2 = gameCommandHandler.requestRematch(SESSION_ID_2)
+        val newGameId1 = gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
+        val newGameId2 = gameCommandHandler.requestRematch(SESSION_ID_2, gameId)
 
         assertNotNull(newGameId1)
         assertNull(newGameId2)
@@ -104,7 +104,7 @@ class RematchSpec : FunSpec({
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE, playerId = "p1"))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, playerId = "p2"))
 
-        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1)
+        val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
         gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(newGameId!!, playerId = "p1"))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(newGameId, playerId = "p2"))
 
