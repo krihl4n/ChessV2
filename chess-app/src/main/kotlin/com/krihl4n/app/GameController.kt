@@ -1,6 +1,7 @@
 package com.krihl4n.app
 
 import com.krihl4n.GameCommandHandler
+import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.messages.JoinGameRequest
 import com.krihl4n.messages.Move
 import com.krihl4n.messages.RejoinGameRequest
@@ -27,7 +28,14 @@ class GameController(
     @Throws(Exception::class)
     fun move(@Payload move: Move, @Header("simpSessionId") sessionId: String) {
         println("--> /move | sessionId=$sessionId | $move")
-        gameCommandHandler.move(sessionId, move.playerId, move.from, move.to, move.pawnPromotion)
+        gameCommandHandler.move(
+            move.gameId, MoveDto(
+                playerId = move.playerId,
+                from = move.from,
+                to = move.to,
+                pawnPromotion = move.pawnPromotion
+            )
+        )
     }
 
     @MessageMapping("/start-new-game") // request-new-game

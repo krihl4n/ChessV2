@@ -1,10 +1,8 @@
 import com.krihl4n.api.dto.GameResultDto
+import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PerformedMoveDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
-import com.krihl4n.messages.GameInfoEvent
-import com.krihl4n.messages.JoinGameRequest
-import com.krihl4n.messages.RejoinGameRequest
-import com.krihl4n.messages.StartGameRequest
+import com.krihl4n.messages.*
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -90,7 +88,7 @@ class ClientInteractionsSpec : FunSpec({
         val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
         gameCommandHandler.rejoinGame(SESSION_ID_2, RejoinGameRequest(gameId, playerId))
 
-        gameCommandHandler.move(SESSION_ID_2, playerId, "a2", "a3", null)
+        gameCommandHandler.move(gameId, MoveDto(playerId, "a2", "a3", null))
 
         verify { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_1, any()) }
         verify { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_2, any()) }
@@ -102,7 +100,7 @@ class ClientInteractionsSpec : FunSpec({
         gameCommandHandler.connectionClosed(SESSION_ID_1)
         gameCommandHandler.rejoinGame(SESSION_ID_2, RejoinGameRequest(gameId, playerId))
 
-        gameCommandHandler.move(SESSION_ID_2, playerId, "a2", "a3", null)
+        gameCommandHandler.move(gameId, MoveDto(playerId, "a2", "a3", null))
 
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_2, any()) }
         verify(exactly = 0) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_1, any()) }
@@ -129,7 +127,7 @@ class ClientInteractionsSpec : FunSpec({
         val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null))
 
-        gameCommandHandler.move(SESSION_ID_1, playerId, "a2", "a4", null)
+        gameCommandHandler.move(gameId, MoveDto(playerId, "a2", "a4", null))
 
         val expectedUpdate = PiecePositionUpdateDto(
             primaryMove = PerformedMoveDto("a2", "a4"),

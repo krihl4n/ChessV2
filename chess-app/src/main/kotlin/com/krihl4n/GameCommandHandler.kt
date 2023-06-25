@@ -4,16 +4,13 @@ import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
-import com.krihl4n.messages.GameInfoEvent
-import com.krihl4n.messages.JoinGameRequest
-import com.krihl4n.messages.RejoinGameRequest
-import com.krihl4n.messages.StartGameRequest
+import com.krihl4n.messages.*
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class GameCommandHandler(
-    private val register: GamesRegistry,
+    private val registry: GamesRegistry,
     private val rematchProposals: RematchProposals,
     private val messageSender: MessageSender,
     private val gameOfChessCreator: GameOfChessCreator
@@ -24,81 +21,81 @@ class GameCommandHandler(
     }
 
     override fun connectionClosed(sessionId: String) {
-        register.deregisterSession(sessionId)
+        registry.deregisterSession(sessionId)
     }
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         val newGame = gameOfChessCreator
             .createGame(request.mode, request.setup)
-        register.registerNewGame(newGame, sessionId)
-        register.getGameForCommand(newGame.gameId)?.initialize()
+        registry.registerNewGame(newGame, sessionId)
+        registry.getGameForCommand(newGame.gameId)?.initialize()
         return newGame.gameId
     }
 
     fun requestRematch(sessionId: String, gameId: String): String? { // todo what to do with old games?
-        val existingGame = register.getGameForQueryById(gameId)
+        val existingGame = registry.getGameForQueryById(gameId)
         if (this.rematchProposals.proposalExists(existingGame.gameId)) {
             return null
         }
         val rematch = gameOfChessCreator.createRematch(existingGame)
         val newGame = rematch.gameOfChess.also {
-            register.registerNewGame(it, sessionId)
+            registry.registerNewGame(it, sessionId)
         }
         this.rematchProposals.createProposal(rematch)
-        register.getGameForCommand(newGame.gameId)?.initialize()
-        register
+        registry.getGameForCommand(newGame.gameId)?.initialize()
+        registry
             .getRelatedSessionIds(existingGame.gameId)
             .firstOrNull { it != sessionId }
             ?.let { this.messageSender.sendRematchRequestedMsg(it, newGame.gameId) }
-        register.deregisterGame(existingGame.gameId)
+        registry.deregisterGame(existingGame.gameId)
         return newGame.gameId
     }
 
     fun joinGame(sessionId: String, req: JoinGameRequest): String {
         val playerId = req.playerId ?: (UUID.randomUUID().toString())
-        register.registerPlayer(sessionId, req.gameId, playerId)
+        registry.registerPlayer(sessionId, req.gameId, playerId)
 
         val colorPreference = rematchProposals
             .getRematchProposal(playerId)
             ?.playerNextColor
             ?: req.colorPreference
 
-        register.getGameForCommand(req.gameId)?.playerReady(playerId, colorPreference)
+        registry.getGameForCommand(req.gameId)?.playerReady(playerId, colorPreference)
         return playerId
     }
 
     fun rejoinGame(sessionId: String, req: RejoinGameRequest) {
-        register.registerPlayer(sessionId, req.gameId, req.playerId)
+        registry.registerPlayer(sessionId, req.gameId, req.playerId)
         joinedExistingGame(sessionId, req.gameId, req.playerId)
     }
 
-    fun move(sessionId: String, playerId: String, from: String, to: String, pawnPromotion: String?) {
-        register.getGame(sessionId)?.move(MoveDto(playerId, from, to, pawnPromotion))
+    fun move(gameId: String, move: MoveDto) {
+        registry.getGameForCommand(gameId)?.move(move)
     }
 
     fun getPositions(sessionId: String): List<FieldOccupationDto>? { // todo all commands by game id, not session id
-        return register.getGameForQuery(sessionId)?.getFieldOccupationInfo()
+        return registry.getGameForQuery(sessionId)?.getFieldOccupationInfo()
     }
 
     fun getPossibleMoves(sessionId: String, field: String): PossibleMovesDto? {
-        return register.getGameForQuery(sessionId)?.getPossibleMoves(field)
+        return registry.getGameForQuery(sessionId)?.getPossibleMoves(field)
     }
 
     fun resign(sessionId: String, playerId: String) {
-        register.getGame(sessionId)?.resign(playerId)
+        registry.getGame(sessionId)?.resign(playerId)
     }
 
     // todo this needs to be smarter
     fun undoMove(sessionId: String, playerId: String) {
-        register.getGame(sessionId)?.undoMove()
+        registry.getGame(sessionId)?.undoMove()
     }
 
     fun redoMove(sessionId: String, playerId: String) {
-        register.getGame(sessionId)?.redoMove()
+        registry.getGame(sessionId)?.redoMove()
     }
 
     private fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {
-        val game: GameOfChess = register.getGameForQueryById(gameId)
+        val game: GameOfChess = registry.getGameForQueryById(gameId)
         game.getPlayer(playerId)?.let {
             val gameInfo = GameInfoEvent(
                 gameId = gameId,
