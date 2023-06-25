@@ -5,27 +5,43 @@ import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.ColorDto
 import com.krihl4n.api.dto.PlayerDto
 import com.krihl4n.api.pieceSetups.SetupProvider
+import org.springframework.stereotype.Service
 import java.util.*
 
-object GameOfChessCreator {
+@Service
+class GameOfChessCreator {
 
-    fun createGame(mode: String, setup: String?, listeners: List<GameEventListener>): GameOfChess { // todo listener moze nie byc potrzebny
-        return setupNewGame(mode, setup, listeners)
+    private val gameListeners = mutableListOf<GameEventListener>()
+
+    fun registerNewGameObserver(gameEventListener: GameEventListener) {
+        gameListeners.add(gameEventListener)
     }
 
-    fun createRematch(existingGame: GameOfChess, listeners: List<GameEventListener>): RematchDto {
+    fun createGame(mode: String, setup: String?): GameOfChess {
+        return setupNewGame(mode, setup)
+    }
+
+    fun createRematch(existingGame: GameOfChess): RematchDto {
         return RematchDto(
             previousGameId = existingGame.gameId,
-            gameOfChess = setupNewGame(existingGame.getMode(), null, listeners),
+            gameOfChess = setupNewGame(existingGame.getMode(), null),
             players = existingGame
                 .getPlayers()
                 .map { PlayerDto(it.id, ColorDto(it.color).opposite().value) }
         )
     }
 
-    private fun setupNewGame(mode: String, setup: String?, listeners: List<GameEventListener>): GameOfChess {
+    fun createWithoutListeners(id: String, mode: String): GameOfChess {
+        return GameOfChess(id, mode, null)
+    }
+
+    fun registerListeners(gameOfChess: GameOfChess) {
+        gameListeners.forEach{ gameOfChess.registerGameEventListener(it)}
+    }
+
+    private fun setupNewGame(mode: String, setup: String?): GameOfChess {
         val newGame = GameOfChess(UUID.randomUUID().toString(), mode, SetupProvider.getSetup(setup))
-        listeners.forEach{ newGame.registerGameEventListener(it)}
+        gameListeners.forEach{ newGame.registerGameEventListener(it)}
         return newGame
     }
 }

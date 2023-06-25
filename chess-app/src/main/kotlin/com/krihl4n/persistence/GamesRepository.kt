@@ -1,7 +1,7 @@
 package com.krihl4n.persistence
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.krihl4n.api.GameEventListener
+import com.krihl4n.GameOfChessCreator
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.persistence.GamesRepository.CommandType.*
@@ -9,15 +9,10 @@ import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
 @Service
-class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
+class GamesRepository(private val mongoGamesRepository: MongoGamesRepository, private val creator: GameOfChessCreator) {
 
     private val games = mutableListOf<GameOfChess>()
-    private var gameListeners = mutableSetOf<GameEventListener>()
     private val objectMapper: ObjectMapper = ObjectMapper()
-
-    fun observeNewGames(listener: GameEventListener) {
-        gameListeners.add(listener)
-    }
 
     fun saveNewGame(gameOfChess: GameOfChess) {
         games.add(gameOfChess)
@@ -40,8 +35,7 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
 
     private fun retrieveGameOfChess(gameId: String): GameOfChess {
         val persistedGame: GameDocument = mongoGamesRepository.findById(gameId).getOrNull() ?: throw RuntimeException("Game not found")
-        val gameOfChess = GameOfChess(persistedGame.id, persistedGame.gameMode, null)
-
+        val gameOfChess = creator.createWithoutListeners(persistedGame.id, persistedGame.gameMode)
         for (command in persistedGame.commands) {
             println("process --> $command")
             when (command.type) {
@@ -63,8 +57,7 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository) {
                 }
             }
         }
-
-        gameListeners.forEach{gameOfChess.registerGameEventListener(it)}
+        creator.registerListeners(gameOfChess)
         return gameOfChess
     }
 

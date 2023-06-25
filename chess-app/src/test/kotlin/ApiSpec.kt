@@ -1,7 +1,4 @@
-import com.krihl4n.GameCommandHandler
-import com.krihl4n.GameEventHandler
-import com.krihl4n.GamesRegistry
-import com.krihl4n.RematchProposals
+import com.krihl4n.*
 import com.krihl4n.app.MessageSender
 import com.krihl4n.computerOpponent.ComputerOpponent
 import com.krihl4n.messages.GameInfoEvent
@@ -24,18 +21,22 @@ const val VS_FRIEND = "vs_friend"
 
 val msgSender = mockk<MessageSender>(relaxed = true)
 val repo = mockk<MongoGamesRepository>(relaxed = false)
-var gamesRegistry = GamesRegistry(GamesRepository(repo))
+var gameOfChessCreator = GameOfChessCreator()
+var gamesRegistry = GamesRegistry(GamesRepository(repo, gameOfChessCreator))
 var rematchProposals = RematchProposals()
-var eventhandler = GameEventHandler(msgSender, gamesRegistry, rematchProposals)
-var gameCommandHandler = GameCommandHandler(eventhandler, gamesRegistry, rematchProposals, msgSender, ComputerOpponent(gamesRegistry))
+var eventhandler = GameEventHandler(msgSender, gamesRegistry, rematchProposals, gameOfChessCreator)
+var gameCommandHandler = GameCommandHandler(gamesRegistry, rematchProposals, msgSender, gameOfChessCreator)
 
 val beforeApiTest: BeforeTest = {
-    gamesRegistry = GamesRegistry(GamesRepository(repo))
+    gameOfChessCreator = GameOfChessCreator()
+    gamesRegistry = GamesRegistry(GamesRepository(repo, gameOfChessCreator))
     rematchProposals = RematchProposals()
-    eventhandler = GameEventHandler(msgSender, gamesRegistry, rematchProposals)
-    gameCommandHandler = GameCommandHandler(eventhandler, gamesRegistry, rematchProposals, msgSender, ComputerOpponent(gamesRegistry))
+    eventhandler = GameEventHandler(msgSender, gamesRegistry, rematchProposals, gameOfChessCreator)
+    gameCommandHandler = GameCommandHandler(gamesRegistry, rematchProposals, msgSender, gameOfChessCreator)
     every { repo.save(any()) }.returnsArgument(0)
     every { repo.findById(any()) }.returns(Optional.empty())
+    gameOfChessCreator.registerNewGameObserver(eventhandler)
+    gameOfChessCreator.registerNewGameObserver(ComputerOpponent(gamesRegistry, gameOfChessCreator))
 }
 
 val afterApiTest: AfterTest = { clearAllMocks() }

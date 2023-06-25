@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service
 class GameEventHandler(
     private val messageSender: MessageSender,
     private val gamesRegistry: GamesRegistry,
-    private val rematchProposals: RematchProposals
+    private val rematchProposals: RematchProposals,
+    private val gameOfChessCreator: GameOfChessCreator
 ) : GameEventListener {
 
     @PostConstruct
     fun post() {
-        gamesRegistry.observeGames(this)
+        gameOfChessCreator.registerNewGameObserver(this)
     }
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {

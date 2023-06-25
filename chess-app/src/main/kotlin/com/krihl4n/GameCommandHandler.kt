@@ -4,7 +4,6 @@ import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
-import com.krihl4n.computerOpponent.ComputerOpponent
 import com.krihl4n.messages.GameInfoEvent
 import com.krihl4n.messages.JoinGameRequest
 import com.krihl4n.messages.RejoinGameRequest
@@ -14,11 +13,10 @@ import java.util.*
 
 @Service
 class GameCommandHandler(
-    private val gameEventHandler: GameEventHandler,
     private val register: GamesRegistry,
     private val rematchProposals: RematchProposals,
     private val messageSender: MessageSender,
-    private val computerOpponent: ComputerOpponent
+    private val gameOfChessCreator: GameOfChessCreator
 ) : ConnectionListener {
 
     override fun connectionEstablished(sessionId: String) {
@@ -30,8 +28,8 @@ class GameCommandHandler(
     }
 
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
-        val newGame = GameOfChessCreator
-            .createGame(request.mode, request.setup, listOf(gameEventHandler, computerOpponent))
+        val newGame = gameOfChessCreator
+            .createGame(request.mode, request.setup)
         register.registerNewGame(newGame, sessionId)
         register.getGameForCommand(newGame.gameId)?.initialize()
         return newGame.gameId
@@ -43,12 +41,10 @@ class GameCommandHandler(
         if (this.rematchProposals.proposalExists(existingGame.gameId)) {
             return null
         }
-        val rematch = GameOfChessCreator.createRematch(existingGame, listOf(gameEventHandler, computerOpponent))
+        val rematch = gameOfChessCreator.createRematch(existingGame)
         val newGame = rematch.gameOfChess.also {
             register.registerNewGame(it, sessionId)
         }
-//        register.getGameForCommand(newGame.gameId)?.initialize()
-        println("create proposal")
         this.rematchProposals.createProposal(rematch)
         register.getGameForCommand(newGame.gameId)?.initialize()
         register
@@ -63,7 +59,6 @@ class GameCommandHandler(
         val playerId = req.playerId ?: (UUID.randomUUID().toString())
         register.registerPlayer(sessionId, req.gameId, playerId)
 
-        println("get proposal")
         val colorPreference = rematchProposals
             .getRematchProposal(playerId)
             ?.playerNextColor
