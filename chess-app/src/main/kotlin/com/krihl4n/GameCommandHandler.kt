@@ -86,12 +86,12 @@ class GameCommandHandler(
     }
 
     // todo this needs to be smarter
-    fun undoMove(sessionId: String, playerId: String) {
-        registry.getGame(sessionId)?.undoMove()
+    fun undoMove(gameId: String) {
+        registry.getGameForCommand(gameId)?.undoMove()
     }
 
-    fun redoMove(sessionId: String, playerId: String) {
-        registry.getGame(sessionId)?.redoMove()
+    fun redoMove(gameId: String) {
+        registry.getGameForCommand(gameId)?.redoMove()
     }
 
     private fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {

@@ -98,16 +98,16 @@ class GameController(
 
     @MessageMapping("/undo-move")
     @Throws(Exception::class)
-    fun undoMove(@Payload playerId: String, @Header("simpSessionId") sessionId: String) {
-        println("--> /undo-move | sessionId=$sessionId | playerId=$playerId")
-        gameCommandHandler.undoMove(sessionId, playerId)
+    fun undoMove(@Payload req: UndoMoveRequest, @Header("simpSessionId") sessionId: String) {
+        println("--> /undo-move | sessionId=$sessionId | playerId=${req.playerId}")
+        gameCommandHandler.undoMove(req.gameId)
     }
 
     @MessageMapping("/redo-move")
     @Throws(Exception::class)
-    fun redoMove(@Payload playerId: String, @Header("simpSessionId") sessionId: String) {
-        println("--> /redo-move | sessionId=$sessionId | playerId=$playerId")
-        gameCommandHandler.redoMove(sessionId, playerId)
+    fun redoMove(@Payload req: RedoMoveRequest, @Header("simpSessionId") sessionId: String) {
+        println("--> /redo-move | sessionId=$sessionId | playerId=${req.playerId}")
+        gameCommandHandler.redoMove(req.gameId)
     }
 
     private fun prepareSessionIdHeader(sessionId: String): MessageHeaders {
