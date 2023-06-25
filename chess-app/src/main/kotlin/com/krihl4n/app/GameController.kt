@@ -68,8 +68,8 @@ class GameController(
 
     @MessageMapping("/fields-occupation")
     @Throws(Exception::class)
-    fun fieldsOccupation(@Payload command: String, @Header("simpSessionId") sessionId: String) {
-        gameCommandHandler.getPositions(sessionId)?.let {
+    fun fieldsOccupation(@Payload gameId: String, @Header("simpSessionId") sessionId: String) {
+        gameCommandHandler.getPositions(gameId).let {
             simpMessagingTemplate.convertAndSendToUser(
                 sessionId,
                 "/queue/fields-occupation",

@@ -73,8 +73,8 @@ class GameCommandHandler(
         registry.getGameForCommand(gameId)?.move(move)
     }
 
-    fun getPositions(sessionId: String): List<FieldOccupationDto>? { // todo all commands by game id, not session id
-        return registry.getGameForQuery(sessionId)?.getFieldOccupationInfo()
+    fun getPositions(gameId: String): List<FieldOccupationDto> {
+        return registry.getGameForQueryById(gameId).getFieldOccupationInfo()
     }
 
     fun getPossibleMoves(sessionId: String, field: String): PossibleMovesDto? {
