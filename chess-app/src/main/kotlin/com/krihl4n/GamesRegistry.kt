@@ -23,19 +23,11 @@ class GamesRegistry(private val repo: GamesRepository) {
         return  this.entries.find { it.playerParticipates(playerId) }?.playerSessionId(playerId)
     }
 
-    fun getGame(sessionId: String): PersistableGameOfChess? { // todo not nullable?
-        return entries.find { it.sessionParticipates(sessionId) }?.let { repo.getById(it.gameId) }
+    fun getGameForCommand(gameId: String): PersistableGameOfChess { // todo not nullable?
+        return repo.getForCommand(gameId)
     }
 
-    fun getGameForCommand(gameId: String): PersistableGameOfChess? { // todo not nullable?
-        return repo.getById(gameId)
-    }
-
-    fun getGameForQuery(sessionId: String): GameOfChess? {
-        return entries.find { it.sessionParticipates(sessionId) }?.let { repo.getForQuery(it.gameId) }
-    }
-
-    fun getGameForQueryById(gameId: String): GameOfChess {
+    fun getGameForQuery(gameId: String): GameOfChess {
         return repo.getForQuery(gameId)
     }
 
@@ -53,10 +45,6 @@ class GamesRegistry(private val repo: GamesRepository) {
             entries.add(RegisteredSession(gameId, sessionId))
         }
         this.entries.find { it.gameId() == gameId }?.registerPlayer(playerId, sessionId)
-    }
-
-    fun getPlayerId(sessionId: String): String? {
-        return this.entries.find { it.sessionParticipates(sessionId) }?.playerId(sessionId)
     }
 }
 

@@ -28,12 +28,12 @@ class GameCommandHandler(
         val newGame = gameOfChessCreator
             .createGame(request.mode, request.setup)
         registry.registerNewGame(newGame, sessionId)
-        registry.getGameForCommand(newGame.gameId)?.initialize()
+        registry.getGameForCommand(newGame.gameId).initialize()
         return newGame.gameId
     }
 
     fun requestRematch(sessionId: String, gameId: String): String? { // todo what to do with old games?
-        val existingGame = registry.getGameForQueryById(gameId)
+        val existingGame = registry.getGameForQuery(gameId)
         if (this.rematchProposals.proposalExists(existingGame.gameId)) {
             return null
         }
@@ -42,7 +42,7 @@ class GameCommandHandler(
             registry.registerNewGame(it, sessionId)
         }
         this.rematchProposals.createProposal(rematch)
-        registry.getGameForCommand(newGame.gameId)?.initialize()
+        registry.getGameForCommand(newGame.gameId).initialize()
         registry
             .getRelatedSessionIds(existingGame.gameId)
             .firstOrNull { it != sessionId }
@@ -60,7 +60,7 @@ class GameCommandHandler(
             ?.playerNextColor
             ?: req.colorPreference
 
-        registry.getGameForCommand(req.gameId)?.playerReady(playerId, colorPreference)
+        registry.getGameForCommand(req.gameId).playerReady(playerId, colorPreference)
         return playerId
     }
 
@@ -70,32 +70,32 @@ class GameCommandHandler(
     }
 
     fun move(gameId: String, move: MoveDto) {
-        registry.getGameForCommand(gameId)?.move(move)
+        registry.getGameForCommand(gameId).move(move)
     }
 
     fun getPositions(gameId: String): List<FieldOccupationDto> {
-        return registry.getGameForQueryById(gameId).getFieldOccupationInfo()
+        return registry.getGameForQuery(gameId).getFieldOccupationInfo()
     }
 
     fun getPossibleMoves(gameId: String, field: String): PossibleMovesDto {
-        return registry.getGameForQueryById(gameId).getPossibleMoves(field)
+        return registry.getGameForQuery(gameId).getPossibleMoves(field)
     }
 
     fun resign(gameId: String, playerId: String) {
-        registry.getGameForCommand(gameId)?.resign(playerId)
+        registry.getGameForCommand(gameId).resign(playerId)
     }
 
     // todo this needs to be smarter
     fun undoMove(gameId: String) {
-        registry.getGameForCommand(gameId)?.undoMove()
+        registry.getGameForCommand(gameId).undoMove()
     }
 
     fun redoMove(gameId: String) {
-        registry.getGameForCommand(gameId)?.redoMove()
+        registry.getGameForCommand(gameId).redoMove()
     }
 
     private fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {
-        val game: GameOfChess = registry.getGameForQueryById(gameId)
+        val game: GameOfChess = registry.getGameForQuery(gameId)
         game.getPlayer(playerId)?.let {
             val gameInfo = GameInfoEvent(
                 gameId = gameId,

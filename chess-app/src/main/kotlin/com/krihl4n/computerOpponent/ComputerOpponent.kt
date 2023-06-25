@@ -52,26 +52,26 @@ class ComputerOpponent(private val gamesRegistry: GamesRegistry, private val gam
     override fun waitingForOtherPlayer(gameId: String) {
         println("CPU $gameId  :: waitingForOtherPlayer")
         if (isVsComputer(gameId)) {
-            gamesRegistry.getGameForCommand(gameId)?.playerReady("cpu", null)
+            gamesRegistry.getGameForCommand(gameId).playerReady("cpu", null)
         }
     }
 
-    private fun isVsComputer(gameId: String) = gamesRegistry.getGameForQueryById(gameId).gameMode == "vs_computer"
+    private fun isVsComputer(gameId: String) = gamesRegistry.getGameForQuery(gameId).gameMode == "vs_computer"
 
     private fun isCpuTurn(gameId: String): Boolean {
-        val game = gamesRegistry.getGameForQueryById(gameId)
+        val game = gamesRegistry.getGameForQuery(gameId)
         val nextColor =  game.getColorAllowedToMove()
         val cpuColor = game.getPlayers().first { it.id == "cpu" }.color
         return nextColor == cpuColor
     }
 
     private fun cpuColor(gameId: String): String {
-        val game = gamesRegistry.getGameForQueryById(gameId)
+        val game = gamesRegistry.getGameForQuery(gameId)
         return game.getPlayers().first { it.id == "cpu" }.color
     }
 
     private fun performRandomMove(gameId: String, playerColor: String) {
-        val game = gamesRegistry.getGameForQueryById(gameId)
+        val game = gamesRegistry.getGameForQuery(gameId)
         val positions = getPositionsOfPiecesOfColor(game, playerColor)
         while (positions.isNotEmpty()) {
             val field = getRandomField(positions)
@@ -81,7 +81,7 @@ class ComputerOpponent(private val gamesRegistry: GamesRegistry, private val gam
                 continue
             } else {
                 gamesRegistry.getGameForCommand(game.gameId)
-                    ?.move(MoveDto("cpu", field, possibleMoves.to[Random.nextInt(0, possibleMoves.to.size)], "queen"))
+                    .move(MoveDto("cpu", field, possibleMoves.to[Random.nextInt(0, possibleMoves.to.size)], "queen"))
                 break
             }
         }
@@ -101,7 +101,7 @@ class ComputerOpponent(private val gamesRegistry: GamesRegistry, private val gam
     private fun noMovesAvailable(possibleMoves: PossibleMovesDto) = possibleMoves.to.isEmpty()
 
     private fun attackIfPossible(gameId: String, playerColor: String): Boolean{
-        val game = gamesRegistry.getGameForQueryById(gameId)
+        val game = gamesRegistry.getGameForQuery(gameId)
         val positions = getPositionsOfPiecesOfColor(game, playerColor)
         val opponentPositions = getPositionsOfPiecesOfColor(game, oppositeColorOf(playerColor))
         while (positions.isNotEmpty()) {
@@ -113,8 +113,9 @@ class ComputerOpponent(private val gamesRegistry: GamesRegistry, private val gam
             } else {
                 for(dst in possibleMoves.to) {
                     if(opponentPositions.contains(dst)) {
-                        gamesRegistry.getGameForCommand(game.gameId)
-                            ?.move(MoveDto("cpu", field, dst, "queen"))
+                        gamesRegistry
+                            .getGameForCommand(game.gameId)
+                            .move(MoveDto("cpu", field, dst, "queen"))
                         return true
                     }
                 }

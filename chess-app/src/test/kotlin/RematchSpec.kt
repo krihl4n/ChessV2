@@ -15,8 +15,7 @@ class RematchSpec : FunSpec({
 
         val newGameId = gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
 
-        assertNotNull(gamesRegistry.getGame(SESSION_ID_1))
-        assertEquals(newGameId, gamesRegistry.getGameForQuery(SESSION_ID_1)?.gameId)
+        assertNotNull(gamesRegistry.getGameForQuery(newGameId!!))
     }
 
     test("should start a new game") {

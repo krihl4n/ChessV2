@@ -19,7 +19,7 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository, pr
         mongoGamesRepository.save(GameDocument(gameOfChess.gameId, gameOfChess.gameMode))
     }
 
-    fun getById(gameId: String): PersistableGameOfChess? {
+    fun getForCommand(gameId: String): PersistableGameOfChess {
         val gameOfChess =
             games.find { it.gameId == gameId }?:
             retrieveGameOfChess(gameId).also {
