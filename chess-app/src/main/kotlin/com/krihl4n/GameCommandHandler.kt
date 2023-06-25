@@ -77,8 +77,8 @@ class GameCommandHandler(
         return registry.getGameForQueryById(gameId).getFieldOccupationInfo()
     }
 
-    fun getPossibleMoves(sessionId: String, field: String): PossibleMovesDto? {
-        return registry.getGameForQuery(sessionId)?.getPossibleMoves(field)
+    fun getPossibleMoves(gameId: String, field: String): PossibleMovesDto {
+        return registry.getGameForQueryById(gameId).getPossibleMoves(field)
     }
 
     fun resign(sessionId: String, playerId: String) {

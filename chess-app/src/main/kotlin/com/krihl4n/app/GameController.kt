@@ -2,10 +2,7 @@ package com.krihl4n.app
 
 import com.krihl4n.GameCommandHandler
 import com.krihl4n.api.dto.MoveDto
-import com.krihl4n.messages.JoinGameRequest
-import com.krihl4n.messages.Move
-import com.krihl4n.messages.RejoinGameRequest
-import com.krihl4n.messages.StartGameRequest
+import com.krihl4n.messages.*
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -81,8 +78,8 @@ class GameController(
 
     @MessageMapping("/possible-moves")
     @Throws(Exception::class)
-    fun possibleMoves(@Payload field: String, @Header("simpSessionId") sessionId: String) {
-        gameCommandHandler.getPossibleMoves(sessionId, field)?.let {
+    fun possibleMoves(@Payload req: PossibleMovesRequest, @Header("simpSessionId") sessionId: String) {
+        gameCommandHandler.getPossibleMoves(req.gameId, req.field)?.let {
             simpMessagingTemplate.convertAndSendToUser(
                 sessionId,
                 "/queue/possible-moves",
