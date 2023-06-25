@@ -81,8 +81,8 @@ class GameCommandHandler(
         return registry.getGameForQueryById(gameId).getPossibleMoves(field)
     }
 
-    fun resign(sessionId: String, playerId: String) {
-        registry.getGame(sessionId)?.resign(playerId)
+    fun resign(gameId: String, playerId: String) {
+        registry.getGameForCommand(gameId)?.resign(playerId)
     }
 
     // todo this needs to be smarter

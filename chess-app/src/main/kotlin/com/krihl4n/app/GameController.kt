@@ -91,9 +91,9 @@ class GameController(
 
     @MessageMapping("/resign")
     @Throws(Exception::class)
-    fun resign(@Payload playerId: String, @Header("simpSessionId") sessionId: String) {
-        println("--> /resign | sessionId=$sessionId | playerId=$playerId")
-        gameCommandHandler.resign(sessionId, playerId)
+    fun resign(@Payload req: ResignRequest, @Header("simpSessionId") sessionId: String) {
+        println("--> /resign | sessionId=$sessionId | playerId=${req.playerId}")
+        gameCommandHandler.resign(req.gameId, req.playerId)
     }
 
     @MessageMapping("/undo-move")
