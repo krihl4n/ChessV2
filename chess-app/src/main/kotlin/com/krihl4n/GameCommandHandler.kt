@@ -11,7 +11,7 @@ import java.util.*
 
 @Service
 class GameCommandHandler(
-    private val registry: GamesRegistry,
+    private val registry: SessionRegistry,
     private val rematchProposals: RematchProposals,
     private val messageSender: MessageSender,
     private val gameOfChessCreator: GameOfChessCreator,
@@ -29,7 +29,7 @@ class GameCommandHandler(
     fun requestNewGame(sessionId: String, request: StartGameRequest): String {
         val newGame = gameOfChessCreator
             .createGame(request.mode, request.setup)
-        registry.registerNewGame(newGame, sessionId)
+        registry.registerNewGame(newGame.gameId, sessionId)
         gamesRepository.saveNewGame(newGame)
         gamesRepository.getGameForCommand(newGame.gameId).initialize()
         return newGame.gameId
@@ -42,7 +42,7 @@ class GameCommandHandler(
         }
         val rematch = gameOfChessCreator.createRematch(existingGame)
         val newGame = rematch.gameOfChess.also {
-            registry.registerNewGame(it, sessionId)
+            registry.registerNewGame(it.gameId, sessionId)
             gamesRepository.saveNewGame(it)
         }
         this.rematchProposals.createProposal(rematch)

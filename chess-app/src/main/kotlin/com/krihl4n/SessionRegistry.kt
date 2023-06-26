@@ -1,15 +1,14 @@
 package com.krihl4n
 
-import com.krihl4n.api.GameOfChess
 import org.springframework.stereotype.Service
 
 @Service
-class GamesRegistry {
+class SessionRegistry {
 
-    private val entries = mutableListOf<RegisteredSession>()
+    private val entries = mutableListOf<RegisteredGameSessions>()
 
-    fun registerNewGame(gameOfChess: GameOfChess, sessionId: String) {
-        entries.add(RegisteredSession(gameOfChess.gameId, sessionId))
+    fun registerNewGame(gameId: String, sessionId: String) {
+        entries.add(RegisteredGameSessions(gameId, sessionId))
     }
 
     fun getRelatedSessionIds(gameId: String): Set<String> {
@@ -31,13 +30,13 @@ class GamesRegistry {
 
     fun registerPlayer(sessionId: String, gameId: String, playerId: String) {
         if(this.entries.find { it.gameId() == gameId } == null) {
-            entries.add(RegisteredSession(gameId, sessionId))
+            entries.add(RegisteredGameSessions(gameId, sessionId))
         }
         this.entries.find { it.gameId() == gameId }?.registerPlayer(playerId, sessionId)
     }
 }
 
-class RegisteredSession(val gameId: String, private var initialSessionId: String?) {
+class RegisteredGameSessions(val gameId: String, private var initialSessionId: String?) {
     private val playerSessions = mutableListOf<PlayerSession>()
 
     fun gameId() = this.gameId
@@ -47,8 +46,6 @@ class RegisteredSession(val gameId: String, private var initialSessionId: String
         this.initialSessionId?.let { sessions.add(it) }
         return sessions.toSet()
     }
-
-    fun sessionParticipates(sessionId: String) = this.sessionIds().contains(sessionId)
 
     fun playerParticipates(playerId: String) = this.playerSessions.map { it.playerId }.contains(playerId)
 

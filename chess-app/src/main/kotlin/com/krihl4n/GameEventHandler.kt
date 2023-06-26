@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class GameEventHandler(
     private val messageSender: MessageSender,
-    private val gamesRegistry: GamesRegistry,
+    private val sessionRegistry: SessionRegistry,
     private val rematchProposals: RematchProposals,
     private val gameOfChessCreator: GameOfChessCreator
 ) : GameEventListener {
@@ -32,7 +32,7 @@ class GameEventHandler(
         rematchProposals.clearProposals(gameInfo.gameId)
 
         for (player in setOf(gameInfo.player1, gameInfo.player2)) {
-            gamesRegistry.getRelatedPlayerSessionId(player.id)?.let {
+            sessionRegistry.getRelatedPlayerSessionId(player.id)?.let {
                 messageSender.sendGameStartedMsg(
                     it,
                     GameInfoEvent(
@@ -55,5 +55,5 @@ class GameEventHandler(
         getSessionIds(gameId).forEach { messageSender.sendWaitingForOtherPlayerMsg(it, gameId) }
     }
 
-    private fun getSessionIds(gameId: String) = gamesRegistry.getRelatedSessionIds(gameId)
+    private fun getSessionIds(gameId: String) = sessionRegistry.getRelatedSessionIds(gameId)
 }
