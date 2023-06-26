@@ -5,6 +5,7 @@ import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.ColorDto
 import com.krihl4n.api.dto.PlayerDto
 import com.krihl4n.api.pieceSetups.SetupProvider
+import com.krihl4n.persistence.ReadOnlyGameOfChess
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -21,9 +22,9 @@ class GameOfChessCreator {
         return setupNewGame(mode, setup)
     }
 
-    fun createRematch(existingGame: GameOfChess): RematchDto {
+    fun createRematch(existingGame: ReadOnlyGameOfChess): RematchDto {
         return RematchDto(
-            previousGameId = existingGame.gameId,
+            previousGameId = existingGame.gameId(),
             gameOfChess = setupNewGame(existingGame.getMode(), null),
             players = existingGame
                 .getPlayers()
@@ -50,7 +51,4 @@ data class RematchDto(
     val previousGameId: String,
     val gameOfChess: GameOfChess,
     val players: List<PlayerDto>
-) {
-    fun opponentPlayerId(id: String) = players.find { it.id != id }?.id ?: players.first().id
-    fun colorOf(playerId: String) = players.first { it.id == playerId }.color
-}
+)

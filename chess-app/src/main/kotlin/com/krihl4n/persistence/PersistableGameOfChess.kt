@@ -10,7 +10,7 @@ import java.time.Instant
 import kotlin.jvm.optionals.getOrNull
 
 class PersistableGameOfChess(private val delegate: GameOfChess, private val repo: MongoGamesRepository) :
-    GameOfChessCommand {
+    GameOfChessCommand, ReadOnlyGameOfChess(delegate) {
 
     private val objectMapper = ObjectMapper()
 

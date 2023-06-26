@@ -1,6 +1,5 @@
 package com.krihl4n
 
-import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
@@ -37,7 +36,7 @@ class GameCommandHandler(
 
     fun requestRematch(sessionId: String, gameId: String): String? { // todo what to do with old games?
         val existingGame = gamesRepository.getGameForQuery(gameId)
-        if (this.rematchProposals.proposalExists(existingGame.gameId)) {
+        if (this.rematchProposals.proposalExists(existingGame.gameId())) {
             return null
         }
         val rematch = gameOfChessCreator.createRematch(existingGame)
@@ -48,10 +47,10 @@ class GameCommandHandler(
         this.rematchProposals.createProposal(rematch)
         gamesRepository.getGameForCommand(newGame.gameId).initialize()
         registry
-            .getRelatedSessionIds(existingGame.gameId)
+            .getRelatedSessionIds(existingGame.gameId())
             .firstOrNull { it != sessionId }
             ?.let { this.messageSender.sendRematchRequestedMsg(it, newGame.gameId) }
-        registry.deregisterGame(existingGame.gameId)
+        registry.deregisterGame(existingGame.gameId())
         return newGame.gameId
     }
 
@@ -99,7 +98,7 @@ class GameCommandHandler(
     }
 
     private fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {
-        val game: GameOfChess = gamesRepository.getGameForQuery(gameId)
+        val game = gamesRepository.getGameForQuery(gameId)
         game.getPlayer(playerId)?.let {
             val gameInfo = GameInfoEvent(
                 gameId = gameId,

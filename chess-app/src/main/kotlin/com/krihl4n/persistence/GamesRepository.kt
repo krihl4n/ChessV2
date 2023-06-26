@@ -28,9 +28,10 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository, pr
         return PersistableGameOfChess(gameOfChess, mongoGamesRepository)
     }
 
-    fun getGameForQuery(gameId: String): GameOfChess { // todo interface for query?
-        return games.find { it.gameId == gameId } ?:
+    fun getGameForQuery(gameId: String): ReadOnlyGameOfChess {
+        val gameOfChess =  games.find { it.gameId == gameId } ?:
         retrieveGameOfChess(gameId).also { games.add(it) }
+        return ReadOnlyGameOfChess(gameOfChess)
     }
 
     private fun retrieveGameOfChess(gameId: String): GameOfChess {

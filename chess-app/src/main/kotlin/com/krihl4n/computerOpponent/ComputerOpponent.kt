@@ -2,9 +2,9 @@ package com.krihl4n.computerOpponent
 
 import com.krihl4n.GameOfChessCreator
 import com.krihl4n.api.GameEventListener
-import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.*
 import com.krihl4n.persistence.GamesRepository
+import com.krihl4n.persistence.ReadOnlyGameOfChess
 import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Service
 import java.util.*
@@ -59,7 +59,7 @@ class ComputerOpponent(
         }
     }
 
-    private fun isVsComputer(gameId: String) = gamesRepository.getGameForQuery(gameId).gameMode == "vs_computer"
+    private fun isVsComputer(gameId: String) = gamesRepository.getGameForQuery(gameId).gameMode() == "vs_computer"
 
     private fun isCpuTurn(gameId: String): Boolean {
         val game = gamesRepository.getGameForQuery(gameId)
@@ -83,14 +83,14 @@ class ComputerOpponent(
                 positions.remove(field)
                 continue
             } else {
-                gamesRepository.getGameForCommand(game.gameId)
+                gamesRepository.getGameForCommand(game.gameId())
                     .move(MoveDto("cpu", field, possibleMoves.to[Random.nextInt(0, possibleMoves.to.size)], "queen"))
                 break
             }
         }
     }
 
-    private fun getPositionsOfPiecesOfColor(game: GameOfChess, playerColor: String): MutableList<String> =
+    private fun getPositionsOfPiecesOfColor(game: ReadOnlyGameOfChess, playerColor: String): MutableList<String> =
         game.getFieldOccupationInfo()
             .filter { it.piece != null && it.piece!!.color.lowercase() == playerColor.lowercase() }
             .map { it.field }
@@ -99,7 +99,7 @@ class ComputerOpponent(
     private fun getRandomField(playersPiecePositions: MutableList<String>) =
         playersPiecePositions[Random.nextInt(0, playersPiecePositions.size)]
 
-    private fun getPossibleMovesFrom(game: GameOfChess, randomField: String) = game.getPossibleMoves(randomField)
+    private fun getPossibleMovesFrom(game: ReadOnlyGameOfChess, randomField: String) = game.getPossibleMoves(randomField)
 
     private fun noMovesAvailable(possibleMoves: PossibleMovesDto) = possibleMoves.to.isEmpty()
 
@@ -117,7 +117,7 @@ class ComputerOpponent(
                 for (dst in possibleMoves.to) {
                     if (opponentPositions.contains(dst)) {
                         gamesRepository
-                            .getGameForCommand(game.gameId)
+                            .getGameForCommand(game.gameId())
                             .move(MoveDto("cpu", field, dst, "queen"))
                         return true
                     }

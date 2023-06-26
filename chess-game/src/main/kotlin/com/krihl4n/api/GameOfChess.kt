@@ -19,7 +19,7 @@ import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.players.Player
 
-class GameOfChess(val gameId: String, val gameMode: String, private val pieceSetup: PieceSetup?): GameOfChessCommand {
+class GameOfChess(val gameId: String, val gameMode: String, private val pieceSetup: PieceSetup?): GameOfChessCommand, GameOfChessQuery {
 
     private val positionTracker = PositionTracker()
     private val commandCoordinator = CommandCoordinator()
@@ -56,17 +56,17 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
 
     override fun redoMove() = game.redoMove()
 
-    fun getMode() = game.getMode().toString()
+    override fun getMode() = game.getMode().toString()
 
-    fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)?.toDto()
+    override fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)?.toDto()
 
-    fun getPlayers() = listOf(this.game.fetchPlayerOne().toDto(), this.game.fetchPlayerTwo().toDto())
+    override fun getPlayers() = listOf(this.game.fetchPlayerOne().toDto(), this.game.fetchPlayerTwo().toDto())
 
-    fun getColorAllowedToMove() = this.game.colorAllowedToMove().toString()
+    override fun getColorAllowedToMove() = this.game.colorAllowedToMove().toString()
 
-    fun getFieldOccupationInfo() = game.getFieldOccupationInfo()
+    override fun getFieldOccupationInfo() = game.getFieldOccupationInfo()
 
-    fun getPossibleMoves(field: String) = game.getPossibleMoves(field)
+    override fun getPossibleMoves(field: String) = game.getPossibleMoves(field)
 
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
