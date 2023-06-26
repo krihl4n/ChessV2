@@ -10,7 +10,6 @@ import com.krihl4n.app.messages.StartGameRequest
 import com.krihl4n.gamesManagement.GameOfChessCreator
 import com.krihl4n.gamesManagement.RematchProposals
 import com.krihl4n.gamesManagement.SessionRegistry
-import com.krihl4n.messages.*
 import com.krihl4n.persistence.GamesRepository
 import org.springframework.stereotype.Service
 import java.util.*
