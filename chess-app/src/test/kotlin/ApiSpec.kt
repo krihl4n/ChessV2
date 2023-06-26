@@ -22,21 +22,23 @@ const val VS_FRIEND = "vs_friend"
 val msgSender = mockk<MessageSender>(relaxed = true)
 val repo = mockk<MongoGamesRepository>(relaxed = false)
 var gameOfChessCreator = GameOfChessCreator()
-var gamesRegistry = GamesRegistry(GamesRepository(repo, gameOfChessCreator))
+var gamesRegistry = GamesRegistry()
+var gamesRepository = GamesRepository(repo, gameOfChessCreator)
 var rematchProposals = RematchProposals()
 var eventhandler = GameEventHandler(msgSender, gamesRegistry, rematchProposals, gameOfChessCreator)
-var gameCommandHandler = GameCommandHandler(gamesRegistry, rematchProposals, msgSender, gameOfChessCreator)
+var gameCommandHandler = GameCommandHandler(gamesRegistry, rematchProposals, msgSender, gameOfChessCreator, gamesRepository)
 
 val beforeApiTest: BeforeTest = {
     gameOfChessCreator = GameOfChessCreator()
-    gamesRegistry = GamesRegistry(GamesRepository(repo, gameOfChessCreator))
+    gamesRegistry = GamesRegistry()
+    gamesRepository = GamesRepository(repo, gameOfChessCreator)
     rematchProposals = RematchProposals()
     eventhandler = GameEventHandler(msgSender, gamesRegistry, rematchProposals, gameOfChessCreator)
-    gameCommandHandler = GameCommandHandler(gamesRegistry, rematchProposals, msgSender, gameOfChessCreator)
+    gameCommandHandler = GameCommandHandler(gamesRegistry, rematchProposals, msgSender, gameOfChessCreator, gamesRepository)
     every { repo.save(any()) }.returnsArgument(0)
     every { repo.findById(any()) }.returns(Optional.empty())
     gameOfChessCreator.registerNewGameObserver(eventhandler)
-    gameOfChessCreator.registerNewGameObserver(ComputerOpponent(gamesRegistry, gameOfChessCreator))
+    gameOfChessCreator.registerNewGameObserver(ComputerOpponent(gameOfChessCreator, gamesRepository))
 }
 
 val afterApiTest: AfterTest = { clearAllMocks() }

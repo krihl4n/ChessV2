@@ -19,7 +19,7 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository, pr
         mongoGamesRepository.save(GameDocument(gameOfChess.gameId, gameOfChess.gameMode))
     }
 
-    fun getForCommand(gameId: String): PersistableGameOfChess {
+    fun getGameForCommand(gameId: String): PersistableGameOfChess {
         val gameOfChess =
             games.find { it.gameId == gameId }?:
             retrieveGameOfChess(gameId).also {
@@ -28,7 +28,7 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository, pr
         return PersistableGameOfChess(gameOfChess, mongoGamesRepository)
     }
 
-    fun getForQuery(gameId: String): GameOfChess { // todo interface for query?
+    fun getGameForQuery(gameId: String): GameOfChess { // todo interface for query?
         return games.find { it.gameId == gameId } ?:
         retrieveGameOfChess(gameId).also { games.add(it) }
     }

@@ -146,7 +146,7 @@ class ClientInteractionsSpec : FunSpec({
         val playerId = gameCommandHandler.joinGame(SESSION_ID_1, JoinGameRequest(gameId, WHITE))
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, null))
 
-        gameCommandHandler.resign(SESSION_ID_1, playerId)
+        gameCommandHandler.resign(gameId, playerId)
 
         verify { msgSender.sendGameFinishedMsg(SESSION_ID_1, GameResultDto(BLACK_PLAYER_WON, PLAYER_RESIGNED)) }
         verify { msgSender.sendGameFinishedMsg(SESSION_ID_2, GameResultDto(BLACK_PLAYER_WON, PLAYER_RESIGNED)) }

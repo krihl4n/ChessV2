@@ -5,6 +5,7 @@ import com.krihl4n.api.dto.*
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
 import com.krihl4n.messages.*
+import com.krihl4n.persistence.GamesRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -13,7 +14,8 @@ class GameCommandHandler(
     private val registry: GamesRegistry,
     private val rematchProposals: RematchProposals,
     private val messageSender: MessageSender,
-    private val gameOfChessCreator: GameOfChessCreator
+    private val gameOfChessCreator: GameOfChessCreator,
+    private val gamesRepository: GamesRepository
 ) : ConnectionListener {
 
     override fun connectionEstablished(sessionId: String) {
@@ -28,21 +30,23 @@ class GameCommandHandler(
         val newGame = gameOfChessCreator
             .createGame(request.mode, request.setup)
         registry.registerNewGame(newGame, sessionId)
-        registry.getGameForCommand(newGame.gameId).initialize()
+        gamesRepository.saveNewGame(newGame)
+        gamesRepository.getGameForCommand(newGame.gameId).initialize()
         return newGame.gameId
     }
 
     fun requestRematch(sessionId: String, gameId: String): String? { // todo what to do with old games?
-        val existingGame = registry.getGameForQuery(gameId)
+        val existingGame = gamesRepository.getGameForQuery(gameId)
         if (this.rematchProposals.proposalExists(existingGame.gameId)) {
             return null
         }
         val rematch = gameOfChessCreator.createRematch(existingGame)
         val newGame = rematch.gameOfChess.also {
             registry.registerNewGame(it, sessionId)
+            gamesRepository.saveNewGame(it)
         }
         this.rematchProposals.createProposal(rematch)
-        registry.getGameForCommand(newGame.gameId).initialize()
+        gamesRepository.getGameForCommand(newGame.gameId).initialize()
         registry
             .getRelatedSessionIds(existingGame.gameId)
             .firstOrNull { it != sessionId }
@@ -60,7 +64,7 @@ class GameCommandHandler(
             ?.playerNextColor
             ?: req.colorPreference
 
-        registry.getGameForCommand(req.gameId).playerReady(playerId, colorPreference)
+        gamesRepository.getGameForCommand(req.gameId).playerReady(playerId, colorPreference)
         return playerId
     }
 
@@ -70,32 +74,32 @@ class GameCommandHandler(
     }
 
     fun move(gameId: String, move: MoveDto) {
-        registry.getGameForCommand(gameId).move(move)
+        gamesRepository.getGameForCommand(gameId).move(move)
     }
 
     fun getPositions(gameId: String): List<FieldOccupationDto> {
-        return registry.getGameForQuery(gameId).getFieldOccupationInfo()
+        return gamesRepository.getGameForQuery(gameId).getFieldOccupationInfo()
     }
 
     fun getPossibleMoves(gameId: String, field: String): PossibleMovesDto {
-        return registry.getGameForQuery(gameId).getPossibleMoves(field)
+        return gamesRepository.getGameForQuery(gameId).getPossibleMoves(field)
     }
 
     fun resign(gameId: String, playerId: String) {
-        registry.getGameForCommand(gameId).resign(playerId)
+        gamesRepository.getGameForCommand(gameId).resign(playerId)
     }
 
     // todo this needs to be smarter
     fun undoMove(gameId: String) {
-        registry.getGameForCommand(gameId).undoMove()
+        gamesRepository.getGameForCommand(gameId).undoMove()
     }
 
     fun redoMove(gameId: String) {
-        registry.getGameForCommand(gameId).redoMove()
+        gamesRepository.getGameForCommand(gameId).redoMove()
     }
 
     private fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {
-        val game: GameOfChess = registry.getGameForQuery(gameId)
+        val game: GameOfChess = gamesRepository.getGameForQuery(gameId)
         game.getPlayer(playerId)?.let {
             val gameInfo = GameInfoEvent(
                 gameId = gameId,

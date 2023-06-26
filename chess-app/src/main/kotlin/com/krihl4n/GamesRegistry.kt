@@ -1,18 +1,15 @@
 package com.krihl4n
 
 import com.krihl4n.api.GameOfChess
-import com.krihl4n.persistence.GamesRepository
-import com.krihl4n.persistence.PersistableGameOfChess
 import org.springframework.stereotype.Service
 
 @Service
-class GamesRegistry(private val repo: GamesRepository) {
+class GamesRegistry {
 
     private val entries = mutableListOf<RegisteredSession>()
 
     fun registerNewGame(gameOfChess: GameOfChess, sessionId: String) {
         entries.add(RegisteredSession(gameOfChess.gameId, sessionId))
-        repo.saveNewGame(gameOfChess)
     }
 
     fun getRelatedSessionIds(gameId: String): Set<String> {
@@ -21,14 +18,6 @@ class GamesRegistry(private val repo: GamesRepository) {
 
     fun getRelatedPlayerSessionId(playerId: String): String? { // todo just return string
         return  this.entries.find { it.playerParticipates(playerId) }?.playerSessionId(playerId)
-    }
-
-    fun getGameForCommand(gameId: String): PersistableGameOfChess { // todo not nullable?
-        return repo.getForCommand(gameId)
-    }
-
-    fun getGameForQuery(gameId: String): GameOfChess {
-        return repo.getForQuery(gameId)
     }
 
     fun deregisterGame(gameId: String) {
