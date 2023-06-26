@@ -1,7 +1,7 @@
 package com.krihl4n.persistence
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.krihl4n.GameOfChessCreator
+import com.krihl4n.gamesManagement.GameOfChessCreator
 import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.persistence.GamesRepository.CommandType.*

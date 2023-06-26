@@ -29,16 +29,10 @@
 
 * some persistent logs. logback?
 
-- play computer vs computer
-
 FEN notation maybe?
 https://www.youtube.com/watch?v=U4ogK0MIzqk&ab_channel=SebastianLague
 
 is it possible to subscribe to one web socket channel and receive messages with different model?
-
-clean up mess with the beans in api module. what should be @Service and what shout not?
-
-command query separation. maybe queries don't have to be pushed through same classes
 
 refresh while waiting for other player
 

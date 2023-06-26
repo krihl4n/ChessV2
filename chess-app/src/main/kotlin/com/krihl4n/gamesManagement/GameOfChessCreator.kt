@@ -1,4 +1,4 @@
-package com.krihl4n
+package com.krihl4n.gamesManagement
 
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.GameOfChess

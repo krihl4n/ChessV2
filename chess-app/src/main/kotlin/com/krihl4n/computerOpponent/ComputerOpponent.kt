@@ -1,6 +1,6 @@
 package com.krihl4n.computerOpponent
 
-import com.krihl4n.GameOfChessCreator
+import com.krihl4n.gamesManagement.GameOfChessCreator
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.dto.*
 import com.krihl4n.persistence.GamesRepository

@@ -1,7 +1,7 @@
 package com.krihl4n.app
 
 import com.krihl4n.api.dto.*
-import com.krihl4n.messages.GameInfoEvent
+import com.krihl4n.app.messages.GameInfoEvent
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessageType

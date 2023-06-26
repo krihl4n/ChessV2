@@ -1,6 +1,6 @@
-package com.krihl4n.messages
+package com.krihl4n.app.messages
 
-data class RedoMoveRequest(
+data class ResignRequest(
     val gameId: String = "",
     val playerId: String = "",
 )

@@ -3,7 +3,10 @@ package com.krihl4n
 import com.krihl4n.api.GameEventListener
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.MessageSender
-import com.krihl4n.messages.GameInfoEvent
+import com.krihl4n.gamesManagement.GameOfChessCreator
+import com.krihl4n.gamesManagement.RematchProposals
+import com.krihl4n.gamesManagement.SessionRegistry
+import com.krihl4n.app.messages.GameInfoEvent
 import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Service
 

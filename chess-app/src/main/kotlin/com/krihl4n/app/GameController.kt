@@ -2,6 +2,7 @@ package com.krihl4n.app
 
 import com.krihl4n.GameCommandHandler
 import com.krihl4n.api.dto.MoveDto
+import com.krihl4n.app.messages.*
 import com.krihl4n.messages.*
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.handler.annotation.Header

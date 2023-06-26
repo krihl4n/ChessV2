@@ -2,6 +2,10 @@ import com.krihl4n.api.dto.GameResultDto
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PerformedMoveDto
 import com.krihl4n.api.dto.PiecePositionUpdateDto
+import com.krihl4n.app.messages.GameInfoEvent
+import com.krihl4n.app.messages.JoinGameRequest
+import com.krihl4n.app.messages.RejoinGameRequest
+import com.krihl4n.app.messages.StartGameRequest
 import com.krihl4n.messages.*
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.*
