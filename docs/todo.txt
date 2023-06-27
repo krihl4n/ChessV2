@@ -37,5 +37,3 @@ is it possible to subscribe to one web socket channel and receive messages with 
 refresh while waiting for other player
 
 Uc8bFLRvYTCHJpF2
-
-maybe just cpu, player1 and player2 as player ids?

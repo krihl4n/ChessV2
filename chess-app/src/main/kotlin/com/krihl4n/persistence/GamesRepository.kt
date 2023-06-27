@@ -51,7 +51,6 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository, pr
                 }
 
                 UNDO_MOVE -> gameOfChess.undoMove()
-                REDO_MOVE -> gameOfChess.redoMove()
                 RESIGN -> {
                     val data = objectMapper.readValue(command.data, ResignData::class.java)
                     gameOfChess.resign(data.playerId)
@@ -63,6 +62,6 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository, pr
     }
 
     enum class CommandType {
-        INITIALIZE, PLAYER_READY, MOVE, UNDO_MOVE, REDO_MOVE, RESIGN
+        INITIALIZE, PLAYER_READY, MOVE, UNDO_MOVE, RESIGN
     }
 }

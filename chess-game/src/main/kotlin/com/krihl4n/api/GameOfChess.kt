@@ -54,8 +54,6 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
 
     override fun undoMove() = game.undoMove()
 
-    override fun redoMove() = game.redoMove()
-
     override fun getMode() = game.getMode().toString()
 
     override fun getPlayer(playerId: String) = this.game.fetchPlayer(playerId)?.toDto()

@@ -109,6 +109,4 @@ internal class GameControl(
         this.performMove(move)
 
     override fun executeUndo() = commandCoordinator.undo()
-
-    override fun executeRedo() = commandCoordinator.redo()
 }

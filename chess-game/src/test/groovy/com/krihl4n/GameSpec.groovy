@@ -81,22 +81,6 @@ class GameSpec extends BaseGameSpec {
         assertPositions("wp_a2")
     }
 
-    def "should redo move"() {
-        given:
-        game.initialize(GameMode.TEST_MODE)
-        game.playerReady("player", null)
-
-        when:
-        performMove("player", "a2 a3")
-        and:
-        game.undoMove()
-        and:
-        game.redoMove()
-
-        then:
-        assertPositions("wp_a3")
-    }
-
     def "should not be able to perform illegal moves"() {
         given:
         game.initialize(GameMode.TEST_MODE)

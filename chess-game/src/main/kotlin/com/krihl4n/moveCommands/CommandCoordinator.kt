@@ -5,7 +5,6 @@ import com.krihl4n.model.Move
 internal class CommandCoordinator {
 
     private val executedCommands = ArrayDeque<MoveCommand>()
-    private val undidCommands = ArrayDeque<MoveCommand>()
 
     private val moveObservers = mutableSetOf<MoveObserver>()
     private var piecePositionUpdateListeners = mutableListOf<PiecePositionUpdateListener>()
@@ -32,21 +31,9 @@ internal class CommandCoordinator {
         val command = executedCommands.last()
         command.undo()
         executedCommands.removeLast()
-        undidCommands.add(command)
 
         moveObservers.forEach { it.moveUndid(command.getMove()) }
         command.getPiecePositionUpdate()?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it.reverted()) }}
-    }
-
-    fun redo() {
-        if (undidCommands.isEmpty())
-            return
-        val command = undidCommands.last()
-        command.execute()
-        undidCommands.removeLast()
-        executedCommands.add(command) // redundant?
-
-        command.getPiecePositionUpdate()?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it) }}
     }
 
     fun getLastMove(): Move? {

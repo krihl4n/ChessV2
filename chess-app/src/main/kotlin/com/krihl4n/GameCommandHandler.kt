@@ -94,13 +94,8 @@ class GameCommandHandler(
         gamesRepository.getGameForCommand(gameId).resign(playerId)
     }
 
-    // todo this needs to be smarter
     fun undoMove(gameId: String) {
         gamesRepository.getGameForCommand(gameId).undoMove()
-    }
-
-    fun redoMove(gameId: String) {
-        gamesRepository.getGameForCommand(gameId).redoMove()
     }
 
     private fun joinedExistingGame(sessionId: String, gameId: String, playerId: String) {

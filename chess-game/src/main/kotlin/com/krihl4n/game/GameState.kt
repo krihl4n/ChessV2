@@ -36,10 +36,6 @@ internal enum class GameState : State {
             throw IllegalStateException("Game not started yet")
         }
 
-        override fun redo(stateHolder: StateHolder, gameCommand: GameCommand) {
-            throw IllegalStateException("Game not started yet")
-        }
-
         override fun gameFinished(stateHolder: StateHolder) {
             stateHolder.setState(FINISHED)
         }
@@ -75,10 +71,6 @@ internal enum class GameState : State {
         }
 
         override fun undo(stateHolder: StateHolder, gameCommand: GameCommand) {
-            throw IllegalStateException("Cannot move, waiting for players")
-        }
-
-        override fun redo(stateHolder: StateHolder, gameCommand: GameCommand) {
             throw IllegalStateException("Cannot move, waiting for players")
         }
 
@@ -118,10 +110,6 @@ internal enum class GameState : State {
             gameCommand.executeUndo()
         }
 
-        override fun redo(stateHolder: StateHolder, gameCommand: GameCommand) {
-            gameCommand.executeRedo()
-        }
-
         override fun gameFinished(stateHolder: StateHolder) {
             stateHolder.setState(FINISHED)
         }
@@ -158,10 +146,6 @@ internal enum class GameState : State {
             throw IllegalStateException("Cannot move if the game is finished")
         }
 
-        override fun redo(stateHolder: StateHolder, gameCommand: GameCommand) {
-            throw IllegalStateException("Cannot move if the game is finished")
-        }
-
         override fun gameFinished(stateHolder: StateHolder) {
             // do nothing?
         }
@@ -181,6 +165,5 @@ internal interface State {
     )
     fun move(stateHolder: StateHolder, gameCommand: GameCommand, move: MoveDto)
     fun undo(stateHolder: StateHolder, gameCommand: GameCommand)
-    fun redo(stateHolder: StateHolder, gameCommand: GameCommand)
     fun gameFinished(stateHolder: StateHolder)
 }

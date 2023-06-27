@@ -64,61 +64,6 @@ class CommandCoordinatorSpec extends BaseSpec {
         1 * c1.undo()
     }
 
-    def "should redo command"() {
-        given:
-        coordinator.execute(command)
-        coordinator.undo()
-
-        when:
-        coordinator.redo()
-
-        then:
-        1 * command.execute()
-    }
-
-    def "should redo commands in proper order"() {
-        given:
-        def c1 = Mock(MoveCommand)
-        def c2 = Mock(MoveCommand)
-
-        and:
-        coordinator.execute(c1)
-        coordinator.execute(c2)
-
-        and:
-        coordinator.undo()
-        coordinator.undo()
-
-        when:
-        coordinator.redo()
-
-        then:
-        1 * c1.execute()
-        0 * c2.execute()
-    }
-
-    def "should redo two commands"() {
-        given:
-        def c1 = Mock(MoveCommand)
-        def c2 = Mock(MoveCommand)
-
-        and:
-        coordinator.execute(c1)
-        coordinator.execute(c2)
-
-        and:
-        coordinator.undo()
-        coordinator.undo()
-
-        when:
-        coordinator.redo()
-        coordinator.redo()
-
-        then:
-        1 * c1.execute()
-        1 * c2.execute()
-    }
-
     def "should do nothing if there is nothing to undo"() {
         given:
         coordinator.execute(command)
@@ -129,18 +74,5 @@ class CommandCoordinatorSpec extends BaseSpec {
 
         then:
         0 * command.undo()
-    }
-
-    def "should do nothing if there is nothing to redo"() {
-        given:
-        coordinator.execute(command)
-        coordinator.undo()
-        coordinator.redo()
-
-        when:
-        coordinator.redo()
-
-        then:
-        0 * command.execute()
     }
 }

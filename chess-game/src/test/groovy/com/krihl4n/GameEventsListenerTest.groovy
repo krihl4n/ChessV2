@@ -158,28 +158,6 @@ class GameEventsListenerTest extends Specification {
                         "white"))
     }
 
-    def "should send event when redoing a move"() {
-        given:
-        def game = initGame()
-
-        and:
-        game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
-        game.undoMove()
-
-        when:
-        game.redoMove()
-
-        then:
-        1 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("a2", "a3"),
-                        null,
-                        null,
-                        null,
-                        false,
-                        "white"))
-    }
-
     def "should notify about en passant capture"() {
         given:
         def game = initGame(new EnPassantSetup())

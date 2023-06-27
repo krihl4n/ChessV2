@@ -14,8 +14,6 @@ internal interface GameCommand {
 
     fun executeUndo()
 
-    fun executeRedo()
-
     fun executeResign(playerId: String)
 
     fun fetchPlayer(playerId: String): Player? // todo separate query from commands?

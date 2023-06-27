@@ -3,7 +3,6 @@ package com.krihl4n.app
 import com.krihl4n.GameCommandHandler
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.app.messages.*
-import com.krihl4n.messages.*
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -102,13 +101,6 @@ class GameController(
     fun undoMove(@Payload req: UndoMoveRequest, @Header("simpSessionId") sessionId: String) {
         println("--> /undo-move | sessionId=$sessionId | playerId=${req.playerId}")
         gameCommandHandler.undoMove(req.gameId)
-    }
-
-    @MessageMapping("/redo-move")
-    @Throws(Exception::class)
-    fun redoMove(@Payload req: RedoMoveRequest, @Header("simpSessionId") sessionId: String) {
-        println("--> /redo-move | sessionId=$sessionId | playerId=${req.playerId}")
-        gameCommandHandler.redoMove(req.gameId)
     }
 
     private fun prepareSessionIdHeader(sessionId: String): MessageHeaders {

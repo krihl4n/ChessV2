@@ -39,11 +39,6 @@ class PersistableGameOfChess(private val delegate: GameOfChess, private val repo
         delegate.undoMove()
     }
 
-    override fun redoMove() {
-        save(REDO_MOVE)
-        delegate.redoMove()
-    }
-
     private fun save(type: CommandType, data: Any? = null) {
         repo.findById(delegate.gameId).getOrNull()
             ?.let {

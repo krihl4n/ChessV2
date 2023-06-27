@@ -9,5 +9,4 @@ interface GameOfChessCommand {
     fun resign(playerId: String)
     fun move(move: MoveDto)
     fun undoMove()
-    fun redoMove()
 }

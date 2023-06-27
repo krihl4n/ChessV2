@@ -62,8 +62,6 @@ internal class Game(
 
     fun undoMove() = gameState.undo(this, gameControl)
 
-    fun redoMove() = gameState.redo(this, gameControl)
-
     fun isGameFinished() = gameState == GameState.FINISHED // todo remove, used only in tests
 
     fun getResult() = gameResultEvaluator.getGameResult()
