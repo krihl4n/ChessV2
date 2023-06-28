@@ -77,7 +77,7 @@ class EnPassantSpec extends BaseGameSpec {
         when:
         performMove("f7 f5")
         performMove("e5 f6")
-        undoMove()
+        undoMove("player")
 
         then:
         assertPositions("wp_e5 bp_f5")

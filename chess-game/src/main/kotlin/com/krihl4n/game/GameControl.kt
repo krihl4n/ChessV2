@@ -108,5 +108,5 @@ internal class GameControl(
     override fun executePerformMove(move: MoveDto) =
         this.performMove(move)
 
-    override fun executeUndo() = commandCoordinator.undo()
+    override fun executeUndo(playerId: String) = commandCoordinator.undo(playersManager.getPlayer(playerId)!!)
 }

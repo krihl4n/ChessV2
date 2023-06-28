@@ -100,7 +100,7 @@ class GameController(
     @Throws(Exception::class)
     fun undoMove(@Payload req: UndoMoveRequest, @Header("simpSessionId") sessionId: String) {
         println("--> /undo-move | sessionId=$sessionId | playerId=${req.playerId}")
-        gameCommandHandler.undoMove(req.gameId)
+        gameCommandHandler.undoMove(req.gameId, req.playerId)
     }
 
     private fun prepareSessionIdHeader(sessionId: String): MessageHeaders {

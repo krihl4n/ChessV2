@@ -2,6 +2,7 @@ package com.krihl4n.moveCalculators
 
 import com.krihl4n.BaseSpec
 import com.krihl4n.PositionTracker
+import com.krihl4n.game.GameMode
 import com.krihl4n.guards.EnPassantGuard
 import com.krihl4n.moveCommands.CommandCoordinator
 import spock.lang.Subject
@@ -14,7 +15,7 @@ class PawnMoveCalculatorSpec extends BaseSpec {
 
     void setup() {
         positionTracker = new PositionTracker()
-        calculator = new PawnMoveCalculator(new EnPassantGuard(positionTracker, new CommandCoordinator()))
+        calculator = new PawnMoveCalculator(new EnPassantGuard(positionTracker, new CommandCoordinator(GameMode.TEST_MODE)))
     }
 
     def "a pawn can move one field forward"() {

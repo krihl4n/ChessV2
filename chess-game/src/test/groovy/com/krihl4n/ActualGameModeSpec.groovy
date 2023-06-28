@@ -58,7 +58,7 @@ class ActualGameModeSpec extends BaseGameSpec {
         performMove(game.fetchPlayerTwo().id, "d7 d6")
 
         when:
-        game.undoMove()
+        game.undoMove("player2")
         performMove(game.fetchPlayerTwo().id, "d7 d5")
 
         then:
@@ -71,7 +71,7 @@ class ActualGameModeSpec extends BaseGameSpec {
 
         and:
         performMove(game.fetchPlayerOne().id, "d2 d3")
-        game.undoMove()
+        game.undoMove("player1")
 
         when:
         performMove(game.fetchPlayerOne().id, "d2 d3")

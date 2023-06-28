@@ -2,6 +2,7 @@ package com.krihl4n
 
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.game.Game
+import com.krihl4n.game.GameMode
 import com.krihl4n.game.GameResultEvaluator
 import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.guards.CheckEvaluator
@@ -25,10 +26,14 @@ class BaseGameSpec extends BaseSpec {
     GameResultEvaluator gameResult
 
     void setup() {
+        setupTests(GameMode.TEST_MODE)
+    }
+
+    void setupTests(GameMode mode) {
         CalculatorFactory calculatorFactory = new CalculatorFactory()
         positionTracker = new PositionTracker()
         CastlingGuard castlingGuard = new CastlingGuard(positionTracker, calculatorFactory)
-        commandCoordinator = new CommandCoordinator()
+        commandCoordinator = new CommandCoordinator(mode)
         commandCoordinator.registerObserver(castlingGuard)
         PieceMoveCalculator pieceMoveCalculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
         CheckEvaluator checkGuard = new CheckEvaluator(positionTracker, pieceMoveCalculator)
@@ -60,8 +65,8 @@ class BaseGameSpec extends BaseSpec {
         return game.performMove(new MoveDto(player, tokens[0], tokens[1], pawnPromotion))
     }
 
-    def undoMove() {
-        game.undoMove()
+    def undoMove(String playerId) {
+        game.undoMove(playerId)
     }
 
     def setupPieces(String expression) {

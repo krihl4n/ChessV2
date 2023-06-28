@@ -8,5 +8,5 @@ interface GameOfChessCommand {
     fun playerReady(playerId: String, colorPreference: String?)
     fun resign(playerId: String)
     fun move(move: MoveDto)
-    fun undoMove()
+    fun undoMove(playerId: String)
 }

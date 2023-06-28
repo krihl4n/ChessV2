@@ -22,6 +22,10 @@ data class MoveData(
     @JsonProperty("pawnPromotion") val pawnPromotion: String?
 )
 
+data class UndoMoveData(
+    @JsonProperty("playerId") val playerId: String,
+)
+
 data class ResignData(
     @JsonProperty("playerId") val playerId: String,
 )

@@ -55,7 +55,7 @@ class PawnPromotionSpec extends BaseGameSpec {
         performMoveWithPawnPromotion(move, "queen")
 
         and:
-        undoMove()
+        undoMove("player")
 
         then:
         assertPositions(positions)
@@ -90,7 +90,7 @@ class PawnPromotionSpec extends BaseGameSpec {
         performMoveWithPawnPromotion(move, "bishop")
 
         and:
-        undoMove()
+        undoMove("player")
 
         then:
         assertPositions(positions)

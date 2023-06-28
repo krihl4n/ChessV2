@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.game.GameMode
 import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.guards.EnPassantGuard
@@ -17,7 +18,7 @@ class MoveValidatorSpec extends BaseSpec {
     void setup() {
         CalculatorFactory calculatorFactory = new CalculatorFactory()
         positionTracker = new PositionTracker()
-        calculatorFactory.initCalculators(new EnPassantGuard(positionTracker, new CommandCoordinator()), new CastlingGuard(positionTracker, calculatorFactory))
+        calculatorFactory.initCalculators(new EnPassantGuard(positionTracker, new CommandCoordinator(GameMode.TEST_MODE)), new CastlingGuard(positionTracker, calculatorFactory))
         PieceMoveCalculator calculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
         moveValidator = new MoveValidator(calculator, new CheckEvaluator(positionTracker, calculator))
     }

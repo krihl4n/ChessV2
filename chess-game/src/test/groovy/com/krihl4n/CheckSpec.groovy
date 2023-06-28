@@ -102,7 +102,7 @@ class CheckSpec extends BaseGameSpec {
         performMove(move)
 
         and:
-        undoMove()
+        undoMove("player")
 
         then:
         assertPositions(positions)

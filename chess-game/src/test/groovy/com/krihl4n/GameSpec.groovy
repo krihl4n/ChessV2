@@ -75,7 +75,7 @@ class GameSpec extends BaseGameSpec {
         performMove("player", "a2 a3")
 
         and:
-        game.undoMove()
+        game.undoMove("player")
 
         then:
         assertPositions("wp_a2")

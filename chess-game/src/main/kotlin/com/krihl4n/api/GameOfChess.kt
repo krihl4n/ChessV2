@@ -22,7 +22,7 @@ import com.krihl4n.players.Player
 class GameOfChess(val gameId: String, val gameMode: String, private val pieceSetup: PieceSetup?): GameOfChessCommand, GameOfChessQuery {
 
     private val positionTracker = PositionTracker()
-    private val commandCoordinator = CommandCoordinator()
+    private val commandCoordinator = CommandCoordinator(GameMode.fromCommand(gameMode))
     private val calculatorFactory = CalculatorFactory()
     private val moveCalculator = PieceMoveCalculator(positionTracker, calculatorFactory)
     private val checkEvaluator = CheckEvaluator(positionTracker, moveCalculator)
@@ -52,7 +52,7 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
 
     override fun move(move: MoveDto) = game.performMove(move)
 
-    override fun undoMove() = game.undoMove()
+    override fun undoMove(playerId: String) = game.undoMove(playerId)
 
     override fun getMode() = game.getMode().toString()
 

@@ -12,7 +12,7 @@ internal interface GameCommand {
 
     fun executePerformMove(move: MoveDto)
 
-    fun executeUndo()
+    fun executeUndo(playerId: String)
 
     fun executeResign(playerId: String)
 

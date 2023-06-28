@@ -33,7 +33,7 @@ class CastlingSpec extends BaseGameSpec {
 
         when:
         performMove(move)
-        undoMove()
+        undoMove("player")
 
         then:
         assertPositions(positions)
@@ -96,7 +96,7 @@ class CastlingSpec extends BaseGameSpec {
 
         and:
         performMove(kingMove)
-        undoMove()
+        undoMove("player")
 
         when:
         performMove(castlingMove)
@@ -120,7 +120,7 @@ class CastlingSpec extends BaseGameSpec {
         performMove(rookMove1)
         performMove(rookMove2)
         performMove(kingMove)
-        undoMove()
+        undoMove("player")
 
         when:
         performMove(castlingMove)
@@ -144,7 +144,7 @@ class CastlingSpec extends BaseGameSpec {
         performMove(kingMove1)
         performMove(kingMove2)
         performMove(kingMove3)
-        undoMove()
+        undoMove("player")
 
         when:
         performMove(castlingMove)

@@ -39,7 +39,7 @@ class CapturesSpec extends BaseGameSpec {
         performMove("player","c3 c5")
 
         when:
-        game.undoMove()
+        game.undoMove("player")
 
         then:
         assertPositions("wr_c3 bp_c5")

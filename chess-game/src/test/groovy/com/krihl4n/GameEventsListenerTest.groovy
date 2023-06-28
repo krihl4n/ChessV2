@@ -145,7 +145,7 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
 
         when:
-        game.undoMove()
+        game.undoMove(PLAYER_ID)
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID,

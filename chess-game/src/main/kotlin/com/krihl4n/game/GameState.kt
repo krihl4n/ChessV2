@@ -32,7 +32,7 @@ internal enum class GameState : State {
             throw IllegalStateException("Game not started yet")
         }
 
-        override fun undo(stateHolder: StateHolder, gameCommand: GameCommand) {
+        override fun undo(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
             throw IllegalStateException("Game not started yet")
         }
 
@@ -70,7 +70,7 @@ internal enum class GameState : State {
             throw IllegalStateException("Cannot move, waiting for players")
         }
 
-        override fun undo(stateHolder: StateHolder, gameCommand: GameCommand) {
+        override fun undo(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
             throw IllegalStateException("Cannot move, waiting for players")
         }
 
@@ -106,8 +106,8 @@ internal enum class GameState : State {
             gameCommand.executePerformMove(move)
         }
 
-        override fun undo(stateHolder: StateHolder, gameCommand: GameCommand) {
-            gameCommand.executeUndo()
+        override fun undo(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
+            gameCommand.executeUndo(playerId)
         }
 
         override fun gameFinished(stateHolder: StateHolder) {
@@ -142,7 +142,7 @@ internal enum class GameState : State {
             throw IllegalStateException("Cannot move if the game is finished")
         }
 
-        override fun undo(stateHolder: StateHolder, gameCommand: GameCommand) {
+        override fun undo(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
             throw IllegalStateException("Cannot move if the game is finished")
         }
 
@@ -164,6 +164,6 @@ internal interface State {
         gameMode: GameMode?
     )
     fun move(stateHolder: StateHolder, gameCommand: GameCommand, move: MoveDto)
-    fun undo(stateHolder: StateHolder, gameCommand: GameCommand)
+    fun undo(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String)
     fun gameFinished(stateHolder: StateHolder)
 }

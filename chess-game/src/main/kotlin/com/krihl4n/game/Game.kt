@@ -4,6 +4,7 @@ import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.pieceSetups.PieceSetup
+import com.krihl4n.model.Color
 import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
@@ -60,7 +61,7 @@ internal class Game(
     fun performMove(move: MoveDto) =
         gameState.move(this, gameControl, move)
 
-    fun undoMove() = gameState.undo(this, gameControl)
+    fun undoMove(playerId: String) = gameState.undo(this, gameControl, playerId)
 
     fun isGameFinished() = gameState == GameState.FINISHED // todo remove, used only in tests
 
@@ -68,7 +69,7 @@ internal class Game(
 
     fun getMode() = this.gameMode
 
-    fun colorAllowedToMove() = this.gameControl.fetchColorAllowedToMove()
+    fun colorAllowedToMove(): Color = this.gameControl.fetchColorAllowedToMove()
 
     fun fetchPlayer(playerId: String) = gameControl.fetchPlayer(playerId)
 

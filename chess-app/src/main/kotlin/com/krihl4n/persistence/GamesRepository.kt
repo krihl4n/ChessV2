@@ -50,7 +50,10 @@ class GamesRepository(private val mongoGamesRepository: MongoGamesRepository, pr
                     gameOfChess.move(MoveDto(data.playerId, data.from, data.to, data.pawnPromotion))
                 }
 
-                UNDO_MOVE -> gameOfChess.undoMove()
+                UNDO_MOVE -> {
+                    val data = objectMapper.readValue(command.data, UndoMoveData::class.java)
+                    gameOfChess.undoMove(data.playerId)
+                }
                 RESIGN -> {
                     val data = objectMapper.readValue(command.data, ResignData::class.java)
                     gameOfChess.resign(data.playerId)
