@@ -44,7 +44,11 @@ internal class GameResultEvaluator(
     private fun insufficientMaterial(): Boolean {
         val piecesLeft = positionTracker.getPositionsOfAllPieces().map { it.value }
 
-        return piecesLeft.hasPieces(Piece(WHITE, KING), Piece(BLACK, KING)) ||
+        return piecesLeft
+            .hasPieces(
+                Piece(WHITE, KING),
+                Piece(BLACK, KING)
+            ) ||
                 piecesLeft.hasPieces(
                     Piece(WHITE, BISHOP),
                     Piece(WHITE, KING),
