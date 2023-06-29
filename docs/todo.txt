@@ -4,19 +4,11 @@
 * game rules
     capture tracker on en passant?
     draw
-    user can choose a figure when pawn reaches the end
-    rematch
     insufficient material results in a draw
     https://en.wikipedia.org/wiki/Threefold_repetition
     https://en.wikipedia.org/wiki/Fifty-move_rule
     https://www.europechess.org/dead-position/ <-- advanced cases
     timer
-
-* security, accounts etc
- //todo later on it will have to be send to specific user who can have multiple sessions
-
-* bugs
-** move observer not notified when redoing the move, bug probably with right to castle
 
 * some persistent logs. logback?
 
