@@ -35,7 +35,7 @@ class PersistableGameOfChess(private val delegate: GameOfChess, private val repo
     }
 
     override fun undoMove(playerId: String) {
-        save(UNDO_MOVE)
+        save(UNDO_MOVE, UndoMoveData(playerId))
         delegate.undoMove(playerId)
     }
 

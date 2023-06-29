@@ -12,20 +12,11 @@
     https://www.europechess.org/dead-position/ <-- advanced cases
     timer
 
-* undoing in actual game
-
 * security, accounts etc
  //todo later on it will have to be send to specific user who can have multiple sessions
 
 * bugs
 ** move observer not notified when redoing the move, bug probably with right to castle
-
-** redo actions not cleared
-    move piece
-    undo
-    move another piece
-    redo
-    redo is performed
 
 * some persistent logs. logback?
 

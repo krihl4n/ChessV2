@@ -24,24 +24,40 @@ internal class CommandCoordinator(private val gameMode: GameMode) {
         executedCommands.add(command)
 
         moveObservers.forEach { it.movePerformed(command.getMove()) }
-        command.getPiecePositionUpdate()?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it) }}
+        command.getPiecePositionUpdate()?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it) } }
     }
 
     fun undo(player: Player) {
         if (executedCommands.isEmpty())
             return
-        when(gameMode) {
+        when (gameMode) {
             GameMode.TEST_MODE -> undoLastMove()
             GameMode.VS_COMPUTER -> {
-
+                if (!lastMoveBy(player) && secondToLastMoveBy(player)) {
+                    undoLastMove()
+                    undoLastMove()
+                } else if (lastMoveBy(player)) {
+                    undoLastMove()
+                }
             }
+
             GameMode.VS_FRIEND -> {
-                if(executedCommands.last().getMove().piece.color == player.color) {
+                if (lastMoveBy(player)) {
                     undoLastMove()
                 }
             }
         }
     }
+
+    fun getLastMove(): Move? {
+        return if (executedCommands.isNotEmpty()) executedCommands.last().getMove()
+        else null
+    }
+
+    private fun lastMoveBy(player: Player) = executedCommands.last().getMove().piece.color == player.color
+
+    private fun secondToLastMoveBy(player: Player) =
+        executedCommands.size >= 2 && executedCommands[executedCommands.size - 2].getMove().piece.color == player.color
 
     private fun undoLastMove(): Boolean {
         val command = executedCommands.last()
@@ -52,10 +68,5 @@ internal class CommandCoordinator(private val gameMode: GameMode) {
         command.getPiecePositionUpdate()
             ?.let { piecePositionUpdateListeners.forEach { l -> l.positionsUpdated(it.reverted()) } }
         return false
-    }
-
-    fun getLastMove(): Move? {
-        return if (executedCommands.isNotEmpty()) executedCommands.last().getMove()
-        else null
     }
 }

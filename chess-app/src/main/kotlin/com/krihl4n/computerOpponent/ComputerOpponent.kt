@@ -25,7 +25,7 @@ class ComputerOpponent(
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
         println("CPU  $gameId --> piecePositionUpdate")
-        if (isVsComputer(gameId) && isCpuTurn(gameId)) {
+        if (isVsComputer(gameId) && isCpuTurn(gameId) && !update.reverted) {
             Timer("ScheduleMove", false).schedule(1000) {
                 val attacked = attackIfPossible(gameId, cpuColor(gameId))
                 if (!attacked) {
