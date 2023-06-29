@@ -7,6 +7,7 @@ import com.krihl4n.game.ResultReason.*
 import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.model.*
 import com.krihl4n.model.Move
+import com.krihl4n.model.Type.*
 import com.krihl4n.moveCommands.MoveObserver
 
 internal class GameResultEvaluator(
@@ -34,7 +35,7 @@ internal class GameResultEvaluator(
             this.result = GameResult(DRAW, STALEMATE)
             notifyGameFinished()
         } else if (insufficientMaterial()) {
-            this.result = GameResult(DRAW, DEAD_POSITION)
+            this.result = GameResult(DRAW, INSUFFICIENT_MATERIAL)
             notifyGameFinished()
         }
     }
@@ -42,11 +43,18 @@ internal class GameResultEvaluator(
     private fun insufficientMaterial(): Boolean {
         val piecesLeft = positionTracker.getPositionsOfAllPieces().map { it.value }
 
-        if (piecesLeft.size == 2 && piecesLeft[0].type == Type.KING && piecesLeft[1].type == Type.KING)
-            return true
+        return piecesLeft.hasPieces(KING, KING) || piecesLeft.hasPieces(BISHOP, KING, KING)
+    }
 
-        // todo remaining cases
-        return false
+    private fun List<Piece>.hasPieces(vararg types: Type): Boolean {
+        if(this.size != types.size) return false
+        val pieces = this.toMutableList()
+        for (t in types) {
+            val index = pieces.indexOfFirst { it.type == t }
+            if (index == -1) return false
+            pieces.removeAt(index)
+        }
+        return pieces.size == 0
     }
 
     private fun noMoreValidMovesFor(color: Color): Boolean {

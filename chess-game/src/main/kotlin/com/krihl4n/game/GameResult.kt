@@ -12,5 +12,6 @@ enum class ResultReason{
     CHECK_MATE,
     STALEMATE,
     DEAD_POSITION,
+    INSUFFICIENT_MATERIAL,
     PLAYER_RESIGNED
 }

@@ -110,19 +110,4 @@ class CheckMateSpec extends BaseGameSpec {
         game.isGameFinished()
         game.getResult() == new GameResult(Result.WHITE_PLAYER_WON, ResultReason.CHECK_MATE)
     }
-
-    def "stalemate should result in a draw"() {
-        given:
-        setupPieces("wk_f6 wb_g7 bk_h7")
-
-        when:
-        performMove("f6 f7")
-
-        then:
-        assertPositions("wk_f7 wb_g7 bk_h7")
-
-        and:
-        game.isGameFinished()
-        game.getResult() == new GameResult(Result.DRAW, ResultReason.STALEMATE)
-    }
 }

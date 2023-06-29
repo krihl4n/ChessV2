@@ -26,6 +26,7 @@ class GameEventsListenerTest extends Specification {
     public static final String DRAW = "draw"
     public static final String STALEMATE = "stalemate"
     public static final String DEAD_POSITION = "dead_position"
+    public static final String INSUFFICIENT_MATERIAL = "insufficient_material"
     public static final String PLAYER_RESIGNED = "player_resigned"
     public static final String TEST_MODE = "test_mode"
     public static final String PLAYER_ID = "player"
@@ -308,7 +309,7 @@ class GameEventsListenerTest extends Specification {
         1 * listener.gameFinished(GAME_ID, new GameResultDto(DRAW, STALEMATE))
     }
 
-    def "should notify about draw due to dead position"() {
+    def "should notify about draw due to insufficient material"() {
         given:
         def game = initGame(new PieceSetup() {
             @Override
@@ -326,7 +327,7 @@ class GameEventsListenerTest extends Specification {
 
         then:
         1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
-        1 * listener.gameFinished(GAME_ID, new GameResultDto(DRAW, DEAD_POSITION))
+        1 * listener.gameFinished(GAME_ID, new GameResultDto(DRAW, INSUFFICIENT_MATERIAL))
     }
 
     def "should notify about loss after player resigned"() {

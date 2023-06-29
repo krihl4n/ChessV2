@@ -3,8 +3,6 @@
 
 * game rules
     capture tracker on en passant?
-    draw
-    insufficient material results in a draw
     https://en.wikipedia.org/wiki/Threefold_repetition
     https://en.wikipedia.org/wiki/Fifty-move_rule
     https://www.europechess.org/dead-position/ <-- advanced cases
@@ -20,3 +18,5 @@ is it possible to subscribe to one web socket channel and receive messages with 
 refresh while waiting for other player
 
 Uc8bFLRvYTCHJpF2
+
+undo move when game finished?
