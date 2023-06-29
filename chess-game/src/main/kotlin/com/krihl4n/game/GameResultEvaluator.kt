@@ -6,6 +6,7 @@ import com.krihl4n.game.Result.*
 import com.krihl4n.game.ResultReason.*
 import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.model.*
+import com.krihl4n.model.Color.*
 import com.krihl4n.model.Move
 import com.krihl4n.model.Type.*
 import com.krihl4n.moveCommands.MoveObserver
@@ -23,7 +24,7 @@ internal class GameResultEvaluator(
         if (isKingChecked(move.piece.color.opposite())) {
             if (!isThereASavingMove(move.piece.color.opposite())) {
                 this.result = move.piece.color.let {
-                    if (it == Color.WHITE) {
+                    if (it == WHITE) {
                         GameResult(WHITE_PLAYER_WON, CHECK_MATE)
                     } else {
                         GameResult(BLACK_PLAYER_WON, CHECK_MATE)
@@ -43,18 +44,74 @@ internal class GameResultEvaluator(
     private fun insufficientMaterial(): Boolean {
         val piecesLeft = positionTracker.getPositionsOfAllPieces().map { it.value }
 
-        return piecesLeft.hasPieces(KING, KING) || piecesLeft.hasPieces(BISHOP, KING, KING)
+        return piecesLeft.hasPieces(Piece(WHITE, KING), Piece(BLACK, KING)) ||
+                piecesLeft.hasPieces(
+                    Piece(WHITE, BISHOP),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                ) ||
+                piecesLeft.hasPieces(
+                    Piece(BLACK, BISHOP),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                ) ||
+                piecesLeft.hasPieces(
+                    Piece(WHITE, KNIGHT),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                ) ||
+                piecesLeft.hasPieces(
+                    Piece(BLACK, KNIGHT),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                ) ||
+                piecesLeft.hasPieces(
+                    Piece(WHITE, BISHOP),
+                    Piece(BLACK, BISHOP),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                ) ||
+                piecesLeft.hasPieces(
+                    Piece(WHITE, KNIGHT),
+                    Piece(BLACK, KNIGHT),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                ) ||
+                piecesLeft.hasPieces(
+                    Piece(WHITE, KNIGHT),
+                    Piece(BLACK, BISHOP),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                ) ||
+                piecesLeft.hasPieces(
+                    Piece(BLACK, KNIGHT),
+                    Piece(WHITE, BISHOP),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                ) ||
+                piecesLeft.hasPieces(
+                    Piece(BLACK, KNIGHT),
+                    Piece(BLACK, KNIGHT),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                ) ||
+                piecesLeft.hasPieces(
+                    Piece(WHITE, KNIGHT),
+                    Piece(WHITE, KNIGHT),
+                    Piece(WHITE, KING),
+                    Piece(BLACK, KING)
+                )
     }
 
-    private fun List<Piece>.hasPieces(vararg types: Type): Boolean {
-        if(this.size != types.size) return false
-        val pieces = this.toMutableList()
-        for (t in types) {
-            val index = pieces.indexOfFirst { it.type == t }
+    private fun List<Piece>.hasPieces(vararg pieces: Piece): Boolean {
+        if (this.size != pieces.size) return false
+        val piecesList = this.toMutableList()
+        for (piece in pieces) {
+            val index = piecesList.indexOfFirst { it == piece }
             if (index == -1) return false
-            pieces.removeAt(index)
+            piecesList.removeAt(index)
         }
-        return pieces.size == 0
+        return piecesList.size == 0
     }
 
     private fun noMoreValidMovesFor(color: Color): Boolean {
@@ -70,14 +127,10 @@ internal class GameResultEvaluator(
 
     fun getGameResult(): GameResult? = result
 
-    fun isGameFinished(): Boolean {  // maybe not needed
-        return false
-    }
-
     fun resign(resigningPlayerColor: Color) {
         when (resigningPlayerColor) {
-            Color.WHITE -> this.result = GameResult(BLACK_PLAYER_WON, PLAYER_RESIGNED)
-            Color.BLACK -> this.result = GameResult(WHITE_PLAYER_WON, PLAYER_RESIGNED)
+            WHITE -> this.result = GameResult(BLACK_PLAYER_WON, PLAYER_RESIGNED)
+            BLACK -> this.result = GameResult(WHITE_PLAYER_WON, PLAYER_RESIGNED)
         }
         notifyGameFinished()
     }

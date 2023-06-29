@@ -30,33 +30,29 @@ class DrawSpec extends BaseGameSpec {
         game.getResult() == new GameResult(Result.DRAW, ResultReason.STALEMATE)
     }
 
-    def "insufficient material with two kings"() {
+    def "insufficient material for #scenario"() {
         given:
-        setupPieces("wk_a1 bq_a2 bk_h1")
+        setupPieces(setup)
 
         when:
         performMove("a1 a2")
 
         then:
-        assertPositions("wk_a2 bk_h1")
-
-        and:
         game.isGameFinished()
         game.getResult() == new GameResult(Result.DRAW, ResultReason.INSUFFICIENT_MATERIAL)
-    }
 
-    def "insufficient material with two kings and bishop"() {
-        given:
-        setupPieces("wk_a1 wb_h2 bq_a2 bk_h1")
-
-        when:
-        performMove("a1 a2")
-
-        then:
-        assertPositions("wk_a2 wb_h2 bk_h1")
-
-        and:
-        game.isGameFinished()
-        game.getResult() == new GameResult(Result.DRAW, ResultReason.INSUFFICIENT_MATERIAL)
+        where:
+        scenario                                | setup
+        "two kings"                             | "wk_a1 bq_a2 bk_h1"
+        "two kings, black bishop"               | "wk_a1 bq_a2 bk_h1 bb_h2"
+        "two kings, white bishop"               | "wk_a1 bq_a2 bk_h1 wb_h2"
+        "two kings, black knight"               | "wk_a1 bq_a2 bk_h1 wn_h2"
+        "two kings, white knight"               | "wk_a1 bq_a2 bk_h1 wn_h2"
+        "two kings, white bishop, black bishop" | "wk_a1 bq_a2 bk_h1 wb_h2 bb_h3"
+        "two kings, white knight, black knight" | "wk_a1 bq_a2 bk_h1 wn_h2 bn_h3"
+        "two kings, white bishop, black knight" | "wk_a1 bq_a2 bk_h1 wb_h2 bn_h3"
+        "two kings, black bishop, white knight" | "wk_a1 bq_a2 bk_h1 bb_h2 wn_h3"
+        "two kings, two white knights"          | "wk_a1 bq_a2 bk_h1 wn_h2 wn_h3"
+        "two kings, two black knights"          | "wk_a1 bq_a2 bk_h1 bn_h2 bn_h3"
     }
 }
