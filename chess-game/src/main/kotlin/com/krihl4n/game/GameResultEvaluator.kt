@@ -38,7 +38,20 @@ internal class GameResultEvaluator(
         } else if (insufficientMaterial()) {
             this.result = GameResult(DRAW, INSUFFICIENT_MATERIAL)
             notifyGameFinished()
+        } else if(fiftyMoveRepetition(move)) {
+            this.result = GameResult(DRAW, REPETITION)
+            notifyGameFinished()
         }
+    }
+
+    private var moveRepetitionCounter = 0
+    private fun fiftyMoveRepetition(move: Move): Boolean {
+//       if(move.piece.type == PAWN ){
+//
+//       }
+       moveRepetitionCounter++
+       println(moveRepetitionCounter)
+       return moveRepetitionCounter == 100
     }
 
     private fun insufficientMaterial(): Boolean {

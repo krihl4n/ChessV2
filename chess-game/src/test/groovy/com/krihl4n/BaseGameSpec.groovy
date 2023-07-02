@@ -56,6 +56,12 @@ class BaseGameSpec extends BaseSpec {
         return performMove("player", move, pawnPromotion)
     }
 
+    def performMoves(String... moves) {
+        for(def move in moves) {
+            performMove("player", move, null)
+        }
+    }
+
     def performMove(String move) {
         return performMove("player", move, null)
     }

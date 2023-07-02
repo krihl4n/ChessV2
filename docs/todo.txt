@@ -12,6 +12,7 @@
 
 FEN notation maybe?
 https://www.youtube.com/watch?v=U4ogK0MIzqk&ab_channel=SebastianLague
+https://www.youtube.com/watch?v=_vqlIPDR2TU&ab_channel=SebastianLague
 
 is it possible to subscribe to one web socket channel and receive messages with different model?
 
