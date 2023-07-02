@@ -31,24 +31,31 @@ internal class GameResultEvaluator(
                     }
                 }
                 notifyGameFinished()
+                return
             }
-        } else if (noMoreValidMovesFor(move.piece.color.opposite())) {
+        }
+        if (noMoreValidMovesFor(move.piece.color.opposite())) {
             this.result = GameResult(DRAW, STALEMATE)
             notifyGameFinished()
-        } else if (insufficientMaterial()) {
+            return
+        }
+        if (insufficientMaterial()) {
             this.result = GameResult(DRAW, INSUFFICIENT_MATERIAL)
             notifyGameFinished()
-        } else if(fiftyMoveRepetition(move)) {
+            return
+        }
+        if(fiftyMoveRepetition(move)) {
             this.result = GameResult(DRAW, REPETITION)
             notifyGameFinished()
+            return
         }
     }
 
     private var moveRepetitionCounter = 0
     private fun fiftyMoveRepetition(move: Move): Boolean {
-//       if(move.piece.type == PAWN ){
-//
-//       }
+       if(move.piece.type == PAWN){ // check if attack
+        moveRepetitionCounter = 0
+       }
        moveRepetitionCounter++
        println(moveRepetitionCounter)
        return moveRepetitionCounter == 100

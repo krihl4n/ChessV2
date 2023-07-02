@@ -67,6 +67,7 @@ class BaseGameSpec extends BaseSpec {
     }
 
     def performMove(String player, String move, String pawnPromotion = null) {
+        println(move)
         String[] tokens = move.split(' ')
         return game.performMove(new MoveDto(player, tokens[0], tokens[1], pawnPromotion))
     }
