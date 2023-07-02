@@ -121,4 +121,70 @@ class DrawSpec extends BaseGameSpec {
         game.isGameFinished()
         game.getResult() == new GameResult(Result.DRAW, ResultReason.REPETITION)
     }
+
+    def "50 move repetition rule draw"() {
+        given:
+        setupPieces("wk_a1 wq_a2 bk_h8 bq_h7 wp_b2 bp_g7")
+
+        and:
+        performMoves(
+                "a2 a3", "h7 h6",
+                "a3 a4", "h6 h5",
+                "a4 a5", "h5 h4",
+                "a5 a6", "h4 h3",
+                "a6 a7", "h3 h2",
+                "a7 b7", "h2 g2",
+                "b7 b6", "g2 g3",
+                "b6 b5", "g3 g4",
+                "b5 b4", "g4 g5",
+                "b4 b3", "g5 g6", // 10
+                "b3 c3", "g6 f6",
+                "c3 c4", "f6 f5",
+                "c4 c5", "f5 f4",
+                "c5 c6", "f4 f3",
+                "c6 c7", "f3 f2",
+                "c7 d7", "f2 e2",
+                "d7 d6", "e2 e3",
+                "d6 d5", "e3 e4",
+                "d5 d4", "e4 e5",
+                "d4 d3", "e5 e6", // 20
+                "d3 d2", "e6 e7",
+                "d2 d3", "e7 e6",
+                "d3 d4", "e6 e5",
+                "d4 d5", "e5 e4",
+                "d5 d6", "e4 e3",
+                "d6 d7", "e3 e2",
+                "d7 c7", "e2 f2",
+                "c7 c6", "f2 f3",
+                "c6 c5", "f3 f4",
+                "c5 c4", "f4 f5", // 30
+                "c4 c3", "f5 f6",
+                "c3 b3", "f6 g6",
+                "b3 b4", "g6 g5",
+                "b4 b5", "g5 g4",
+                "b5 b6", "g4 g3",
+                "b6 b7", "g3 g2",
+                "b7 a7", "g2 h2",
+                "a7 a6", "h2 h3",
+                "a6 a5", "h3 h4",
+                "a5 a4", "h4 h5", // 40
+                "a4 a3", "h5 h6",
+                "a3 a2", "h6 h7",
+                "a2 b1", "h7 g8",
+                "b1 g1", "g8 b8",// up to this point queen moves. wq_a2 bq_h7
+                "a1 b1", "h8 g8",
+                "b1 c1", "g8 f8",
+                "c1 d1", "f8 e8",
+                "d1 e1", "e8 d8",
+                "e1 f1", "d8 c8", // 49
+                "f1 f2"
+        )
+
+        when:
+        performMove("c8 c7")
+
+        then:
+        game.isGameFinished()
+        game.getResult() == new GameResult(Result.DRAW, ResultReason.REPETITION)
+    }
 }
