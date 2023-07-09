@@ -259,6 +259,5 @@ class DrawSpec extends BaseGameSpec {
     }
 }
 // todo mate has precedence
-// todo attack resetting the counter
 // todo undo actions including those resetting the counter
 // count moves every time?

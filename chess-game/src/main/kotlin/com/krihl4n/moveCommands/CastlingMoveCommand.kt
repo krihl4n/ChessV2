@@ -23,7 +23,7 @@ internal class CastlingMoveCommand(
 
         positionTracker.movePiece(rookFrom, rookTo)
 
-        update = PiecePositionUpdate(move, Move(Piece(move.piece.color, Type.ROOK), rookFrom, rookTo))
+        update = PiecePositionUpdate(move, Move(Piece(move.piece.color, Type.ROOK), rookFrom, rookTo, false))
     }
 
     override fun undo() {

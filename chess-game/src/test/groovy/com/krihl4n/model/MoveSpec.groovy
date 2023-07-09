@@ -9,7 +9,7 @@ class MoveSpec extends BaseSpec {
         def field = new Field("a1")
 
         when:
-        new Move(aWhitePawn(), field, field, null)
+        new Move(aWhitePawn(), field, field, false, null)
 
         then:
         thrown(IllegalArgumentException)

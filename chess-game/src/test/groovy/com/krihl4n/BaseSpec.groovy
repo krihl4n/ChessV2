@@ -14,7 +14,7 @@ class BaseSpec extends Specification {
 
     static def move(Piece piece, String expression) {
         def tokens = expression.split(" ")
-        return new Move(piece, tokens[0], tokens[1], null)
+        return new Move(piece, tokens[0], tokens[1], false, null)
     }
 
     static def aWhitePawn() {

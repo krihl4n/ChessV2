@@ -2,7 +2,7 @@ package com.krihl4n.model
 
 import java.util.*
 
-internal class Move(val piece: Piece, val from: Field, val to: Field, val pawnPromotion: Type? = null) {
+internal class Move(val piece: Piece, val from: Field, val to: Field, val isAttack: Boolean, val pawnPromotion: Type? = null) {
 
     private val id = UUID.randomUUID()
 
@@ -11,7 +11,12 @@ internal class Move(val piece: Piece, val from: Field, val to: Field, val pawnPr
             throw IllegalArgumentException("Move has to be performed to different location")
     }
 
-    constructor(piece: Piece, from: String, to: String, pawnPromotion: String?) : this(piece, Field(from), Field(to), pawnPromotion?.let { Type.of(it) })
+    constructor(piece: Piece, from: String, to: String, isAttack: Boolean, pawnPromotion: String?) : this(
+        piece,
+        Field(from),
+        Field(to),
+        isAttack,
+        pawnPromotion?.let { Type.of(it) })
 
     override fun toString(): String {
         return "Move(piece=$piece, from=$from, to=$to)"
@@ -26,6 +31,7 @@ internal class Move(val piece: Piece, val from: Field, val to: Field, val pawnPr
         if (piece != other.piece) return false
         if (from != other.from) return false
         if (to != other.to) return false
+        if (isAttack != other.isAttack) return false
         if (id != other.id) return false
 
         return true
@@ -35,6 +41,7 @@ internal class Move(val piece: Piece, val from: Field, val to: Field, val pawnPr
         var result = piece.hashCode()
         result = 31 * result + from.hashCode()
         result = 31 * result + to.hashCode()
+        result = 31 * result + isAttack.hashCode()
         result = 31 * result + (id?.hashCode() ?: 0)
         return result
     }

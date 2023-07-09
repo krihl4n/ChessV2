@@ -53,7 +53,7 @@ internal class GameResultEvaluator(
 
     private var moveRepetitionCounter = 0
     private fun fiftyMoveRepetition(move: Move): Boolean {
-       if(move.piece.type == PAWN){ // check if attack
+       if(move.piece.type == PAWN || move.isAttack){
         moveRepetitionCounter = 0
        }
        moveRepetitionCounter++

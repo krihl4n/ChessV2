@@ -12,6 +12,7 @@ import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move
+import com.krihl4n.model.Type
 import com.krihl4n.players.ActualGamePlayersManager
 import com.krihl4n.players.FreeMovePlayersManager
 import com.krihl4n.players.Player
@@ -39,7 +40,17 @@ internal class GameControl(
             return
         }
 
-        val move = positionTracker.getPieceAt(Field(moveDto.from))?.let { Move(it, moveDto.from, moveDto.to, moveDto.pawnPromotion) } ?: return
+        val pieceFrom =  positionTracker.getPieceAt(Field(moveDto.from))
+        val pieceTo = positionTracker.getPieceAt(Field(moveDto.to))
+        val isAttack = pieceTo != null && pieceFrom!!.color != pieceTo.color || // extract to some sort of move type evaluator
+                ( // en passant
+                        pieceFrom!!.type == Type.PAWN &&
+                                Field(moveDto.to).file != Field(moveDto.from).file &&
+                                positionTracker.isFieldEmpty(Field(moveDto.to))
+                        )
+
+        val move = positionTracker.getPieceAt(Field(moveDto.from))
+            ?.let { Move(it, moveDto.from, moveDto.to, isAttack, moveDto.pawnPromotion) } ?: return
 
         if (!movePolicy.moveAllowedBy(moveDto.playerId, move)) {
             println("it's not player's $moveDto.playerId turn")
