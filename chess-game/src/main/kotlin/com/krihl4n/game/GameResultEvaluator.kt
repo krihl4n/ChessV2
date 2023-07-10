@@ -51,12 +51,22 @@ internal class GameResultEvaluator(
         }
     }
 
-    private var moveRepetitionCounter = 0
+    //private var moveRepetitionCounter = 0 // todo refactor
+    private var moves = ArrayDeque<Move>()
+
     private fun fiftyMoveRepetition(move: Move): Boolean {
-       if(move.piece.type == PAWN || move.isAttack){
-        moveRepetitionCounter = 0
+       moves.add(move)
+       var moveRepetitionCounter = 0
+       moves.forEach {m ->
+           if(m.piece.type == PAWN || m.isAttack){
+               moveRepetitionCounter = 0
+           }
+           moveRepetitionCounter++
        }
-       moveRepetitionCounter++
+//       if(move.piece.type == PAWN || move.isAttack){
+//        moveRepetitionCounter = 0
+//       }
+//       moveRepetitionCounter++
        println(moveRepetitionCounter)
        return moveRepetitionCounter == 100
     }
@@ -146,7 +156,7 @@ internal class GameResultEvaluator(
     }
 
     override fun moveUndid(move: Move) {
-        // todo
+        moves.removeLast()
     }
 
     fun getGameResult(): GameResult? = result
@@ -176,6 +186,7 @@ internal class GameResultEvaluator(
     }
 
     private fun notifyGameFinished() {
+        println("Game finished: ${this.result}")
         this.result?.let { result -> resultObservers.forEach { it.gameFinished(result) } }
     }
 
