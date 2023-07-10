@@ -257,7 +257,72 @@ class DrawSpec extends BaseGameSpec {
         then:
         !game.isGameFinished()
     }
+
+    def "check mate has precedence over 50 move repetition"() {
+        given:
+        setupPieces("wk_a1 wp_a2 wp_b2 wq_c1 bk_a8 bp_a7 bp_b7 bq_a6")
+
+        and:
+        performMoves(
+                "c1 d1", "a6 a5",
+                "d1 e1", "a5 a6",
+                "e1 f1", "a6 a5",
+                "f1 g1", "a5 a6",
+                "g1 h1", "a6 a5",
+                "h1 h2", "a5 a6",
+                "h2 g2", "a6 a5",
+                "g2 f2", "a5 a6",
+                "f2 e2", "a6 a5",
+                "e2 d2", "a5 a6", // 10
+                "d2 c2", "a6 a5",
+                "c2 c3", "a5 a6",
+                "c3 d3", "a6 a5",
+                "d3 e3", "a5 a6",
+                "e3 f3", "a6 a5",
+                "f3 g3", "a5 a6",
+                "g3 h3", "a6 a5",
+                "h3 h4", "a5 a6",
+                "h4 g4", "a6 a5",
+                "g4 f4", "a5 a6", // 20
+                "f4 e4", "a6 a5",
+                "e4 d4", "a5 a6",
+                "d4 c4", "a6 a5",
+                "c4 c5", "a5 a6",
+                "c5 d5", "a6 a5",
+                "d5 e5", "a5 a6",
+                "e5 f5", "a6 a5",
+                "f5 g5", "a5 a6",
+                "g5 h5", "a6 a5",
+                "h5 h6", "a5 a6", // 30
+                "h6 g6", "a6 a5",
+                "g6 f6", "a5 a6",
+                "f6 e6", "a6 a5",
+                "e6 d6", "a5 a6",
+                "d6 c6", "a6 a5",
+                "c6 c7", "a5 a6",
+                "c7 d7", "a6 a5",
+                "d7 e7", "a5 a6",
+                "e7 f7", "a6 a5",
+                "f7 g7", "a5 a6", // 40
+                "g7 h7", "a6 a5",
+                "h7 h6", "a5 a6",
+                "h6 g6", "a6 a5",
+                "g6 f6", "a5 a6",
+                "f6 e6", "a6 a5",
+                "e6 d6", "a5 a6",
+                "d6 c6", "a6 a5",
+                "c6 c5", "a5 a6",
+                "c5 d5", "a6 c6",
+                "d5 e5",  // 50
+        )
+
+        when: // 50th move, but check mate
+        performMove("c6 c1")
+
+        then:
+        game.isGameFinished()
+        game.getResult() == new GameResult(Result.BLACK_PLAYER_WON, ResultReason.CHECK_MATE)
+    }
 }
-// todo mate has precedence
 // todo undo actions including those resetting the counter
 // count moves every time?
