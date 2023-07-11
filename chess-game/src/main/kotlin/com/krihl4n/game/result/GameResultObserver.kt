@@ -1,4 +1,4 @@
-package com.krihl4n.game
+package com.krihl4n.game.result
 
 interface GameResultObserver {
 

@@ -7,6 +7,7 @@ import com.krihl4n.api.dto.FieldsOccupationMapper
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.PieceSetup
+import com.krihl4n.game.result.GameResultEvaluator
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.model.Color

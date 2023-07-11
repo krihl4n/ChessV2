@@ -1,9 +1,9 @@
 package com.krihl4n
 
 import com.krihl4n.game.GameMode
-import com.krihl4n.game.GameResult
-import com.krihl4n.game.Result
-import com.krihl4n.game.ResultReason
+import com.krihl4n.game.result.GameResult
+import com.krihl4n.game.result.Result
+import com.krihl4n.game.result.ResultReason
 
 class DrawSpec extends BaseGameSpec {
 

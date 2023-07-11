@@ -6,7 +6,9 @@ import com.krihl4n.api.dto.*
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.game.*
 import com.krihl4n.game.Game
-import com.krihl4n.game.GameResultEvaluator
+import com.krihl4n.game.result.GameResult
+import com.krihl4n.game.result.GameResultEvaluator
+import com.krihl4n.game.result.GameResultObserver
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.moveCommands.PiecePositionUpdateListener

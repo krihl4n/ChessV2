@@ -1,11 +1,11 @@
 package com.krihl4n
 
 import com.krihl4n.game.GameMode
-import com.krihl4n.game.GameResult
+import com.krihl4n.game.result.GameResult
 
-import static com.krihl4n.game.Result.BLACK_PLAYER_WON
-import static com.krihl4n.game.Result.WHITE_PLAYER_WON
-import static com.krihl4n.game.ResultReason.PLAYER_RESIGNED
+import static com.krihl4n.game.result.Result.BLACK_PLAYER_WON
+import static com.krihl4n.game.result.Result.WHITE_PLAYER_WON
+import static com.krihl4n.game.result.ResultReason.PLAYER_RESIGNED
 
 class GameEndingCommandsSpec extends BaseGameSpec {
 

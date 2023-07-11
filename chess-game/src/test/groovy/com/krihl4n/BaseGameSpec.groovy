@@ -3,7 +3,7 @@ package com.krihl4n
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.game.Game
 import com.krihl4n.game.GameMode
-import com.krihl4n.game.GameResultEvaluator
+import com.krihl4n.game.result.GameResultEvaluator
 import com.krihl4n.guards.CastlingGuard
 import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.guards.EnPassantGuard
