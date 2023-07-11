@@ -30,30 +30,24 @@ internal class GameResultEvaluator(
 
     override fun movePerformed(move: Move) {
         if (checkMate.occurs(move.piece.color.opposite())) {
-            this.result = move.piece.color.let {
-                if (it == WHITE) {
-                    GameResult(WHITE_PLAYER_WON, CHECK_MATE)
-                } else {
-                    GameResult(BLACK_PLAYER_WON, CHECK_MATE)
-                }
+            if (move.piece.color == WHITE) {
+                gameFinished(WHITE_PLAYER_WON, CHECK_MATE)
+            } else {
+                gameFinished(BLACK_PLAYER_WON, CHECK_MATE)
             }
-            notifyGameFinished()
             return
         }
 
         if (stalemate.occurs(move.piece.color.opposite())) {
-            this.result = GameResult(DRAW, STALEMATE)
-            notifyGameFinished()
+            gameFinished(DRAW, STALEMATE)
             return
         }
         if (insufficientMaterial.occurs()) {
-            this.result = GameResult(DRAW, INSUFFICIENT_MATERIAL)
-            notifyGameFinished()
+            gameFinished(DRAW, INSUFFICIENT_MATERIAL)
             return
         }
         if (fiftyMoveRepetition.occurs(move)) {
-            this.result = GameResult(DRAW, REPETITION)
-            notifyGameFinished()
+            gameFinished(DRAW, REPETITION)
             return
         }
     }
@@ -74,6 +68,11 @@ internal class GameResultEvaluator(
 
     fun registerObserver(observer: GameResultObserver) {
         resultObservers.add(observer)
+    }
+
+    private fun gameFinished(result: Result, reason: ResultReason) {
+        this.result = GameResult(result, reason)
+        notifyGameFinished()
     }
 
     private fun notifyGameFinished() {
