@@ -2,13 +2,14 @@ package com.krihl4n.game.result
 
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
-import com.krihl4n.game.result.Result.*
-import com.krihl4n.game.result.ResultReason.*
+import com.krihl4n.game.positionEvaluators.*
+import com.krihl4n.game.positionEvaluators.CheckEvaluator
 import com.krihl4n.game.positionEvaluators.CheckMateEvaluator
 import com.krihl4n.game.positionEvaluators.FiftyMoveRepetitionEvaluator
 import com.krihl4n.game.positionEvaluators.InsufficientMaterialEvaluator
 import com.krihl4n.game.positionEvaluators.StalemateEvaluator
-import com.krihl4n.game.positionEvaluators.CheckEvaluator
+import com.krihl4n.game.result.Result.*
+import com.krihl4n.game.result.ResultReason.*
 import com.krihl4n.model.*
 import com.krihl4n.model.Color.*
 import com.krihl4n.model.Move
@@ -21,10 +22,10 @@ internal class FinishedGameEvaluator(
 ) : MoveObserver {
 
     private val insufficientMaterial = InsufficientMaterialEvaluator(positionTracker)
-    private val checkMate =
-        CheckMateEvaluator(positionTracker, checkEvaluator, moveValidator)
+    private val checkMate = CheckMateEvaluator(positionTracker, checkEvaluator, moveValidator)
     private val fiftyMoveRepetition = FiftyMoveRepetitionEvaluator()
     private val stalemate = StalemateEvaluator(positionTracker, moveValidator)
+    private val threefoldRepetition = ThreefoldRepEvaluator(positionTracker, moveValidator)
 
     private val resultObservers = mutableListOf<GameResultObserver>()
     private var result: GameResult? = null
@@ -51,10 +52,15 @@ internal class FinishedGameEvaluator(
             gameFinished(DRAW, FIFTY_MOVE_REPETITION)
             return
         }
+        if (threefoldRepetition.occurs()) {
+            gameFinished(DRAW, THREEFOLD_REPETITION)
+            return
+        }
     }
 
     override fun moveUndid(move: Move) {
         fiftyMoveRepetition.moveUndid()
+        threefoldRepetition.moveUndid()
     }
 
     fun getGameResult(): GameResult? = result

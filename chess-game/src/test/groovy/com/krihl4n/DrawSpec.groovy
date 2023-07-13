@@ -476,9 +476,9 @@ class DrawSpec extends BaseGameSpec {
         and:
         performMoves(
                 "g1 f3", "g8 f6",
-                "f3 g1", "g6 g8",
+                "f3 g1", "f6 g8",
                 "g1 f3", "g8 f6",
-                "f3 g1", "g6 g8")
+                "f3 g1", "f6 g8")
 
         when:
         performMove("g1 f3")
