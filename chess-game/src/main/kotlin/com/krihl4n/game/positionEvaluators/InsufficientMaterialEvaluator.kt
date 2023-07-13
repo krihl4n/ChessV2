@@ -1,11 +1,11 @@
-package com.krihl4n.game.result.checkers
+package com.krihl4n.game.positionEvaluators
 
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Color
 import com.krihl4n.model.Piece
 import com.krihl4n.model.Type
 
-internal class InsufficientMaterialChecker(private val positionTracker: PositionTracker) {
+internal class InsufficientMaterialEvaluator(private val positionTracker: PositionTracker) {
 
     fun occurs(): Boolean {
         val piecesLeft = positionTracker.getPositionsOfAllPieces().map { it.value }

@@ -7,14 +7,14 @@ import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.game.*
 import com.krihl4n.game.Game
 import com.krihl4n.game.result.GameResult
-import com.krihl4n.game.result.GameResultEvaluator
+import com.krihl4n.game.result.FinishedGameEvaluator
 import com.krihl4n.game.result.GameResultObserver
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.moveCommands.PiecePositionUpdateListener
-import com.krihl4n.guards.CastlingGuard
-import com.krihl4n.guards.CheckEvaluator
-import com.krihl4n.guards.EnPassantGuard
+import com.krihl4n.game.guards.CastlingGuard
+import com.krihl4n.game.positionEvaluators.CheckEvaluator
+import com.krihl4n.game.guards.EnPassantGuard
 import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
@@ -32,13 +32,13 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
     private val commandFactory = CommandFactory(positionTracker)
     private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
-    private val gameResultEvaluator = GameResultEvaluator(positionTracker, moveValidator, checkEvaluator)
-    private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResultEvaluator)
+    private val finishedGameEvaluator = FinishedGameEvaluator(positionTracker, moveValidator, checkEvaluator)
+    private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker, finishedGameEvaluator)
 
     init {
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
         commandCoordinator.registerObserver(this.castlingGuard)
-        commandCoordinator.registerObserver(this.gameResultEvaluator)
+        commandCoordinator.registerObserver(this.finishedGameEvaluator)
     }
 
     override fun initialize() {
@@ -106,7 +106,7 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
             }
         })
 
-        gameResultEvaluator.registerObserver(object : GameResultObserver {
+        finishedGameEvaluator.registerObserver(object : GameResultObserver {
             override fun gameFinished(result: GameResult) {
                 listener.gameFinished(
                     gameId, GameResultDto(

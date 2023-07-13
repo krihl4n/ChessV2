@@ -4,26 +4,27 @@ import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.game.result.Result.*
 import com.krihl4n.game.result.ResultReason.*
-import com.krihl4n.game.result.checkers.CheckMateChecker
-import com.krihl4n.game.result.checkers.FiftyMoveRepetitionChecker
-import com.krihl4n.game.result.checkers.InsufficientMaterialChecker
-import com.krihl4n.game.result.checkers.StalemateChecker
-import com.krihl4n.guards.CheckEvaluator
+import com.krihl4n.game.positionEvaluators.CheckMateEvaluator
+import com.krihl4n.game.positionEvaluators.FiftyMoveRepetitionEvaluator
+import com.krihl4n.game.positionEvaluators.InsufficientMaterialEvaluator
+import com.krihl4n.game.positionEvaluators.StalemateEvaluator
+import com.krihl4n.game.positionEvaluators.CheckEvaluator
 import com.krihl4n.model.*
 import com.krihl4n.model.Color.*
 import com.krihl4n.model.Move
 import com.krihl4n.moveCommands.MoveObserver
 
-internal class GameResultEvaluator(
+internal class FinishedGameEvaluator(
     positionTracker: PositionTracker,
     moveValidator: MoveValidator,
     checkEvaluator: CheckEvaluator
 ) : MoveObserver {
 
-    private val insufficientMaterial = InsufficientMaterialChecker(positionTracker)
-    private val checkMate = CheckMateChecker(positionTracker, checkEvaluator, moveValidator)
-    private val fiftyMoveRepetition = FiftyMoveRepetitionChecker()
-    private val stalemate = StalemateChecker(positionTracker, moveValidator)
+    private val insufficientMaterial = InsufficientMaterialEvaluator(positionTracker)
+    private val checkMate =
+        CheckMateEvaluator(positionTracker, checkEvaluator, moveValidator)
+    private val fiftyMoveRepetition = FiftyMoveRepetitionEvaluator()
+    private val stalemate = StalemateEvaluator(positionTracker, moveValidator)
 
     private val resultObservers = mutableListOf<GameResultObserver>()
     private var result: GameResult? = null
@@ -47,7 +48,7 @@ internal class GameResultEvaluator(
             return
         }
         if (fiftyMoveRepetition.occurs(move)) {
-            gameFinished(DRAW, REPETITION)
+            gameFinished(DRAW, FIFTY_MOVE_REPETITION)
             return
         }
     }

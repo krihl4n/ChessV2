@@ -1,4 +1,4 @@
-package com.krihl4n.guards
+package com.krihl4n.game.guards
 
 import com.krihl4n.PositionTracker
 import com.krihl4n.moveCommands.CommandCoordinator

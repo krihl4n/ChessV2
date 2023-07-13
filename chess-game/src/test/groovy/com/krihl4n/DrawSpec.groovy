@@ -119,7 +119,7 @@ class DrawSpec extends BaseGameSpec {
 
         then:
         game.isGameFinished()
-        game.getResult() == new GameResult(Result.DRAW, ResultReason.REPETITION)
+        game.getResult() == new GameResult(Result.DRAW, ResultReason.FIFTY_MOVE_REPETITION)
     }
 
     def "50 move repetition rule draw with pawn resetting the counter"() {
@@ -391,7 +391,7 @@ class DrawSpec extends BaseGameSpec {
 
         then:
         game.isGameFinished()
-        game.getResult() == new GameResult(Result.DRAW, ResultReason.REPETITION)
+        game.getResult() == new GameResult(Result.DRAW, ResultReason.FIFTY_MOVE_REPETITION)
     }
 
     def "50 move repetition rule draw with pawn undo"() {
@@ -461,6 +461,30 @@ class DrawSpec extends BaseGameSpec {
 
         then:
         game.isGameFinished()
-        game.getResult() == new GameResult(Result.DRAW, ResultReason.REPETITION)
+        game.getResult() == new GameResult(Result.DRAW, ResultReason.FIFTY_MOVE_REPETITION)
+    }
+
+    // threefold repetition
+    // position is reached at least three times in the same game.
+    // This repetition is only possible when all the pieces of the same size and color are occupying identical squares as they were before,
+    // and all the possible moves are also the same.
+
+    def "should end game with a draw when threefold repetition occurs"() {
+        given:
+        setupPieces("wn_g1 bn_g8")
+
+        and:
+        performMoves(
+                "g1 f3", "g8 f6",
+                "f3 g1", "g6 g8",
+                "g1 f3", "g8 f6",
+                "f3 g1", "g6 g8")
+
+        when:
+        performMove("g1 f3")
+
+        then:
+        game.isGameFinished()
+        game.getResult() == new GameResult(Result.DRAW, ResultReason.THREEFOLD_REPETITION)
     }
 }

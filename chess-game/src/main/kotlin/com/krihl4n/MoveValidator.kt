@@ -1,6 +1,6 @@
 package com.krihl4n
 
-import com.krihl4n.guards.CheckEvaluator
+import com.krihl4n.game.positionEvaluators.CheckEvaluator
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Move

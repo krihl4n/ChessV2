@@ -7,7 +7,7 @@ import com.krihl4n.api.dto.FieldsOccupationMapper
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PossibleMovesDto
 import com.krihl4n.api.pieceSetups.PieceSetup
-import com.krihl4n.game.result.GameResultEvaluator
+import com.krihl4n.game.result.FinishedGameEvaluator
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
 import com.krihl4n.model.Color
@@ -27,7 +27,7 @@ internal class GameControl(
     private val commandCoordinator: CommandCoordinator,
     private val commandFactory: CommandFactory,
     private val positionTracker: PositionTracker,
-    private val gameResultEvaluator: GameResultEvaluator
+    private val finishedGameEvaluator: FinishedGameEvaluator
 ) : GameCommand {
 
     private var movePolicy: MovePolicy = FreeMovePolicy()
@@ -114,7 +114,7 @@ internal class GameControl(
     override fun executeResign(playerId: String) {
         val resigningPlayerColor = playersManager.getPlayer(playerId)?.color
             ?: throw IllegalStateException("Unable to determine resigning player's color")
-        this.gameResultEvaluator.resign(resigningPlayerColor)
+        this.finishedGameEvaluator.resign(resigningPlayerColor)
     }
 
     override fun executePerformMove(move: MoveDto) =

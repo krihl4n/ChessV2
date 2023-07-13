@@ -1,11 +1,10 @@
-package com.krihl4n.game.result.checkers
+package com.krihl4n.game.positionEvaluators
 
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
-import com.krihl4n.guards.CheckEvaluator
 import com.krihl4n.model.Color
 
-internal class CheckMateChecker(private val positionTracker: PositionTracker, private val checkEvaluator: CheckEvaluator, private val moveValidator: MoveValidator) {
+internal class CheckMateEvaluator(private val positionTracker: PositionTracker, private val checkEvaluator: CheckEvaluator, private val moveValidator: MoveValidator) {
 
     fun occurs(color: Color): Boolean {
         return checkEvaluator.isKingChecked(color) && !isThereASavingMove(color)

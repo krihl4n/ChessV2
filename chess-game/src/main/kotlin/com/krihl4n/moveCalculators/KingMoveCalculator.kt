@@ -1,7 +1,7 @@
 package com.krihl4n.moveCalculators
 
 import com.krihl4n.PositionTracker
-import com.krihl4n.guards.CastlingGuard
+import com.krihl4n.game.guards.CastlingGuard
 import com.krihl4n.model.Field
 
 internal class KingMoveCalculator(private val castlingGuard: CastlingGuard) : MoveCalculator {

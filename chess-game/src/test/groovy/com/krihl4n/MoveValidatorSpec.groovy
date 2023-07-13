@@ -1,9 +1,9 @@
 package com.krihl4n
 
 import com.krihl4n.game.GameMode
-import com.krihl4n.guards.CastlingGuard
-import com.krihl4n.guards.CheckEvaluator
-import com.krihl4n.guards.EnPassantGuard
+import com.krihl4n.game.guards.CastlingGuard
+import com.krihl4n.game.positionEvaluators.CheckEvaluator
+import com.krihl4n.game.guards.EnPassantGuard
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCommands.CommandCoordinator

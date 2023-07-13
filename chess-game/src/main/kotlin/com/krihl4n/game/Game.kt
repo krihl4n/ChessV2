@@ -5,7 +5,7 @@ import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.pieceSetups.PieceSetup
 import com.krihl4n.game.result.GameResult
-import com.krihl4n.game.result.GameResultEvaluator
+import com.krihl4n.game.result.FinishedGameEvaluator
 import com.krihl4n.game.result.GameResultObserver
 import com.krihl4n.model.Color
 import com.krihl4n.model.GameStateUpdate
@@ -17,7 +17,7 @@ internal class Game(
     commandCoordinator: CommandCoordinator,
     commandFactory: CommandFactory,
     positionTracker: PositionTracker,
-    private val gameResultEvaluator: GameResultEvaluator
+    private val finishedGameEvaluator: FinishedGameEvaluator
 ) : StateHolder, GameResultObserver {
 
     private var gameState: State = GameState.UNINITIALIZED
@@ -28,11 +28,11 @@ internal class Game(
         commandCoordinator,
         commandFactory,
         positionTracker,
-        gameResultEvaluator
+        finishedGameEvaluator
     )
 
     init {
-        gameResultEvaluator.registerObserver(this)
+        finishedGameEvaluator.registerObserver(this)
     }
 
     override fun setState(state: State) {
@@ -68,7 +68,7 @@ internal class Game(
 
     fun isGameFinished() = gameState == GameState.FINISHED // todo remove, used only in tests
 
-    fun getResult() = gameResultEvaluator.getGameResult()
+    fun getResult() = finishedGameEvaluator.getGameResult()
 
     fun getMode() = this.gameMode
 

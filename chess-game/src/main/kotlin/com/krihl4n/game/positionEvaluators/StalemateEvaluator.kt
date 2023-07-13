@@ -1,10 +1,10 @@
-package com.krihl4n.game.result.checkers
+package com.krihl4n.game.positionEvaluators
 
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Color
 
-internal class StalemateChecker(private val positionTracker: PositionTracker, private val moveValidator: MoveValidator) {
+internal class StalemateEvaluator(private val positionTracker: PositionTracker, private val moveValidator: MoveValidator) {
 
     fun occurs(color: Color) = noMoreValidMovesFor(color)
 

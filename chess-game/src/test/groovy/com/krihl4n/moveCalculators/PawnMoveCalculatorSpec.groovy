@@ -3,7 +3,7 @@ package com.krihl4n.moveCalculators
 import com.krihl4n.BaseSpec
 import com.krihl4n.PositionTracker
 import com.krihl4n.game.GameMode
-import com.krihl4n.guards.EnPassantGuard
+import com.krihl4n.game.guards.EnPassantGuard
 import com.krihl4n.moveCommands.CommandCoordinator
 import spock.lang.Subject
 

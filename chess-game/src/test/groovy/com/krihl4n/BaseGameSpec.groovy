@@ -3,10 +3,10 @@ package com.krihl4n
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.game.Game
 import com.krihl4n.game.GameMode
-import com.krihl4n.game.result.GameResultEvaluator
-import com.krihl4n.guards.CastlingGuard
-import com.krihl4n.guards.CheckEvaluator
-import com.krihl4n.guards.EnPassantGuard
+import com.krihl4n.game.result.FinishedGameEvaluator
+import com.krihl4n.game.guards.CastlingGuard
+import com.krihl4n.game.positionEvaluators.CheckEvaluator
+import com.krihl4n.game.guards.EnPassantGuard
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
@@ -23,7 +23,7 @@ class BaseGameSpec extends BaseSpec {
     Game game
     PositionTracker positionTracker
     CommandCoordinator commandCoordinator
-    GameResultEvaluator gameResult
+    FinishedGameEvaluator gameResult
 
     void setup() {
         setupTests(GameMode.TEST_MODE)
@@ -42,7 +42,7 @@ class BaseGameSpec extends BaseSpec {
                 checkGuard
         )
         CommandFactory commandFactory = new CommandFactory(positionTracker)
-        gameResult = new GameResultEvaluator(positionTracker, moveValidator, checkGuard)
+        gameResult = new FinishedGameEvaluator(positionTracker, moveValidator, checkGuard)
         game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResult)
         EnPassantGuard enPassantGuard = new EnPassantGuard(positionTracker, commandCoordinator)
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)

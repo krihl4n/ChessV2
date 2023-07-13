@@ -1,9 +1,9 @@
-package com.krihl4n.game.result.checkers
+package com.krihl4n.game.positionEvaluators
 
 import com.krihl4n.model.Move
 import com.krihl4n.model.Type
 
-internal class FiftyMoveRepetitionChecker {
+internal class FiftyMoveRepetitionEvaluator {
 
     private var moves = ArrayDeque<Move>()
 

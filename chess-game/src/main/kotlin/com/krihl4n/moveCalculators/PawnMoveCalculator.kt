@@ -1,7 +1,7 @@
 package com.krihl4n.moveCalculators
 
 import com.krihl4n.PositionTracker
-import com.krihl4n.guards.EnPassantGuard
+import com.krihl4n.game.guards.EnPassantGuard
 import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.File
