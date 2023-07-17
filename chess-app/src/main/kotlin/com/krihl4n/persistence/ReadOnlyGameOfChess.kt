@@ -11,6 +11,8 @@ open class ReadOnlyGameOfChess(private val delegate: GameOfChess) : GameOfChessQ
     override fun getColorAllowedToMove() = delegate.getColorAllowedToMove()
     override fun getFieldOccupationInfo() = delegate.getFieldOccupationInfo()
     override fun getPossibleMoves(field: String) = delegate.getPossibleMoves(field)
+    override fun getRecordedMoves() = delegate.getRecordedMoves()
+
     fun gameId() = delegate.gameId
     fun gameMode() = delegate.gameMode
 }

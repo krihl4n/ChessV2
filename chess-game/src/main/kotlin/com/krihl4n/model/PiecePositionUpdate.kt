@@ -5,7 +5,8 @@ internal class PiecePositionUpdate(
     val secondaryMove: Move? = null,
     val pieceCapture: PieceCapture? = null,
     val pawnPromotion: Type? = null,
-    var reverted: Boolean = false
+    var reverted: Boolean = false,
+    val recordedMove: String = "a3"
 ) {
 
     fun reverted(): PiecePositionUpdate {

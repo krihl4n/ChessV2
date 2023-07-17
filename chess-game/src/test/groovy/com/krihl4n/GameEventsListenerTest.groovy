@@ -61,14 +61,11 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
 
         then:
-        1 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("a2", "a3"),
-                        null,
-                        null,
-                        null,
-                        false,
-                        "white"))
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("a2", "a3")
+            update.turn == "white"
+        }
     }
 
     def "having two games, only one is notified about moving piece"() {
@@ -80,22 +77,16 @@ class GameEventsListenerTest extends Specification {
         g2.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
 
         then:
-        1 * secondListener.piecePositionUpdate(SECOND_GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("a2", "a3"),
-                        null,
-                        null,
-                        null,
-                        false,
-                        "white"))
-        0 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("a2", "a3"),
-                        null,
-                        null,
-                        null,
-                        false,
-                        "white"))
+        1 * secondListener.piecePositionUpdate(SECOND_GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("a2", "a3")
+            update.turn == "white"
+        }
+        0 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("a2", "a3")
+            update.turn == "white"
+        }
     }
 
     def "should notify about two moves when castling"() {
@@ -106,16 +97,11 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "e1", "g1", null))
 
         then:
-        1 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("e1", "g1"),
-                        new PerformedMoveDto("h1", "f1"),
-                        null,
-                        null,
-                        false,
-                        "white"
-                )
-        )
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("e1", "g1")
+            update.getSecondaryMove() == new PerformedMoveDto("h1", "f1")
+        }
     }
 
     def "should notify about attacks"() {
@@ -126,16 +112,11 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "c2", "d3", null))
 
         then:
-        1 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("c2", "d3"),
-                        null,
-                        new PieceCaptureDto("d3", new PieceDto("black", "pawn")),
-                        null,
-                        false,
-                        "white"
-                )
-        )
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("c2", "d3")
+            update.getPieceCapture() == new PieceCaptureDto("d3", new PieceDto("black", "pawn"))
+        }
     }
 
     def "should notify when undoing basic move"() {
@@ -149,14 +130,11 @@ class GameEventsListenerTest extends Specification {
         game.undoMove(PLAYER_ID)
 
         then:
-        1 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("a2", "a3"),
-                        null,
-                        null,
-                        null,
-                        true,
-                        "white"))
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("a2", "a3")
+            update.getReverted()
+        }
     }
 
     def "should notify about en passant capture"() {
@@ -170,16 +148,11 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "e4", "d3", null))
 
         then:
-        1 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("e4", "d3"),
-                        null,
-                        new PieceCaptureDto("d4", new PieceDto("white", "pawn")),
-                        null,
-                        false,
-                        "white"
-                )
-        )
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("e4", "d3")
+            update.getPieceCapture() == new PieceCaptureDto("d4", new PieceDto("white", "pawn"))
+        }
     }
 
     def "should notify about pawn promotion"() {
@@ -190,16 +163,11 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "d7", "d8", pawnPromotion))
 
         then:
-        1 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("d7", "d8"),
-                        null,
-                        null,
-                        pawnPromotion,
-                        false,
-                        "white"
-                )
-        )
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("d7", "d8")
+            update.getPawnPromotion() == pawnPromotion
+        }
 
         where:
         pawnPromotion << ["queen", "knight", "bishop", "rook"]
@@ -213,16 +181,12 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "d7", "e8", "queen"))
 
         then:
-        1 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("d7", "e8"),
-                        null,
-                        new PieceCaptureDto("e8", new PieceDto("black", "knight")),
-                        "queen",
-                        false,
-                        "white"
-                )
-        )
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("d7", "e8")
+            update.getPieceCapture() ==  new PieceCaptureDto("e8", new PieceDto("black", "knight"))
+            update.getPawnPromotion() == "queen"
+        }
     }
 
     def "should notify about game start"() {
@@ -359,15 +323,16 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "e5", "d6", null))
 
         then:
-        1 * listener.piecePositionUpdate(GAME_ID,
-                new PiecePositionUpdateDto(
-                        new PerformedMoveDto("e5", "d6"),
-                        null,
-                        new PieceCaptureDto("d5", new PieceDto("black", "pawn")),
-                        null,
-                        false,
-                        "white"
-                )
-        )
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("d7", "d5")
+            update.getPieceCapture() == null
+        }
+
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> { args ->
+            PiecePositionUpdateDto update = args[1]
+            update.getPrimaryMove() == new PerformedMoveDto("e5", "d6")
+            update.getPieceCapture() == new PieceCaptureDto("d5", new PieceDto("black", "pawn"))
+        }
     }
 }

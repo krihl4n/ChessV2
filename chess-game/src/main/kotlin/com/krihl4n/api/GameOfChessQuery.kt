@@ -12,4 +12,5 @@ interface GameOfChessQuery {
     fun getColorAllowedToMove(): String
     fun getFieldOccupationInfo(): List<FieldOccupationDto>
     fun getPossibleMoves(field: String): PossibleMovesDto
+    fun getRecordedMoves(): List<String>
 }

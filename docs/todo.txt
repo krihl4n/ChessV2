@@ -20,4 +20,4 @@ refresh while waiting for other player
 
 Uc8bFLRvYTCHJpF2
 
-undo move when game finished?
+undo move when game finished? should not be allowed

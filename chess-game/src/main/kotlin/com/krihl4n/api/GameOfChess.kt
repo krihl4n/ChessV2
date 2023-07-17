@@ -33,12 +33,14 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
     private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
     private val finishedGameEvaluator = FinishedGameEvaluator(positionTracker, moveValidator, checkEvaluator)
+    private val moveRecorder = MoveRecorder()
     private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker, finishedGameEvaluator)
 
     init {
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)
         commandCoordinator.registerObserver(this.castlingGuard)
         commandCoordinator.registerObserver(this.finishedGameEvaluator)
+        commandCoordinator.registerPiecePositionUpdateListener(this.moveRecorder)
     }
 
     override fun initialize() {
@@ -67,6 +69,8 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
     override fun getFieldOccupationInfo() = game.getFieldOccupationInfo()
 
     override fun getPossibleMoves(field: String) = game.getPossibleMoves(field)
+
+    override fun getRecordedMoves() = moveRecorder.getMoves()
 
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {

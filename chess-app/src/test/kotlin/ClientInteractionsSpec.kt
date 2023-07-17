@@ -6,7 +6,6 @@ import com.krihl4n.app.messages.GameInfoEvent
 import com.krihl4n.app.messages.JoinGameRequest
 import com.krihl4n.app.messages.RejoinGameRequest
 import com.krihl4n.app.messages.StartGameRequest
-import com.krihl4n.messages.*
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -139,7 +138,8 @@ class ClientInteractionsSpec : FunSpec({
             pieceCapture = null,
             pawnPromotion = null,
             reverted = false,
-            turn = BLACK
+            turn = BLACK,
+            recordedMove = "a3"
         )
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_1, expectedUpdate) }
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_2, expectedUpdate) }
