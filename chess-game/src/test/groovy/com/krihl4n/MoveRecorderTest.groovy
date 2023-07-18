@@ -31,16 +31,53 @@ class MoveRecorderTest extends Specification {
         return game
     }
 
-    def "should notify about basic move"() {
+    def "should notify about basic pawn move"() {
         given:
         def game = initGame()
 
         when:
         game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
+        game.move(new MoveDto(PLAYER_ID, "c2", "c4", null))
+        game.move(new MoveDto(PLAYER_ID, "b2", "b3", null))
+        game.move(new MoveDto(PLAYER_ID, "a7", "a6", null))
+        game.move(new MoveDto(PLAYER_ID, "b7", "b5", null))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
             moveIs("a3", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("c4", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("b3", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("a6", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("b5", it)
+        }
+    }
+
+    def "reverted move should has the same label"() {
+        given:
+        def game = initGame()
+
+        when:
+        game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
+        game.undoMove(PLAYER_ID)
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            PiecePositionUpdateDto update = it[1]
+            update.getRecordedMove() == "a3"
+            !update.getReverted()
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            PiecePositionUpdateDto update = it[1]
+            update.getRecordedMove() == "a3"
+            update.getReverted()
         }
     }
 

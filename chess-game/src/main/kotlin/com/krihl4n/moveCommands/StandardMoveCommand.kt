@@ -22,6 +22,6 @@ internal class StandardMoveCommand(
     }
 
     override fun getPiecePositionUpdate(): PiecePositionUpdate {
-        return PiecePositionUpdate(move)
+        return PiecePositionUpdate(move, recordedMove = move.to.token())
     }
 }
