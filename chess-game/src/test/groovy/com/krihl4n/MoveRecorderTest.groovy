@@ -81,6 +81,51 @@ class MoveRecorderTest extends Specification {
         }
     }
 
+    def "should notify about basic figure moves"() {
+        given:
+        def game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white bishop",
+                        "b1 white knight",
+                        "c1 white rook",
+                        "d1 white queen",
+                        "e1 white king",
+                        "a8 black bishop",
+                        "b8 black knight",
+                        "c8 black rook",
+                        "d8 black queen",
+                        "e8 black king",
+                ]
+            }
+        })
+
+        when:
+        game.move(new MoveDto(PLAYER_ID, "a1", "b2", null))
+        game.move(new MoveDto(PLAYER_ID, "b1", "a3", null))
+        game.move(new MoveDto(PLAYER_ID, "c1", "c2", null))
+        game.move(new MoveDto(PLAYER_ID, "d1", "d2", null))
+        game.move(new MoveDto(PLAYER_ID, "e1", "e2", null))
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Bb2", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Na3", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Rc2", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Qd2", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Ke2", it)
+        }
+    }
+
 //
 //    def "should notify about two moves when castling"() {
 //        given:
