@@ -14,7 +14,9 @@ internal object MoveLabelGenerator {
             Type.QUEEN -> "Q"
             Type.KING -> "K"
         }
-        val attack = if (move.isAttack) {
+        val attack = if (move.isAttack && move.piece.type == Type.PAWN) {
+            move.from.rank.token.lowercase() + "x"
+        } else if (move.isAttack) {
             "x"
         } else {
             ""
