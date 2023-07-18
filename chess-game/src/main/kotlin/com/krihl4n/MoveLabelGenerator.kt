@@ -6,7 +6,7 @@ import com.krihl4n.model.Type
 internal object MoveLabelGenerator {
 
     fun getLabel(move: Move): String {
-        val pieceAbbreviation = when(move.piece.type) {
+        val piece = when (move.piece.type) {
             Type.PAWN -> ""
             Type.KNIGHT -> "N"
             Type.BISHOP -> "B"
@@ -14,6 +14,12 @@ internal object MoveLabelGenerator {
             Type.QUEEN -> "Q"
             Type.KING -> "K"
         }
-        return pieceAbbreviation + move.to.token().lowercase()
+        val attack = if (move.isAttack) {
+            "x"
+        } else {
+            ""
+        }
+        val destination = move.to.token().lowercase()
+        return piece + attack + destination
     }
 }

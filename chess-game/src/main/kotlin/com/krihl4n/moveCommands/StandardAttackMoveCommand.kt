@@ -1,6 +1,7 @@
 package com.krihl4n.moveCommands
 
 import com.krihl4n.CaptureTracker
+import com.krihl4n.MoveLabelGenerator
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Move
 import com.krihl4n.model.PieceCapture
@@ -24,7 +25,8 @@ internal class StandardAttackMoveCommand(
 
         update = PiecePositionUpdate(
             primaryMove = move,
-            pieceCapture = PieceCapture(move.to, capturedPiece)
+            pieceCapture = PieceCapture(move.to, capturedPiece),
+            recordedMove = MoveLabelGenerator.getLabel(move)
         )
     }
 

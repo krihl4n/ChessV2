@@ -126,6 +126,61 @@ class MoveRecorderTest extends Specification {
         }
     }
 
+    def "should notify about basic figure attacks"() {
+        given:
+        def game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white bishop",
+                        "b1 white knight",
+                        "c1 white rook",
+                        "d1 white queen",
+                        "f1 white king",
+                        "a8 black bishop",
+                        "b8 black knight",
+                        "c8 black rook",
+                        "d8 black queen",
+                        "e8 black king",
+                        "b2 black pawn",
+                        "a3 black pawn",
+                        "c2 black pawn",
+                        "d2 black pawn",
+                        "f2 black pawn",
+                ]
+            }
+        })
+
+        when:
+        game.move(new MoveDto(PLAYER_ID, "a1", "b2", null))
+        game.move(new MoveDto(PLAYER_ID, "b1", "a3", null))
+        game.move(new MoveDto(PLAYER_ID, "c1", "c2", null))
+        game.move(new MoveDto(PLAYER_ID, "d1", "d2", null))
+        game.move(new MoveDto(PLAYER_ID, "f1", "f2", null))
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Bxb2", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Nxa3", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Rxc2", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Qxd2", it)
+        }
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Kxf2", it)
+        }
+    }
+
+    /*
+    In a few cases, a more detailed representation is needed to resolve ambiguity; if so, the piece's file letter,
+    numerical rank, or the exact square is inserted after the moving piece's name (in that order of preference).
+    Thus, Nge2 specifies that the knight originally on the g-file moves to e2.
+     */
 //
 //    def "should notify about two moves when castling"() {
 //        given:
