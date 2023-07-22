@@ -1,5 +1,6 @@
 package com.krihl4n.moveCommands
 
+import com.krihl4n.MoveLabelGenerator
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.*
 
@@ -28,7 +29,8 @@ internal class EnPassantAttackMoveCommand(
             pieceCapture = PieceCapture(
                 field = findAttackedPawnLocation(),
                 piece = Piece(move.piece.color.opposite(), Type.PAWN)
-            )
+            ),
+            recordedMove = MoveLabelGenerator.getLabel(move)
         )
     }
 

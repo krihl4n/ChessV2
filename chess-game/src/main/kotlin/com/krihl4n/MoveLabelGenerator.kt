@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.model.File
 import com.krihl4n.model.Move
 import com.krihl4n.model.Type
 
@@ -15,7 +16,7 @@ internal object MoveLabelGenerator {
             Type.KING -> "K"
         }
         val attack = if (move.isAttack && move.piece.type == Type.PAWN) {
-            move.from.rank.token.lowercase() + "x"
+            move.from.file.token.lowercase() + "x"
         } else if (move.isAttack) {
             "x"
         } else {
@@ -23,5 +24,13 @@ internal object MoveLabelGenerator {
         }
         val destination = move.to.token().lowercase()
         return piece + attack + destination
+    }
+
+    fun getLabelForCastling(move: Move): String {
+        return when (move.to.file) {
+            File("g") -> "O-O"
+            File("c") -> "O-O-O"
+            else -> throw RuntimeException("Not castling")
+        }
     }
 }

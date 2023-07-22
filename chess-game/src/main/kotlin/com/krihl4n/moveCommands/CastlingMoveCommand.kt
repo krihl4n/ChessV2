@@ -1,5 +1,6 @@
 package com.krihl4n.moveCommands
 
+import com.krihl4n.MoveLabelGenerator
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.*
 import com.krihl4n.model.Field
@@ -23,7 +24,11 @@ internal class CastlingMoveCommand(
 
         positionTracker.movePiece(rookFrom, rookTo)
 
-        update = PiecePositionUpdate(move, Move(Piece(move.piece.color, Type.ROOK), rookFrom, rookTo, false))
+        update = PiecePositionUpdate(
+            primaryMove = move,
+            secondaryMove = Move(Piece(move.piece.color, Type.ROOK), rookFrom, rookTo, false),
+            recordedMove = MoveLabelGenerator.getLabelForCastling(move)
+        )
     }
 
     override fun undo() {

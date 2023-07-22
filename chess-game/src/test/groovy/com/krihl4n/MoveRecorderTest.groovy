@@ -11,9 +11,10 @@ class MoveRecorderTest extends Specification {
     public static final String TEST_MODE = "test_mode"
     public static final String PLAYER_ID = "player"
 
-    GameEventListener listener = Mock(GameEventListener)
+    private GameEventListener listener = Mock(GameEventListener)
 
-    String GAME_ID = "game-id"
+    private String GAME_ID = "game-id"
+    private GameOfChess game
 
     void setup() {
 
@@ -33,14 +34,14 @@ class MoveRecorderTest extends Specification {
 
     def "should notify about basic pawn move"() {
         given:
-        def game = initGame()
+        this.game = initGame()
 
         when:
-        game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
-        game.move(new MoveDto(PLAYER_ID, "c2", "c4", null))
-        game.move(new MoveDto(PLAYER_ID, "b2", "b3", null))
-        game.move(new MoveDto(PLAYER_ID, "a7", "a6", null))
-        game.move(new MoveDto(PLAYER_ID, "b7", "b5", null))
+        move( "a2", "a3")
+        move( "c2", "c4")
+        move( "b2", "b3")
+        move( "a7", "a6")
+        move( "b7", "b5")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
@@ -62,10 +63,10 @@ class MoveRecorderTest extends Specification {
 
     def "reverted move should has the same label"() {
         given:
-        def game = initGame()
+        this.game = initGame()
 
         when:
-        game.move(new MoveDto(PLAYER_ID, "a2", "a3", null))
+        move("a2", "a3")
         game.undoMove(PLAYER_ID)
 
         then:
@@ -83,7 +84,7 @@ class MoveRecorderTest extends Specification {
 
     def "should notify about basic figure moves"() {
         given:
-        def game = initGame(new PieceSetup() {
+        this.game = initGame(new PieceSetup() {
             @Override
             List<String> get() {
                 return [
@@ -102,11 +103,11 @@ class MoveRecorderTest extends Specification {
         })
 
         when:
-        game.move(new MoveDto(PLAYER_ID, "a1", "b2", null))
-        game.move(new MoveDto(PLAYER_ID, "b1", "a3", null))
-        game.move(new MoveDto(PLAYER_ID, "c1", "c2", null))
-        game.move(new MoveDto(PLAYER_ID, "d1", "d2", null))
-        game.move(new MoveDto(PLAYER_ID, "e1", "e2", null))
+        move("a1", "b2")
+        move("b1", "a3")
+        move("c1", "c2")
+        move("d1", "d2")
+        move("e1", "e2")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
@@ -128,7 +129,7 @@ class MoveRecorderTest extends Specification {
 
     def "should notify about basic figure attacks"() {
         given:
-        def game = initGame(new PieceSetup() {
+        this.game = initGame(new PieceSetup() {
             @Override
             List<String> get() {
                 return [
@@ -152,11 +153,11 @@ class MoveRecorderTest extends Specification {
         })
 
         when:
-        game.move(new MoveDto(PLAYER_ID, "a1", "b2", null))
-        game.move(new MoveDto(PLAYER_ID, "b1", "a3", null))
-        game.move(new MoveDto(PLAYER_ID, "c1", "c2", null))
-        game.move(new MoveDto(PLAYER_ID, "d1", "d2", null))
-        game.move(new MoveDto(PLAYER_ID, "f1", "f2", null))
+        move("a1", "b2")
+        move("b1", "a3")
+        move("c1", "c2")
+        move("d1", "d2")
+        move("f1", "f2")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
@@ -178,7 +179,7 @@ class MoveRecorderTest extends Specification {
 
     def "pawn attack"() {
         given:
-        def game = initGame(new PieceSetup() {
+        this.game = initGame(new PieceSetup() {
             @Override
             List<String> get() {
                 return [
@@ -189,7 +190,7 @@ class MoveRecorderTest extends Specification {
         })
 
         when:
-        game.move(new MoveDto(PLAYER_ID, "a2", "b3", null))
+        move("a2", "b3")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
@@ -199,7 +200,7 @@ class MoveRecorderTest extends Specification {
 
     def "en passant attack"() {
         given:
-        def game = initGame(new PieceSetup() {
+        this.game = initGame(new PieceSetup() {
             @Override
             List<String> get() {
                 return [
@@ -214,8 +215,8 @@ class MoveRecorderTest extends Specification {
         })
 
         when:
-        game.move(new MoveDto(PLAYER_ID, "b7", "b5", null))
-        game.move(new MoveDto(PLAYER_ID, "a5", "b6", null))
+        move("b7", "b5")
+        move("a5", "b6")
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
@@ -226,10 +227,63 @@ class MoveRecorderTest extends Specification {
         }
     }
 
-    // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Disambiguating_moves
+    def "king side castling"() {
+        given:
+        this.game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white rook",
+                        "h1 white rook",
+                        "e1 white king",
+                        "a8 black rook",
+                        "h8 black rook",
+                        "e8 black king",
+                ]
+            }
+        })
+
+        when:
+        move("e1", "g1")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("O-O", it)
+        }
+    }
+
+    def "queen side castling"() {
+        given:
+        this.game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white rook",
+                        "h1 white rook",
+                        "e1 white king",
+                        "a8 black rook",
+                        "h8 black rook",
+                        "e8 black king",
+                ]
+            }
+        })
+
+        when:
+        move("e1", "c1")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("O-O-O", it)
+        }
+    }
+// https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Disambiguating_moves
+
+    private void move(String from, String to) {
+        this.game.move(new MoveDto(PLAYER_ID, from, to, null))
+    }
 
     private void moveIs(move, args) {
         PiecePositionUpdateDto update = args[1]
-        update.getRecordedMove() == move
+        assert update.getRecordedMove() == move
     }
 }
