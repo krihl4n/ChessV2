@@ -23,7 +23,8 @@ internal object MoveLabelGenerator {
             ""
         }
         val destination = move.to.token().lowercase()
-        return piece + attack + destination
+        val pawnPromotion = move.pawnPromotion?.let { "Q" } ?: ""
+        return piece + attack + destination + pawnPromotion
     }
 
     fun getLabelForCastling(move: Move): String {

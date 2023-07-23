@@ -276,6 +276,33 @@ class MoveRecorderTest extends Specification {
             moveIs("O-O-O", it)
         }
     }
+
+    def "pawn promotion"() {
+        given:
+        this.game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white rook",
+                        "h1 white rook",
+                        "e1 white king",
+                        "a8 black rook",
+                        "h8 black rook",
+                        "e8 black king",
+                        "b7 white pawn"
+                ]
+            }
+        })
+
+        when:
+        this.game.move(new MoveDto(PLAYER_ID, "b7", "b8", "queen"))
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("b8Q", it)
+        }
+    }
+
 // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Disambiguating_moves
 
     private void move(String from, String to) {

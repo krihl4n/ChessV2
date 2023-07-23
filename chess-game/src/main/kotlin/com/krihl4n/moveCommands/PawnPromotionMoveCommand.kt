@@ -1,6 +1,7 @@
 package com.krihl4n.moveCommands
 
 import com.krihl4n.CaptureTracker
+import com.krihl4n.MoveLabelGenerator
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.*
 import com.krihl4n.model.Move
@@ -49,7 +50,8 @@ internal class PawnPromotionMoveCommand(
         return PiecePositionUpdate(
             primaryMove = move,
             pawnPromotion = move.pawnPromotion,
-            pieceCapture = killedPiece?.let { PieceCapture(move.to, it) }
+            pieceCapture = killedPiece?.let { PieceCapture(move.to, it) },
+            recordedMove = MoveLabelGenerator.getLabel(move)
         )
     }
 }
