@@ -19,6 +19,7 @@ import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
+import com.krihl4n.moveCommands.MoveLabelGenerator
 import com.krihl4n.players.Player
 
 class GameOfChess(val gameId: String, val gameMode: String, private val pieceSetup: PieceSetup?): GameOfChessCommand, GameOfChessQuery {
@@ -29,7 +30,7 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
     private val moveCalculator = PieceMoveCalculator(positionTracker, calculatorFactory)
     private val checkEvaluator = CheckEvaluator(positionTracker, moveCalculator)
     private val moveValidator = MoveValidator(moveCalculator, checkEvaluator)
-    private val commandFactory = CommandFactory(positionTracker)
+    private val commandFactory = CommandFactory(positionTracker, MoveLabelGenerator(checkEvaluator))
     private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
     private val finishedGameEvaluator = FinishedGameEvaluator(positionTracker, moveValidator, checkEvaluator)

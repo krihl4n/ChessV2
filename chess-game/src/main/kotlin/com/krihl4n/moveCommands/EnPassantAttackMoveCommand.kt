@@ -1,12 +1,12 @@
 package com.krihl4n.moveCommands
 
-import com.krihl4n.MoveLabelGenerator
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.*
 
 internal class EnPassantAttackMoveCommand(
     private val move: Move,
-    private val positionTracker: PositionTracker
+    private val positionTracker: PositionTracker,
+    private val labelGenerator: MoveLabelGenerator
 ) : MoveCommand {
 
     override fun execute() {
@@ -30,7 +30,7 @@ internal class EnPassantAttackMoveCommand(
                 field = findAttackedPawnLocation(),
                 piece = Piece(move.piece.color.opposite(), Type.PAWN)
             ),
-            recordedMove = MoveLabelGenerator.getLabel(move)
+            recordedMove = labelGenerator.getLabel(move)
         )
     }
 

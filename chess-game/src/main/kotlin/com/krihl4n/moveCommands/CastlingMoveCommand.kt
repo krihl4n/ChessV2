@@ -1,6 +1,5 @@
 package com.krihl4n.moveCommands
 
-import com.krihl4n.MoveLabelGenerator
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.*
 import com.krihl4n.model.Field
@@ -11,6 +10,7 @@ import com.krihl4n.model.PiecePositionUpdate
 internal class CastlingMoveCommand(
     private val move: Move,
     private val positionTracker: PositionTracker,
+    private val labelGenerator: MoveLabelGenerator
 ) : MoveCommand {
 
     private var update: PiecePositionUpdate? = null
@@ -27,7 +27,7 @@ internal class CastlingMoveCommand(
         update = PiecePositionUpdate(
             primaryMove = move,
             secondaryMove = Move(Piece(move.piece.color, Type.ROOK), rookFrom, rookTo, false),
-            recordedMove = MoveLabelGenerator.getLabelForCastling(move)
+            recordedMove = labelGenerator.getLabelForCastling(move)
         )
     }
 

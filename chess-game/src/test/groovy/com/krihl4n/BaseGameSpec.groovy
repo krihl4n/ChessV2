@@ -15,6 +15,7 @@ import com.krihl4n.moveCalculators.CalculatorFactory
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCommands.CommandCoordinator
 import com.krihl4n.moveCommands.CommandFactory
+import com.krihl4n.moveCommands.MoveLabelGenerator
 import spock.lang.Subject
 
 class BaseGameSpec extends BaseSpec {
@@ -36,13 +37,13 @@ class BaseGameSpec extends BaseSpec {
         commandCoordinator = new CommandCoordinator(mode)
         commandCoordinator.registerObserver(castlingGuard)
         PieceMoveCalculator pieceMoveCalculator = new PieceMoveCalculator(positionTracker, calculatorFactory)
-        CheckEvaluator checkGuard = new CheckEvaluator(positionTracker, pieceMoveCalculator)
+        CheckEvaluator checkEvaluator = new CheckEvaluator(positionTracker, pieceMoveCalculator)
         MoveValidator moveValidator = new MoveValidator(
                 pieceMoveCalculator,
-                checkGuard
+                checkEvaluator
         )
-        CommandFactory commandFactory = new CommandFactory(positionTracker)
-        gameResult = new FinishedGameEvaluator(positionTracker, moveValidator, checkGuard)
+        CommandFactory commandFactory = new CommandFactory(positionTracker, new MoveLabelGenerator(checkEvaluator))
+        gameResult = new FinishedGameEvaluator(positionTracker, moveValidator, checkEvaluator)
         game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResult)
         EnPassantGuard enPassantGuard = new EnPassantGuard(positionTracker, commandCoordinator)
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)

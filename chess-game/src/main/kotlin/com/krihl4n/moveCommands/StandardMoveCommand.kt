@@ -1,13 +1,13 @@
 package com.krihl4n.moveCommands
 
-import com.krihl4n.MoveLabelGenerator
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Move
 import com.krihl4n.model.PiecePositionUpdate
 
 internal class StandardMoveCommand(
     private val move: Move,
-    private val positionTracker: PositionTracker
+    private val positionTracker: PositionTracker,
+    private val labelGenerator: MoveLabelGenerator
     ) : MoveCommand {
 
     override fun execute() {
@@ -23,6 +23,6 @@ internal class StandardMoveCommand(
     }
 
     override fun getPiecePositionUpdate(): PiecePositionUpdate {
-        return PiecePositionUpdate(move, recordedMove = MoveLabelGenerator.getLabel(move))
+        return PiecePositionUpdate(move, recordedMove = labelGenerator.getLabel(move))
     }
 }

@@ -304,10 +304,35 @@ class MoveRecorderTest extends Specification {
 
         where:
         pawnPromotion || movelabel
-        "queen"       || "b8Q"
-        "rook"        || "b8R"
+        "queen"       || "b8Q+"
+        "rook"        || "b8R+"
         "knight"      || "b8N"
         "bishop"      || "b8B"
+    }
+
+    def "check"() {
+        given:
+        this.game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white rook",
+                        "h1 white rook",
+                        "e1 white king",
+                        "a8 black rook",
+                        "h8 black rook",
+                        "e8 black king",
+                ]
+            }
+        })
+
+        when:
+        move("a1", "a8")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Rxa8+", it)
+        }
     }
 
 // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Disambiguating_moves

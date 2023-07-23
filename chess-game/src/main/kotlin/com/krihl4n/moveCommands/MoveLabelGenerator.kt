@@ -1,10 +1,11 @@
-package com.krihl4n
+package com.krihl4n.moveCommands
 
+import com.krihl4n.game.positionEvaluators.CheckEvaluator
 import com.krihl4n.model.File
 import com.krihl4n.model.Move
 import com.krihl4n.model.Type
 
-internal object MoveLabelGenerator {
+internal class MoveLabelGenerator(private val checkEvaluator: CheckEvaluator) {
 
     fun getLabel(move: Move): String {
         val piece = pieceTypeLabel(move.piece.type)
@@ -17,7 +18,8 @@ internal object MoveLabelGenerator {
         }
         val destination = move.to.token().lowercase()
         val pawnPromotion = move.pawnPromotion?.let { pieceTypeLabel(it) } ?: ""
-        return piece + attack + destination + pawnPromotion
+        val check = if (checkEvaluator.isKingChecked(move.piece.color.opposite())) "+" else ""
+        return piece + attack + destination + pawnPromotion + check
     }
 
     fun getLabelForCastling(move: Move): String {

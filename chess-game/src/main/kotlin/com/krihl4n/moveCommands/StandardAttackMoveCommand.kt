@@ -1,7 +1,6 @@
 package com.krihl4n.moveCommands
 
 import com.krihl4n.CaptureTracker
-import com.krihl4n.MoveLabelGenerator
 import com.krihl4n.PositionTracker
 import com.krihl4n.model.Move
 import com.krihl4n.model.PieceCapture
@@ -10,7 +9,8 @@ import com.krihl4n.model.PiecePositionUpdate
 internal class StandardAttackMoveCommand(
     private val move: Move,
     private val positionTracker: PositionTracker,
-    private val captureTracker: CaptureTracker
+    private val captureTracker: CaptureTracker,
+    private val labelGenerator: MoveLabelGenerator
 ) : MoveCommand {
 
     var update: PiecePositionUpdate? = null
@@ -26,7 +26,7 @@ internal class StandardAttackMoveCommand(
         update = PiecePositionUpdate(
             primaryMove = move,
             pieceCapture = PieceCapture(move.to, capturedPiece),
-            recordedMove = MoveLabelGenerator.getLabel(move)
+            recordedMove = labelGenerator.getLabel(move)
         )
     }
 
