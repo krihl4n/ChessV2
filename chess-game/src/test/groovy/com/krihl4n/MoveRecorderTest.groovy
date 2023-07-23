@@ -295,12 +295,19 @@ class MoveRecorderTest extends Specification {
         })
 
         when:
-        this.game.move(new MoveDto(PLAYER_ID, "b7", "b8", "queen"))
+        this.game.move(new MoveDto(PLAYER_ID, "b7", "b8", pawnPromotion))
 
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
-            moveIs("b8Q", it)
+            moveIs(movelabel, it)
         }
+
+        where:
+        pawnPromotion || movelabel
+        "queen"       || "b8Q"
+        "rook"        || "b8R"
+        "knight"      || "b8N"
+        "bishop"      || "b8B"
     }
 
 // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Disambiguating_moves
