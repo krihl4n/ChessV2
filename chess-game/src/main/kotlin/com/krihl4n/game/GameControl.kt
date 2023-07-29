@@ -120,5 +120,8 @@ internal class GameControl(
     override fun executePerformMove(move: MoveDto) =
         this.performMove(move)
 
-    override fun executeUndo(playerId: String) = commandCoordinator.undo(playersManager.getPlayer(playerId)!!)
+    override fun executeUndo(playerId: String) {
+        commandCoordinator.undo(playersManager.getPlayer(playerId)!!)
+        DebugLogger.printChessboard(positionTracker)
+    }
 }

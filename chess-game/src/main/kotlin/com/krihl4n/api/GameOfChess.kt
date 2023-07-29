@@ -30,7 +30,7 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
     private val moveCalculator = PieceMoveCalculator(positionTracker, calculatorFactory)
     private val checkEvaluator = CheckEvaluator(positionTracker, moveCalculator)
     private val moveValidator = MoveValidator(moveCalculator, checkEvaluator)
-    private val commandFactory = CommandFactory(positionTracker, MoveLabelGenerator(checkEvaluator))
+    private val commandFactory = CommandFactory(positionTracker, MoveLabelGenerator(checkEvaluator, positionTracker, moveCalculator))
     private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
     private val finishedGameEvaluator = FinishedGameEvaluator(positionTracker, moveValidator, checkEvaluator)

@@ -17,6 +17,8 @@ internal class PawnPromotionMoveCommand(
 
     private var killedPiece: Piece? = null
 
+    private var update: PiecePositionUpdate? = null
+
     override fun execute() {
         if (this.move.pawnPromotion == null)
             throw IllegalArgumentException("No pawn promotion info")
@@ -27,6 +29,13 @@ internal class PawnPromotionMoveCommand(
         }
         positionTracker.removePieceFromField(move.from)
         positionTracker.setPieceAtField(Piece(move.piece.color, move.pawnPromotion), move.to)
+
+        this.update = PiecePositionUpdate(
+            primaryMove = move,
+            pawnPromotion = move.pawnPromotion,
+            pieceCapture = killedPiece?.let { PieceCapture(move.to, it) },
+            recordedMove = labelGenerator.getLabel(move)
+        )
     }
 
     override fun undo() {
@@ -46,12 +55,7 @@ internal class PawnPromotionMoveCommand(
         return this.move
     }
 
-    override fun getPiecePositionUpdate(): PiecePositionUpdate {
-        return PiecePositionUpdate(
-            primaryMove = move,
-            pawnPromotion = move.pawnPromotion,
-            pieceCapture = killedPiece?.let { PieceCapture(move.to, it) },
-            recordedMove = labelGenerator.getLabel(move)
-        )
+    override fun getPiecePositionUpdate(): PiecePositionUpdate? {
+        return update
     }
 }

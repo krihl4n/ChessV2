@@ -9,9 +9,19 @@ internal class EnPassantAttackMoveCommand(
     private val labelGenerator: MoveLabelGenerator
 ) : MoveCommand {
 
+    var update: PiecePositionUpdate? = null
+
     override fun execute() {
         positionTracker.removePieceFromField(findAttackedPawnLocation())
         positionTracker.movePiece(move.from, move.to)
+        this.update = PiecePositionUpdate(
+            primaryMove = move,
+            pieceCapture = PieceCapture(
+                field = findAttackedPawnLocation(),
+                piece = Piece(move.piece.color.opposite(), Type.PAWN)
+            ),
+            recordedMove = labelGenerator.getLabel(move)
+        )
     }
 
     override fun undo() {
@@ -23,15 +33,8 @@ internal class EnPassantAttackMoveCommand(
         return this.move
     }
 
-    override fun getPiecePositionUpdate(): PiecePositionUpdate {
-        return PiecePositionUpdate(
-            primaryMove = move,
-            pieceCapture = PieceCapture(
-                field = findAttackedPawnLocation(),
-                piece = Piece(move.piece.color.opposite(), Type.PAWN)
-            ),
-            recordedMove = labelGenerator.getLabel(move)
-        )
+    override fun getPiecePositionUpdate(): PiecePositionUpdate? {
+        return update
     }
 
     private fun findAttackedPawnLocation(): Field {

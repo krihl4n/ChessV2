@@ -72,13 +72,13 @@ class MoveRecorderTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
             PiecePositionUpdateDto update = it[1]
-            update.getRecordedMove() == "a3"
-            !update.getReverted()
+            assert update.getRecordedMove() == "a3"
+            assert !update.getReverted()
         }
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
             PiecePositionUpdateDto update = it[1]
-            update.getRecordedMove() == "a3"
-            update.getReverted()
+            assert  update.getRecordedMove() == "a3"
+            assert  update.getReverted()
         }
     }
 
@@ -332,6 +332,31 @@ class MoveRecorderTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
             moveIs("Rxa8+", it)
+        }
+    }
+
+    def "ambiguous move - label extended with rank of departure"() {
+        given:
+        this.game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white rook",
+                        "a3 white rook",
+                        "e1 white king",
+                        "a8 black rook",
+                        "h8 black rook",
+                        "e8 black king",
+                ]
+            }
+        })
+
+        when:
+        move("a1", "a2")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("R1a2", it)
         }
     }
 

@@ -42,7 +42,7 @@ class BaseGameSpec extends BaseSpec {
                 pieceMoveCalculator,
                 checkEvaluator
         )
-        CommandFactory commandFactory = new CommandFactory(positionTracker, new MoveLabelGenerator(checkEvaluator))
+        CommandFactory commandFactory = new CommandFactory(positionTracker, new MoveLabelGenerator(checkEvaluator, positionTracker, pieceMoveCalculator))
         gameResult = new FinishedGameEvaluator(positionTracker, moveValidator, checkEvaluator)
         game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResult)
         EnPassantGuard enPassantGuard = new EnPassantGuard(positionTracker, commandCoordinator)

@@ -8,10 +8,13 @@ internal class StandardMoveCommand(
     private val move: Move,
     private val positionTracker: PositionTracker,
     private val labelGenerator: MoveLabelGenerator
-    ) : MoveCommand {
+) : MoveCommand {
+
+    var update: PiecePositionUpdate? = null
 
     override fun execute() {
         positionTracker.movePiece(move.from, move.to)
+        this.update = PiecePositionUpdate(move, recordedMove = labelGenerator.getLabel(move))
     }
 
     override fun undo() {
@@ -22,7 +25,7 @@ internal class StandardMoveCommand(
         return this.move
     }
 
-    override fun getPiecePositionUpdate(): PiecePositionUpdate {
-        return PiecePositionUpdate(move, recordedMove = labelGenerator.getLabel(move))
+    override fun getPiecePositionUpdate(): PiecePositionUpdate? {
+        return update
     }
 }
