@@ -385,6 +385,31 @@ class MoveRecorderTest extends Specification {
         }
     }
 
+    def "ambiguous move - label extended with field of departure"() {
+        given:
+        this.game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "h1 white queen",
+                        "h4 white queen",
+                        "e4 white queen",
+                        "a1 white king",
+                        "b7 black queen",
+                        "a8 black king",
+                ]
+            }
+        })
+
+        when:
+        move("h4", "e1")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Qh4e1", it)
+        }
+    }
+
 // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Disambiguating_moves
 
     private void move(String from, String to) {
