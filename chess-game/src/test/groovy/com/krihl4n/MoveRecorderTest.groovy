@@ -72,12 +72,12 @@ class MoveRecorderTest extends Specification {
         then:
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
             PiecePositionUpdateDto update = it[1]
-            assert update.getRecordedMove() == "a3"
+            assert update.getLabel() == "a3"
             assert !update.getReverted()
         }
         1 * listener.piecePositionUpdate(GAME_ID, _) >> {
             PiecePositionUpdateDto update = it[1]
-            assert  update.getRecordedMove() == "a3"
+            assert  update.getLabel() == "a3"
             assert  update.getReverted()
         }
     }
@@ -418,6 +418,6 @@ class MoveRecorderTest extends Specification {
 
     private void moveIs(move, args) {
         PiecePositionUpdateDto update = args[1]
-        assert update.getRecordedMove() == move
+        assert update.getLabel() == move
     }
 }

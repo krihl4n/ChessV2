@@ -26,7 +26,7 @@ internal class StandardAttackMoveCommand(
         update = PiecePositionUpdate(
             primaryMove = move,
             pieceCapture = PieceCapture(move.to, capturedPiece),
-            recordedMove = labelGenerator.getLabel(move)
+            label = labelGenerator.getLabel(move)
         )
     }
 

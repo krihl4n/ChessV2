@@ -27,7 +27,7 @@ internal class CastlingMoveCommand(
         update = PiecePositionUpdate(
             primaryMove = move,
             secondaryMove = Move(Piece(move.piece.color, Type.ROOK), rookFrom, rookTo, false),
-            recordedMove = labelGenerator.getLabelForCastling(move)
+            label = labelGenerator.getLabelForCastling(move)
         )
     }
 

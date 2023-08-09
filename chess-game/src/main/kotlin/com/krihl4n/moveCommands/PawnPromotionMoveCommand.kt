@@ -34,7 +34,7 @@ internal class PawnPromotionMoveCommand(
             primaryMove = move,
             pawnPromotion = move.pawnPromotion,
             pieceCapture = killedPiece?.let { PieceCapture(move.to, it) },
-            recordedMove = labelGenerator.getLabel(move)
+            label = labelGenerator.getLabel(move)
         )
     }
 

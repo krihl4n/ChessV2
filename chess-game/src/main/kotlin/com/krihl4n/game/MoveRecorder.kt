@@ -9,7 +9,7 @@ internal class MoveRecorder : PiecePositionUpdateListener {
 
     override fun positionsUpdated(update: PiecePositionUpdate) {
         if (!update.reverted) {
-            moves.add(update.recordedMove)
+            moves.add(update.label)
         } else {
             moves.removeLast()
         }

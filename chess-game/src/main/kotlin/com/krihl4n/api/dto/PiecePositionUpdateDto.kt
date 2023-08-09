@@ -8,7 +8,7 @@ data class PiecePositionUpdateDto(
     val pieceCapture: PieceCaptureDto? = null,
     val pawnPromotion: String? = null,
     val reverted: Boolean = false,
-    val recordedMove: String,
+    val label: String,
     val turn: String
 ) {
 
@@ -36,7 +36,7 @@ data class PiecePositionUpdateDto(
                 },
                 pawnPromotion = positionUpdate.pawnPromotion?.toString(),
                 reverted = positionUpdate.reverted,
-                recordedMove = positionUpdate.recordedMove,
+                label = positionUpdate.label,
                 turn = turn
             )
         }

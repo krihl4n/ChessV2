@@ -20,7 +20,7 @@ internal class EnPassantAttackMoveCommand(
                 field = findAttackedPawnLocation(),
                 piece = Piece(move.piece.color.opposite(), Type.PAWN)
             ),
-            recordedMove = labelGenerator.getLabel(move)
+            label = labelGenerator.getLabel(move)
         )
     }
 

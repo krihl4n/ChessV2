@@ -14,7 +14,7 @@ internal class StandardMoveCommand(
 
     override fun execute() {
         positionTracker.movePiece(move.from, move.to)
-        this.update = PiecePositionUpdate(move, recordedMove = labelGenerator.getLabel(move))
+        this.update = PiecePositionUpdate(move, label = labelGenerator.getLabel(move))
     }
 
     override fun undo() {
