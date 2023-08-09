@@ -11,6 +11,7 @@ internal class MoveLabelGenerator(private val checkEvaluator: CheckEvaluator, pr
 
     fun getLabel(move: Move): String {
         val piece = pieceTypeLabel(move.piece.type)
+        val fileOfDeparture = getFileOfDepartureIfNeeded(move)
         val rankOfDeparture = getRankOfDepartureIfNeeded(move)
         val attack = if (move.isAttack && move.piece.type == Type.PAWN) {
             move.from.file.token.lowercase() + "x"
@@ -22,7 +23,7 @@ internal class MoveLabelGenerator(private val checkEvaluator: CheckEvaluator, pr
         val destination = move.to.token().lowercase()
         val pawnPromotion = move.pawnPromotion?.let { pieceTypeLabel(it) } ?: ""
         val check = if (checkEvaluator.isKingChecked(move.piece.color.opposite())) "+" else ""
-        return piece + rankOfDeparture + attack + destination + pawnPromotion + check
+        return piece + fileOfDeparture + rankOfDeparture + attack + destination + pawnPromotion + check
     }
 
     fun getLabelForCastling(move: Move): String {
@@ -55,6 +56,23 @@ internal class MoveLabelGenerator(private val checkEvaluator: CheckEvaluator, pr
 
         return if (rankMatches) {
             performedMove.from.rank.token
+        } else {
+            ""
+        }
+    }
+
+    private fun getFileOfDepartureIfNeeded(performedMove: Move): String {
+        val positionTracker = this.positionTracker.copy()
+        positionTracker.movePiece(performedMove.to, performedMove.from)
+
+        val fileMatches = positionTracker.getPositionsOfAllPieces()
+            .filter { it.value.color == performedMove.piece.color && it.value.type == performedMove.piece.type }
+            .flatMap { this.moveCalculator.withPositionTracker(positionTracker).findMoves(it.key) }
+            .filter { it.to == performedMove.to && it.from != performedMove.from }
+            .any { it.from.rank == performedMove.from.rank }
+
+        return if (fileMatches) {
+            performedMove.from.file.token
         } else {
             ""
         }
