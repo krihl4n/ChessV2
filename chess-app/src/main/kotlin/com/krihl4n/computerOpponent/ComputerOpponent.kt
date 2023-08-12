@@ -83,10 +83,21 @@ class ComputerOpponent(
                 positions.remove(field)
                 continue
             } else {
+                val dst = possibleMoves.to[Random.nextInt(0, possibleMoves.to.size)]
+                val promotion = getPromotion(game, field, dst)
                 gamesRepository.getGameForCommand(game.gameId())
-                    .move(MoveDto("cpu", field, possibleMoves.to[Random.nextInt(0, possibleMoves.to.size)], "queen"))
+                    .move(MoveDto("cpu", field, dst, promotion))
                 break
             }
+        }
+    }
+
+    private fun getPromotion(game: ReadOnlyGameOfChess, from: String, dst: String): String? {
+        val piece = game.getFieldOccupationInfo().first { it.field == from }.piece
+        return if (piece?.type == "PAWN" && (dst[1] == '1' || dst[1] == '8') ) {
+            "queen"
+        } else {
+            null
         }
     }
 
@@ -116,9 +127,10 @@ class ComputerOpponent(
             } else {
                 for (dst in possibleMoves.to) {
                     if (opponentPositions.contains(dst)) {
+                        val promotion = getPromotion(game, field, dst)
                         gamesRepository
                             .getGameForCommand(game.gameId())
-                            .move(MoveDto("cpu", field, dst, "queen"))
+                            .move(MoveDto("cpu", field, dst, promotion))
                         return true
                     }
                 }
