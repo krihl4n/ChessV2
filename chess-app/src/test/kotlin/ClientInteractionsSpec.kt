@@ -139,7 +139,7 @@ class ClientInteractionsSpec : FunSpec({
             pawnPromotion = null,
             reverted = false,
             turn = BLACK,
-            label = "a3"
+            label = "a4"
         )
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_1, expectedUpdate) }
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_2, expectedUpdate) }

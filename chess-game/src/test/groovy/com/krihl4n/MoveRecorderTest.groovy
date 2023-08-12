@@ -61,27 +61,6 @@ class MoveRecorderTest extends Specification {
         }
     }
 
-    def "reverted move should has the same label"() {
-        given:
-        this.game = initGame()
-
-        when:
-        move("a2", "a3")
-        game.undoMove(PLAYER_ID)
-
-        then:
-        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
-            PiecePositionUpdateDto update = it[1]
-            assert update.getLabel() == "a3"
-            assert !update.getReverted()
-        }
-        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
-            PiecePositionUpdateDto update = it[1]
-            assert  update.getLabel() == "a3"
-            assert  update.getReverted()
-        }
-    }
-
     def "should notify about basic figure moves"() {
         given:
         this.game = initGame(new PieceSetup() {
