@@ -8,6 +8,8 @@ import com.krihl4n.model.Type
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCalculators.PossibleMove
 
+// todo chack mate #
+// todo result 1-0
 internal class MoveLabelGenerator(
     private val checkEvaluator: CheckEvaluator,
     private val positionTracker: PositionTracker,
@@ -49,6 +51,9 @@ internal class MoveLabelGenerator(
         }
 
     private fun getFieldOfDepartureIfNeeded(performedMove: Move): String {
+        if(performedMove.piece.type == Type.PAWN) {
+            return ""
+        }
         val moves = findOtherMovesWithSameDstAs(performedMove)
         val fileToken = performedMove.from.file.token
         val rankToken = performedMove.from.rank.token
