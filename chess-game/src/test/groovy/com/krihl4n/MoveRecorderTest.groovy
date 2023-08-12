@@ -410,6 +410,56 @@ class MoveRecorderTest extends Specification {
         }
     }
 
+    def "ambiguous move - rook test 1"() {
+        given:
+        this.game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white rook",
+                        "b1 white rook",
+                        "g1 white king",
+                        "h2 black rook",
+                        "a8 black rook",
+                        "d7 black king",
+                ]
+            }
+        })
+
+        when:
+        move("a8", "h8")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Rah8", it)
+        }
+    }
+
+    def "ambiguous move - rook test 2"() {
+        given:
+        this.game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "a1 white rook",
+                        "b1 white rook",
+                        "g1 white king",
+                        "h2 black rook",
+                        "a8 black rook",
+                        "d7 black king",
+                ]
+            }
+        })
+
+        when:
+        move("h2", "h8")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Rhh8", it)
+        }
+    }
+
 // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Disambiguating_moves
 
     private void move(String from, String to) {

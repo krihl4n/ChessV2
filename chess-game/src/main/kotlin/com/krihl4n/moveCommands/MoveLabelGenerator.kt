@@ -8,7 +8,11 @@ import com.krihl4n.model.Type
 import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCalculators.PossibleMove
 
-internal class MoveLabelGenerator(private val checkEvaluator: CheckEvaluator, private val positionTracker: PositionTracker, private val moveCalculator: PieceMoveCalculator) {
+internal class MoveLabelGenerator(
+    private val checkEvaluator: CheckEvaluator,
+    private val positionTracker: PositionTracker,
+    private val moveCalculator: PieceMoveCalculator
+) {
 
     fun getLabel(move: Move): String {
         val piece = pieceTypeLabel(move.piece.type)
@@ -48,12 +52,23 @@ internal class MoveLabelGenerator(private val checkEvaluator: CheckEvaluator, pr
         val moves = findOtherMovesWithSameDstAs(performedMove)
         var departure = ""
 
-        if(moves.anyMoveHasSameFromRankAs(performedMove)) {
-            departure += performedMove.from.file.token
-        }
-
-        if(moves.anyMoveHasSameFromFileAs(performedMove)) {
-            departure += performedMove.from.rank.token
+        if (moves.size == 1) {
+            val onlyAmbiguousMove = moves.first()
+            if (onlyAmbiguousMove.from.file != performedMove.from.file) {
+                departure = performedMove.from.file.token
+            } else if (onlyAmbiguousMove.from.rank != performedMove.from.rank) {
+                departure = performedMove.from.rank.token
+            }
+        } else if (moves.size > 1) {
+            if (moves.find { it.from.rank == performedMove.from.rank } != null) {
+                departure = performedMove.from.file.token
+            }
+            if (moves.find { it.from.file == performedMove.from.file } != null) {
+                departure = performedMove.from.rank.token
+            }
+            if (moves.find { it.from.file == performedMove.from.file } != null && moves.find { it.from.rank == performedMove.from.rank } != null) {
+                departure = performedMove.from.file.token + performedMove.from.rank.token
+            }
         }
         return departure
     }
@@ -67,9 +82,9 @@ internal class MoveLabelGenerator(private val checkEvaluator: CheckEvaluator, pr
             .filter { it.to == move.to && it.from != move.from }
     }
 
-    private fun List<PossibleMove>.anyMoveHasSameFromRankAs(move: Move)  =
-        this.any {it.from.rank == move.from.rank}
+    private fun List<PossibleMove>.anyMoveHasSameFromRankAs(move: PossibleMove) =
+        this.any { it.from.rank == move.from.rank }
 
-    private fun List<PossibleMove>.anyMoveHasSameFromFileAs(move: Move)  =
-        this.any {it.from.file == move.from.file}
+    private fun List<PossibleMove>.anyMoveHasSameFromFileAs(move: PossibleMove) =
+        this.any { it.from.file == move.from.file }
 }
