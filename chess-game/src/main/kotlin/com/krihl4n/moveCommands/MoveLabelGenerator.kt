@@ -50,24 +50,26 @@ internal class MoveLabelGenerator(
 
     private fun getFieldOfDepartureIfNeeded(performedMove: Move): String {
         val moves = findOtherMovesWithSameDstAs(performedMove)
+        val fileToken = performedMove.from.file.token
+        val rankToken = performedMove.from.rank.token
         var departure = ""
 
         if (moves.size == 1) {
-            val onlyAmbiguousMove = moves.first()
-            if (onlyAmbiguousMove.from.file != performedMove.from.file) {
-                departure = performedMove.from.file.token
-            } else if (onlyAmbiguousMove.from.rank != performedMove.from.rank) {
-                departure = performedMove.from.rank.token
+            if (moves[0].hasDifferentFromFileThan(performedMove)) {
+                departure = fileToken
+            } else if (moves[0].hasDifferentFromRankThan(performedMove)) {
+                departure = rankToken
             }
         } else if (moves.size > 1) {
-            if (moves.find { it.from.rank == performedMove.from.rank } != null) {
-                departure = performedMove.from.file.token
-            }
-            if (moves.find { it.from.file == performedMove.from.file } != null) {
-                departure = performedMove.from.rank.token
-            }
-            if (moves.find { it.from.file == performedMove.from.file } != null && moves.find { it.from.rank == performedMove.from.rank } != null) {
-                departure = performedMove.from.file.token + performedMove.from.rank.token
+            if (moves.containsMoveWithSameFromFileAs(performedMove) && moves.containsMoveWithSameFromRankAs(performedMove)) {
+                departure = fileToken + rankToken
+            } else {
+                if (moves.containsMoveWithSameFromRankAs(performedMove)) {
+                    departure = fileToken
+                }
+                if (moves.containsMoveWithSameFromFileAs(performedMove)) {
+                    departure = rankToken
+                }
             }
         }
         return departure
@@ -82,9 +84,11 @@ internal class MoveLabelGenerator(
             .filter { it.to == move.to && it.from != move.from }
     }
 
-    private fun List<PossibleMove>.anyMoveHasSameFromRankAs(move: PossibleMove) =
-        this.any { it.from.rank == move.from.rank }
+    private fun PossibleMove.hasDifferentFromFileThan(move: Move) = this.from.file != move.from.file
 
-    private fun List<PossibleMove>.anyMoveHasSameFromFileAs(move: PossibleMove) =
-        this.any { it.from.file == move.from.file }
+    private fun PossibleMove.hasDifferentFromRankThan(move: Move) = this.from.rank != move.from.rank
+
+    private fun List<PossibleMove>.containsMoveWithSameFromFileAs(move: Move) = find { it.from.file == move.from.file } != null
+
+    private fun List<PossibleMove>.containsMoveWithSameFromRankAs(move: Move) = find { it.from.rank == move.from.rank } != null
 }
