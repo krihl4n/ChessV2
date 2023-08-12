@@ -100,7 +100,8 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
                             player1 = game.fetchPlayerOne().toDto(),
                             player2 = game.fetchPlayerTwo().toDto(),
                             piecePositions = game.getFieldOccupationInfo(),
-                            turn = game.fetchColorAllowedToMove()
+                            turn = game.fetchColorAllowedToMove(),
+                            recordedMoves = getRecordedMoves()
                         )
                     )
                 }

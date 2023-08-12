@@ -6,5 +6,6 @@ data class GameInfoDto(
     val player1: PlayerDto,
     val player2: PlayerDto,
     val piecePositions: List<FieldOccupationDto>,
-    val turn: String
+    val turn: String,
+    val recordedMoves: List<String>
 )

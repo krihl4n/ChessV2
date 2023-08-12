@@ -39,11 +39,12 @@ class GameEventHandler(
                 messageSender.sendGameStartedMsg(
                     it,
                     GameInfoEvent(
-                        gameInfo.gameId,
-                        gameInfo.mode,
-                        player,
-                        gameInfo.piecePositions,
-                        gameInfo.turn
+                        gameId = gameInfo.gameId,
+                        mode = gameInfo.mode,
+                        player = player,
+                        piecePositions = gameInfo.piecePositions,
+                        turn = gameInfo.turn,
+                        recordedMoves = gameInfo.recordedMoves
                     )
                 )
             }
