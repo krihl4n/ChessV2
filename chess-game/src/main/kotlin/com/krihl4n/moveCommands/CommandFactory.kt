@@ -19,7 +19,7 @@ internal class CommandFactory(
             return PawnPromotionMoveCommand(move, positionTracker, captureTracker, labelGenerator)
 
         if (isEnPassantAttack(move))
-            return EnPassantAttackMoveCommand(move, positionTracker, labelGenerator)
+            return EnPassantAttackMoveCommand(move, positionTracker, captureTracker, labelGenerator)
 
         if (pieceAttacks(move))
             return StandardAttackMoveCommand(move, positionTracker, captureTracker, labelGenerator)
