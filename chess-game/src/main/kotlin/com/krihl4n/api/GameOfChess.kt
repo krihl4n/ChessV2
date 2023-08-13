@@ -1,5 +1,6 @@
 package com.krihl4n.api
 
+import com.krihl4n.CaptureTracker
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
 import com.krihl4n.api.dto.*
@@ -15,6 +16,7 @@ import com.krihl4n.moveCommands.PiecePositionUpdateListener
 import com.krihl4n.game.guards.CastlingGuard
 import com.krihl4n.game.positionEvaluators.CheckEvaluator
 import com.krihl4n.game.guards.EnPassantGuard
+import com.krihl4n.model.Color
 import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.model.PiecePositionUpdate
 import com.krihl4n.moveCalculators.CalculatorFactory
@@ -30,7 +32,8 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
     private val moveCalculator = PieceMoveCalculator(positionTracker, calculatorFactory)
     private val checkEvaluator = CheckEvaluator(positionTracker, moveCalculator)
     private val moveValidator = MoveValidator(moveCalculator, checkEvaluator)
-    private val commandFactory = CommandFactory(positionTracker, MoveLabelGenerator(checkEvaluator, positionTracker, moveCalculator))
+    private val captureTracker = CaptureTracker()
+    private val commandFactory = CommandFactory(positionTracker, MoveLabelGenerator(checkEvaluator, positionTracker, moveCalculator), captureTracker)
     private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
     private val finishedGameEvaluator = FinishedGameEvaluator(positionTracker, moveValidator, checkEvaluator)
@@ -73,6 +76,13 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
 
     override fun getRecordedMoves() = moveRecorder.getMoves()
 
+    override fun getAllCaptures(): CapturesDto {
+        return CapturesDto(
+            capturesOfWhitePlayer = captureTracker.getCapturedPieces(Color.BLACK).map { PieceDto.from(it) },
+            capturesOfBlackPlayer = captureTracker.getCapturedPieces(Color.WHITE).map { PieceDto.from(it) }
+        )
+    }
+
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
             override fun positionsUpdated(update: PiecePositionUpdate) {
@@ -101,7 +111,8 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
                             player2 = game.fetchPlayerTwo().toDto(),
                             piecePositions = game.getFieldOccupationInfo(),
                             turn = game.fetchColorAllowedToMove(),
-                            recordedMoves = getRecordedMoves()
+                            recordedMoves = getRecordedMoves(),
+                            captures = getAllCaptures()
                         )
                     )
                 }

@@ -51,4 +51,6 @@ class PersistableGameOfChess(private val delegate: GameOfChess, private val repo
                 repo.save(it)
             }
     }
+
+    override fun getAllCaptures() = delegate.getAllCaptures()
 }

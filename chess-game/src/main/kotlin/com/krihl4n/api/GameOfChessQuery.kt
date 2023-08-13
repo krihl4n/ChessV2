@@ -1,5 +1,6 @@
 package com.krihl4n.api
 
+import com.krihl4n.api.dto.CapturesDto
 import com.krihl4n.api.dto.FieldOccupationDto
 import com.krihl4n.api.dto.PlayerDto
 import com.krihl4n.api.dto.PossibleMovesDto
@@ -13,4 +14,5 @@ interface GameOfChessQuery {
     fun getFieldOccupationInfo(): List<FieldOccupationDto>
     fun getPossibleMoves(field: String): PossibleMovesDto
     fun getRecordedMoves(): List<String>
+    fun getAllCaptures(): CapturesDto
 }

@@ -107,7 +107,8 @@ class GameCommandHandler(
                 player = PlayerDto(playerId, it.color),
                 piecePositions = game.getFieldOccupationInfo(),
                 turn = game.getColorAllowedToMove(),
-                recordedMoves = game.getRecordedMoves()
+                recordedMoves = game.getRecordedMoves(),
+                captures = game.getAllCaptures()
             )
             messageSender.sendJoinedExistingGameMsg(sessionId, gameInfo)
         }

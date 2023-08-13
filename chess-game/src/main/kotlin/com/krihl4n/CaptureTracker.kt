@@ -1,5 +1,6 @@
 package com.krihl4n
 
+import com.krihl4n.model.Color
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
 import java.util.*
@@ -17,6 +18,9 @@ internal class CaptureTracker {
         capturedPieces.removeLastOccurrence(capture)
         return capture.piece
     }
+
+    fun getCapturedPieces(piecesColor: Color) =
+        capturedPieces.filter { it.piece.color == piecesColor }.map { it.piece }
 }
 
 private data class Capture(val piece: Piece, val field: Field)

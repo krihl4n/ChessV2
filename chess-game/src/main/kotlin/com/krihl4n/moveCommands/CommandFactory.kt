@@ -5,9 +5,11 @@ import com.krihl4n.PositionTracker
 import com.krihl4n.model.Move
 import com.krihl4n.model.Type
 
-internal class CommandFactory(private val positionTracker: PositionTracker, private val labelGenerator: MoveLabelGenerator) {
-
-    private val captureTracker = CaptureTracker()
+internal class CommandFactory(
+    private val positionTracker: PositionTracker,
+    private val labelGenerator: MoveLabelGenerator,
+    private val captureTracker: CaptureTracker
+) {
 
     fun getCommand(move: Move): MoveCommand {
         if (kingAttemptsCastling(move))

@@ -44,7 +44,8 @@ class GameEventHandler(
                         player = player,
                         piecePositions = gameInfo.piecePositions,
                         turn = gameInfo.turn,
-                        recordedMoves = gameInfo.recordedMoves
+                        recordedMoves = gameInfo.recordedMoves,
+                        captures = gameInfo.captures
                     )
                 )
             }
