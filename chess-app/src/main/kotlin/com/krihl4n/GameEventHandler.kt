@@ -35,7 +35,7 @@ class GameEventHandler(
         rematchProposals.clearProposals(gameInfo.gameId)
 
         for (player in setOf(gameInfo.player1, gameInfo.player2)) {
-            sessionRegistry.getRelatedPlayerSessionId(player.id)?.let {
+            sessionRegistry.getRelatedPlayerSessionId(gameId, player.id)?.let {
                 messageSender.sendGameStartedMsg(
                     it,
                     GameInfoEvent(

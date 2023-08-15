@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 @Service
 class SessionRegistry {
 
-    private val entries = mutableListOf<RegisteredGameSessions>()
+    private val entries = mutableListOf<RegisteredGameSessions>() // these are never cleaned
 
     fun registerNewGame(gameId: String, sessionId: String) {
         entries.add(RegisteredGameSessions(gameId, sessionId))
@@ -15,8 +15,8 @@ class SessionRegistry {
        return this.entries.find { it.gameId() == gameId }?.sessionIds().orEmpty()
     }
 
-    fun getRelatedPlayerSessionId(playerId: String): String? { // todo just return string
-        return  this.entries.find { it.playerParticipates(playerId) }?.playerSessionId(playerId)
+    fun getRelatedPlayerSessionId(gameId: String, playerId: String): String? { // todo just return string
+        return this.entries.filter { it.gameId == gameId }.find { it.playerParticipates(playerId) }?.playerSessionId(playerId)
     }
 
     fun deregisterGame(gameId: String) {
