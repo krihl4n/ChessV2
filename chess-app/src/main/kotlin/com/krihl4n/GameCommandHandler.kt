@@ -108,7 +108,8 @@ class GameCommandHandler(
                 piecePositions = game.getFieldOccupationInfo(),
                 turn = game.getColorAllowedToMove(),
                 recordedMoves = game.getRecordedMoves(),
-                captures = game.getAllCaptures()
+                captures = game.getAllCaptures(),
+                score = game.getScore()
             )
             messageSender.sendJoinedExistingGameMsg(sessionId, gameInfo)
         }

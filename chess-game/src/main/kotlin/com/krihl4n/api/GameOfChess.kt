@@ -83,12 +83,17 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
         )
     }
 
+    override fun getScore(): ScoreDto {
+        val score = captureTracker.getScore()
+        return ScoreDto(score.white, score.black)
+    }
+
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
             override fun positionsUpdated(update: PiecePositionUpdate) {
                 listener.piecePositionUpdate(
                     gameId,
-                    PiecePositionUpdateDto.from(update, game.fetchColorAllowedToMove())
+                    PiecePositionUpdateDto.from(update, game.fetchColorAllowedToMove(), getScore())
                 )
             }
         })
@@ -112,7 +117,8 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
                             piecePositions = game.getFieldOccupationInfo(),
                             turn = game.fetchColorAllowedToMove(),
                             recordedMoves = getRecordedMoves(),
-                            captures = getAllCaptures()
+                            captures = getAllCaptures(),
+                            score = getScore()
                         )
                     )
                 }

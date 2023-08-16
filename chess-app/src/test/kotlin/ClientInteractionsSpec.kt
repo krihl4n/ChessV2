@@ -1,7 +1,4 @@
-import com.krihl4n.api.dto.GameResultDto
-import com.krihl4n.api.dto.MoveDto
-import com.krihl4n.api.dto.PerformedMoveDto
-import com.krihl4n.api.dto.PiecePositionUpdateDto
+import com.krihl4n.api.dto.*
 import com.krihl4n.app.messages.GameInfoEvent
 import com.krihl4n.app.messages.JoinGameRequest
 import com.krihl4n.app.messages.RejoinGameRequest
@@ -139,7 +136,8 @@ class ClientInteractionsSpec : FunSpec({
             pawnPromotion = null,
             reverted = false,
             turn = BLACK,
-            label = "a4"
+            label = "a4",
+            score = ScoreDto(0,0)
         )
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_1, expectedUpdate) }
         verify(exactly = 1) { msgSender.sendPiecePositionUpdateMsg(SESSION_ID_2, expectedUpdate) }

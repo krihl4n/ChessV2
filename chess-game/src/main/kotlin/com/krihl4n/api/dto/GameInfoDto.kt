@@ -8,10 +8,13 @@ data class GameInfoDto(
     val piecePositions: List<FieldOccupationDto>,
     val turn: String,
     val recordedMoves: List<String>,
-    val captures: CapturesDto
+    val captures: CapturesDto,
+    val score: ScoreDto,
 )
 
 data class CapturesDto (
     val capturesOfWhitePlayer: List<PieceDto>,
     val capturesOfBlackPlayer: List<PieceDto>
 )
+
+data class ScoreDto (val white: Int, val black: Int)

@@ -13,6 +13,7 @@ open class ReadOnlyGameOfChess(private val delegate: GameOfChess) : GameOfChessQ
     override fun getPossibleMoves(field: String) = delegate.getPossibleMoves(field)
     override fun getRecordedMoves() = delegate.getRecordedMoves()
     override fun getAllCaptures() = delegate.getAllCaptures()
+    override fun getScore() = delegate.getScore()
 
     fun gameId() = delegate.gameId
     fun gameMode() = delegate.gameMode

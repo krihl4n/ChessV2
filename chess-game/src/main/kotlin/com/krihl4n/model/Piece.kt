@@ -26,8 +26,8 @@ internal enum class Color {
     }
 }
 
-internal enum class Type {
-    PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING;
+internal enum class Type(val value: Int) {
+    PAWN(1), KNIGHT(3), BISHOP(3), ROOK(5), QUEEN(9), KING(0);
 
     override fun toString(): String = super.toString().lowercase()
 

@@ -21,6 +21,29 @@ internal class CaptureTracker {
 
     fun getCapturedPieces(piecesColor: Color) =
         capturedPieces.filter { it.piece.color == piecesColor }.map { it.piece }
+
+    fun getScore(): Score {
+        var white = 0
+        var black = 0
+
+        capturedPieces.forEach { capture ->
+            if (capture.piece.color == Color.BLACK) {
+                white += capture.piece.type.value
+            } else {
+                black += capture.piece.type.value
+            }
+        }
+
+        return if (white > black) {
+            Score(white - black, 0)
+        } else if (white < black) {
+            Score(0, black - white)
+        } else {
+            Score(0, 0)
+        }
+    }
 }
+
+data class Score(val white: Int, val black: Int)
 
 private data class Capture(val piece: Piece, val field: Field)

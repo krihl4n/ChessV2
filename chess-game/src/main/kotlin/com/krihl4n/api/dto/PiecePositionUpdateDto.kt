@@ -9,11 +9,12 @@ data class PiecePositionUpdateDto(
     val pawnPromotion: String? = null,
     val reverted: Boolean = false,
     val label: String,
-    val turn: String
+    val turn: String,
+    val score: ScoreDto
 ) {
 
     companion object {
-        internal fun from(positionUpdate: PiecePositionUpdate, turn: String): PiecePositionUpdateDto {
+        internal fun from(positionUpdate: PiecePositionUpdate, turn: String, score: ScoreDto): PiecePositionUpdateDto {
             return PiecePositionUpdateDto(
                 primaryMove = PerformedMoveDto(
                     positionUpdate.primaryMove.from.token(),
@@ -37,7 +38,8 @@ data class PiecePositionUpdateDto(
                 pawnPromotion = positionUpdate.pawnPromotion?.toString(),
                 reverted = positionUpdate.reverted,
                 label = positionUpdate.label,
-                turn = turn
+                turn = turn,
+                score = ScoreDto(score.white, score.black)
             )
         }
     }
