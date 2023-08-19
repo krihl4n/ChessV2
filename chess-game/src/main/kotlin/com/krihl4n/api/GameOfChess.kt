@@ -16,6 +16,7 @@ import com.krihl4n.moveCommands.PiecePositionUpdateListener
 import com.krihl4n.game.guards.CastlingGuard
 import com.krihl4n.game.positionEvaluators.CheckEvaluator
 import com.krihl4n.game.guards.EnPassantGuard
+import com.krihl4n.game.positionEvaluators.CheckMateEvaluator
 import com.krihl4n.model.Color
 import com.krihl4n.model.GameStateUpdate
 import com.krihl4n.model.PiecePositionUpdate
@@ -24,7 +25,8 @@ import com.krihl4n.moveCalculators.PieceMoveCalculator
 import com.krihl4n.moveCommands.MoveLabelGenerator
 import com.krihl4n.players.Player
 
-class GameOfChess(val gameId: String, val gameMode: String, private val pieceSetup: PieceSetup?): GameOfChessCommand, GameOfChessQuery {
+class GameOfChess(val gameId: String, val gameMode: String, private val pieceSetup: PieceSetup?) : GameOfChessCommand,
+    GameOfChessQuery {
 
     private val positionTracker = PositionTracker()
     private val commandCoordinator = CommandCoordinator(GameMode.fromCommand(gameMode))
@@ -33,10 +35,15 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
     private val checkEvaluator = CheckEvaluator(positionTracker, moveCalculator)
     private val moveValidator = MoveValidator(moveCalculator, checkEvaluator)
     private val captureTracker = CaptureTracker()
-    private val commandFactory = CommandFactory(positionTracker, MoveLabelGenerator(checkEvaluator, positionTracker, moveCalculator), captureTracker)
+    private val checkMateEvaluator = CheckMateEvaluator(positionTracker, checkEvaluator, moveValidator)
+    private val commandFactory = CommandFactory(
+        positionTracker,
+        MoveLabelGenerator(checkEvaluator, checkMateEvaluator, positionTracker, moveCalculator),
+        captureTracker
+    )
     private val castlingGuard = CastlingGuard(positionTracker, calculatorFactory)
     private val enPassantGuard = EnPassantGuard(positionTracker, commandCoordinator)
-    private val finishedGameEvaluator = FinishedGameEvaluator(positionTracker, moveValidator, checkEvaluator)
+    private val finishedGameEvaluator = FinishedGameEvaluator(positionTracker, moveValidator, checkMateEvaluator)
     private val moveRecorder = MoveRecorder()
     private val game = Game(moveValidator, commandCoordinator, commandFactory, positionTracker, finishedGameEvaluator)
 
@@ -123,7 +130,7 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
                     )
                 }
 
-                if(update.gameState == GameState.WAITING_FOR_PLAYERS) {
+                if (update.gameState == GameState.WAITING_FOR_PLAYERS) {
                     listener.waitingForOtherPlayer(gameId)
                 }
             }

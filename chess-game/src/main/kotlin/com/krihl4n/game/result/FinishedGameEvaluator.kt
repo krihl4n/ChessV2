@@ -18,11 +18,10 @@ import com.krihl4n.moveCommands.MoveObserver
 internal class FinishedGameEvaluator(
     positionTracker: PositionTracker,
     moveValidator: MoveValidator,
-    checkEvaluator: CheckEvaluator
+    private val checkMate: CheckMateEvaluator
 ) : MoveObserver {
 
     private val insufficientMaterial = InsufficientMaterialEvaluator(positionTracker)
-    private val checkMate = CheckMateEvaluator(positionTracker, checkEvaluator, moveValidator)
     private val fiftyMoveRepetition = FiftyMoveRepetitionEvaluator()
     private val stalemate = StalemateEvaluator(positionTracker, moveValidator)
     private val threefoldRepetition = ThreefoldRepEvaluator(positionTracker, moveValidator)

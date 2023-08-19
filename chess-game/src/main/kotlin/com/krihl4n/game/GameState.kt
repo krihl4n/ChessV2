@@ -143,7 +143,7 @@ internal enum class GameState : State {
         }
 
         override fun undo(stateHolder: StateHolder, gameCommand: GameCommand, playerId: String) {
-            throw IllegalStateException("Cannot move if the game is finished")
+            //throw IllegalStateException("Cannot move if the game is finished")
         }
 
         override fun gameFinished(stateHolder: StateHolder) {

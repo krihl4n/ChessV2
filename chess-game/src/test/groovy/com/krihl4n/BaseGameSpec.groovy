@@ -3,6 +3,7 @@ package com.krihl4n
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.game.Game
 import com.krihl4n.game.GameMode
+import com.krihl4n.game.positionEvaluators.CheckMateEvaluator
 import com.krihl4n.game.result.FinishedGameEvaluator
 import com.krihl4n.game.guards.CastlingGuard
 import com.krihl4n.game.positionEvaluators.CheckEvaluator
@@ -42,8 +43,9 @@ class BaseGameSpec extends BaseSpec {
                 pieceMoveCalculator,
                 checkEvaluator
         )
-        CommandFactory commandFactory = new CommandFactory(positionTracker, new MoveLabelGenerator(checkEvaluator, positionTracker, pieceMoveCalculator), new CaptureTracker())
-        gameResult = new FinishedGameEvaluator(positionTracker, moveValidator, checkEvaluator)
+        CheckMateEvaluator checkMateEvaluator = new CheckMateEvaluator(positionTracker, checkEvaluator, moveValidator)
+        CommandFactory commandFactory = new CommandFactory(positionTracker, new MoveLabelGenerator(checkEvaluator, checkMateEvaluator, positionTracker, pieceMoveCalculator), new CaptureTracker())
+        gameResult = new FinishedGameEvaluator(positionTracker, moveValidator, checkMateEvaluator)
         game = new Game(moveValidator, commandCoordinator, commandFactory, positionTracker, gameResult)
         EnPassantGuard enPassantGuard = new EnPassantGuard(positionTracker, commandCoordinator)
         calculatorFactory.initCalculators(enPassantGuard, castlingGuard)

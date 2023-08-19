@@ -439,6 +439,28 @@ class MoveRecorderTest extends Specification {
         }
     }
 
+    def "check mate"() {
+        given:
+        this.game = initGame(new PieceSetup() {
+            @Override
+            List<String> get() {
+                return [
+                        "h2 white rook",
+                        "g2 white rook",
+                        "a1 black king",
+                ]
+            }
+        })
+
+        when:
+        move("g2", "g1")
+
+        then:
+        1 * listener.piecePositionUpdate(GAME_ID, _) >> {
+            moveIs("Rg1#", it)
+        }
+    }
+
 // https://en.wikipedia.org/wiki/Algebraic_notation_(chess)#Disambiguating_moves
 
     private void move(String from, String to) {
