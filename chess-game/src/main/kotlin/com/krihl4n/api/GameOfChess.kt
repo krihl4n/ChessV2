@@ -95,6 +95,15 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
         return ScoreDto(score.white, score.black)
     }
 
+    override fun getResult(): GameResultDto? {
+        return this.game.getResult()?.let {
+            GameResultDto(
+                result = it.result.toString().lowercase(),
+                reason = it.reason.toString().lowercase()
+            )
+        }
+    }
+
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
             override fun positionsUpdated(update: PiecePositionUpdate) {

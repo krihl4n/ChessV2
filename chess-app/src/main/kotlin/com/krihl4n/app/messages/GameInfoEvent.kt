@@ -1,9 +1,6 @@
 package com.krihl4n.app.messages
 
-import com.krihl4n.api.dto.CapturesDto
-import com.krihl4n.api.dto.FieldOccupationDto
-import com.krihl4n.api.dto.PlayerDto
-import com.krihl4n.api.dto.ScoreDto
+import com.krihl4n.api.dto.*
 
 data class GameInfoEvent(
     val gameId: String,
@@ -13,10 +10,11 @@ data class GameInfoEvent(
     val turn: String,
     val recordedMoves: List<String>,
     val captures: CapturesDto,
-    val score: ScoreDto
-){
+    val score: ScoreDto,
+    val result: GameResultDto?
+) {
 
     override fun toString(): String {
-        return "GameInfoEvent(gameId='$gameId', mode='$mode', player=$player, piecePositions=$piecePositions, turn='$turn', recordedMoves=$recordedMoves, score=$score)"
+        return "GameInfoEvent(gameId='$gameId', mode='$mode', player=$player, piecePositions=$piecePositions, turn='$turn', recordedMoves=$recordedMoves, captures=$captures, score=$score, result=$result)"
     }
 }

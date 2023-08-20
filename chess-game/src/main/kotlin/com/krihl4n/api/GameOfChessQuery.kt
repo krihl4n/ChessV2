@@ -13,4 +13,5 @@ interface GameOfChessQuery {
     fun getRecordedMoves(): List<String>
     fun getAllCaptures(): CapturesDto
     fun getScore(): ScoreDto
+    fun getResult(): GameResultDto?
 }

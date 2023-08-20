@@ -109,7 +109,8 @@ class GameCommandHandler(
                 turn = game.getColorAllowedToMove(),
                 recordedMoves = game.getRecordedMoves(),
                 captures = game.getAllCaptures(),
-                score = game.getScore()
+                score = game.getScore(),
+                result = game.getResult()
             )
             messageSender.sendJoinedExistingGameMsg(sessionId, gameInfo)
         }
