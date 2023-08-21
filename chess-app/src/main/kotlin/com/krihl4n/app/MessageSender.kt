@@ -17,10 +17,6 @@ class MessageSender(
         sendMsg(sessionId, "/queue/piece-position-updates", update)
     }
 
-    fun sendGameStateUpdateMsg(sessionId: String, update: GameStateUpdateDto) {
-        sendMsg(sessionId, "/queue/game-state-updates", update)
-    }
-
     fun sendGameStartedMsg(sessionId: String, gameInfo: GameInfoEvent) {
         sendMsg(sessionId, "/queue/game-started", gameInfo)
     }

@@ -27,10 +27,6 @@ class GameEventHandler(
         getSessionIds(gameId).forEach { messageSender.sendPiecePositionUpdateMsg(it, update) }
     }
 
-    override fun gameStateUpdate(gameId: String, update: GameStateUpdateDto) {
-        getSessionIds(gameId).forEach { messageSender.sendGameStateUpdateMsg(it, update) }
-    }
-
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
         rematchProposals.clearProposals(gameInfo.gameId)
 

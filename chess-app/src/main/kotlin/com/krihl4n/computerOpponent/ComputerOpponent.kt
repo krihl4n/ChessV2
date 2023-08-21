@@ -35,10 +35,6 @@ class ComputerOpponent(
         }
     }
 
-    override fun gameStateUpdate(gameId: String, update: GameStateUpdateDto) {
-        println("CPU $gameId  --> gameStateUpdate")
-    }
-
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
         println("CPU $gameId --> gameStarted")
         if (isVsComputer(gameId) && isCpuTurn(gameId)) {

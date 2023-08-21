@@ -116,12 +116,6 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
 
         game.registerGameStateUpdateListener(object : GameStateUpdateListener {
             override fun gameStateUpdated(update: GameStateUpdate) {
-                listener.gameStateUpdate(
-                    gameId, GameStateUpdateDto(
-                        gameState = update.gameState.toString()
-                    )
-                )
-
                 if (update.gameState == GameState.IN_PROGRESS) {
                     listener.gameStarted(
                         gameId,

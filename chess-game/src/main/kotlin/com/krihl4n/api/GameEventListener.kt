@@ -9,8 +9,6 @@ interface GameEventListener {
 
     fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto)
 
-    fun gameStateUpdate(gameId: String, update: GameStateUpdateDto)
-
     fun gameStarted(gameId: String, gameInfo: GameInfoDto)
 
     fun gameFinished(gameId: String, result: GameResultDto)

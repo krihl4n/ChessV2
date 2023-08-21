@@ -189,45 +189,6 @@ class GameEventsListenerTest extends Specification {
         }
     }
 
-    def "should notify about game start"() {
-        given:
-        def game = new GameOfChess(GAME_ID, TEST_MODE, null)
-        game.registerGameEventListener(listener)
-
-        when:
-        game.initialize()
-        game.playerReady(PLAYER_ID, null)
-
-        then:
-        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("IN_PROGRESS"))
-    }
-
-    def "should notify about waiting for players state change"() {
-        given:
-        def game = new GameOfChess(GAME_ID, "vs_friend", null)
-        game.registerGameEventListener(listener)
-
-        when:
-        game.initialize()
-
-        then:
-        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("WAITING_FOR_PLAYERS"))
-    }
-
-    def "should notify about game start after player two joins"() {
-        given:
-        def game = new GameOfChess(GAME_ID, "vs_friend", null)
-        game.registerGameEventListener(listener)
-        game.initialize()
-        game.playerReady("player1", null)
-
-        when:
-        game.playerReady("player2", null)
-
-        then:
-        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("IN_PROGRESS"))
-    }
-
     def "should notify about game end after check mate by white player"() {
         given:
         def game = initGame(new AboutToCheckMateSetup())
@@ -236,7 +197,6 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "h2", "h1", null))
 
         then:
-        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
         1 * listener.gameFinished(GAME_ID, new GameResultDto(WHITE_PLAYER_WON, CHECK_MATE))
     }
 
@@ -257,7 +217,6 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "h2", "h1", null))
 
         then:
-        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
         1 * listener.gameFinished(GAME_ID, new GameResultDto(BLACK_PLAYER_WON, CHECK_MATE))
     }
 
@@ -269,7 +228,6 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "f6", "f7", null))
 
         then:
-        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
         1 * listener.gameFinished(GAME_ID, new GameResultDto(DRAW, STALEMATE))
     }
 
@@ -290,7 +248,6 @@ class GameEventsListenerTest extends Specification {
         game.move(new MoveDto(PLAYER_ID, "a1", "a2", null))
 
         then:
-        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
         1 * listener.gameFinished(GAME_ID, new GameResultDto(DRAW, INSUFFICIENT_MATERIAL))
     }
 
@@ -302,7 +259,6 @@ class GameEventsListenerTest extends Specification {
         game.resign(PLAYER_ID)
 
         then:
-        1 * listener.gameStateUpdate(GAME_ID, new GameStateUpdateDto("FINISHED"))
         1 * listener.gameFinished(GAME_ID, new GameResultDto(BLACK_PLAYER_WON, PLAYER_RESIGNED))
     }
 
