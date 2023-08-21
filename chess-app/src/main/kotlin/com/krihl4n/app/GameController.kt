@@ -63,19 +63,6 @@ class GameController(
         gameCommandHandler.requestRematch(sessionId, gameId)
     }
 
-    @MessageMapping("/fields-occupation")
-    @Throws(Exception::class)
-    fun fieldsOccupation(@Payload gameId: String, @Header("simpSessionId") sessionId: String) {
-        gameCommandHandler.getPositions(gameId).let {
-            simpMessagingTemplate.convertAndSendToUser(
-                sessionId,
-                "/queue/fields-occupation",
-                it,
-                prepareSessionIdHeader(sessionId)
-            )
-        }
-    }
-
     @MessageMapping("/possible-moves")
     @Throws(Exception::class)
     fun possibleMoves(@Payload req: PossibleMovesRequest, @Header("simpSessionId") sessionId: String) {

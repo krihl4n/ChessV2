@@ -82,10 +82,6 @@ class GameCommandHandler(
         gamesRepository.getGameForCommand(gameId).move(move)
     }
 
-    fun getPositions(gameId: String): List<FieldOccupationDto> {
-        return gamesRepository.getGameForQuery(gameId).getFieldOccupationInfo()
-    }
-
     fun getPossibleMoves(gameId: String, field: String): PossibleMovesDto {
         return gamesRepository.getGameForQuery(gameId).getPossibleMoves(field)
     }
