@@ -3,7 +3,12 @@ package com.krihl4n.api.dto
 import com.krihl4n.model.Field
 import com.krihl4n.model.Piece
 
-data class FieldOccupationDto(val field: String = "", val piece: PieceDto? = null)
+data class FieldOccupationDto(val field: String = "", val piece: PieceDto) {
+
+    override fun toString(): String {
+        return "${field}: ${piece.color} ${piece.type}"
+    }
+}
 
 internal class FieldsOccupationMapper {
 
@@ -24,9 +29,7 @@ internal class FieldsOccupationMapper {
 
             for (field in ALL_FIELDS) {
                 val piece = positionsOfAllPieces[Field(field)]
-                if (piece == null) {
-                    occupations.add(FieldOccupationDto(field, null))
-                } else {
+                if (piece != null) {
                     occupations.add(FieldOccupationDto(field, PieceDto(piece.color.toString(), piece.type.toString())))
                 }
             }
