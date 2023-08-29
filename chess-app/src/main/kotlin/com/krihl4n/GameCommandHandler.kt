@@ -67,7 +67,7 @@ class GameCommandHandler(
         val colorPreference = rematchProposals
             .getRematchProposal(playerId)
             ?.playerNextColor
-            ?: req.colorPreference
+            ?: req.colorPreference?.getValue()
 
         gamesRepository.getGameForCommand(req.gameId).playerReady(playerId, colorPreference)
         return playerId
