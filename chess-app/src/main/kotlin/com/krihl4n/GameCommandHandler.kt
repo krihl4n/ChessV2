@@ -41,7 +41,6 @@ class GameCommandHandler(
         return newGame.gameId
     }
 
-    // try to make player id constant
     fun requestRematch(sessionId: String, gameId: String): String? { // todo what to do with old games?
         val existingGame = gamesRepository.getGameForQuery(gameId)
         if (this.rematchProposals.proposalExists(existingGame.gameId())) {
@@ -71,7 +70,11 @@ class GameCommandHandler(
             ?.playerNextColor
             ?: req.colorPreference
 
-        gamesRepository.getGameForCommand(req.gameId).playerReady(playerId, colorPreference)
+        gamesRepository.getGameForCommand(req.gameId).let {
+            if (it.getPlayer(playerId) == null) {
+                it.playerReady(playerId, colorPreference)
+            }
+        }
         return playerId
     }
 

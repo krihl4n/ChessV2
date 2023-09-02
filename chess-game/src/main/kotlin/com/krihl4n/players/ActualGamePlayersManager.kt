@@ -20,11 +20,6 @@ internal class ActualGamePlayersManager : PlayersManager {
             return false
         }
 
-        if (player1?.id == playerId) {
-            println("player $playerId already registered")
-            return false
-        }
-
         if (player2 == null) {
             registerPlayerTwo(playerId, colorPreference)
             println("registered player two: $playerId")
