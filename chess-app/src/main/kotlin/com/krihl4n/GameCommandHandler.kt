@@ -12,6 +12,7 @@ import com.krihl4n.gamesManagement.RematchProposals
 import com.krihl4n.gamesManagement.SessionRegistry
 import com.krihl4n.persistence.GamesRepository
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
 import java.util.*
 
 @Service
@@ -40,10 +41,11 @@ class GameCommandHandler(
         return newGame.gameId
     }
 
+    // try to make player id constant
     fun requestRematch(sessionId: String, gameId: String): String? { // todo what to do with old games?
         val existingGame = gamesRepository.getGameForQuery(gameId)
         if (this.rematchProposals.proposalExists(existingGame.gameId())) {
-            return null
+            throw RuntimeException("no game to base rematch on")
         }
         val rematch = gameOfChessCreator.createRematch(existingGame)
         val newGame = rematch.gameOfChess.also {

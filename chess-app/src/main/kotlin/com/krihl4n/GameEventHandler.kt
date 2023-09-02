@@ -30,7 +30,7 @@ class GameEventHandler(
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
         rematchProposals.clearProposals(gameInfo.gameId)
 
-        for (player in setOf(gameInfo.player1, gameInfo.player2)) {
+        for (player in setOf(gameInfo.player1, gameInfo.player2).filter { it.id != "cpu" }) {
             sessionRegistry.getRelatedPlayerSessionId(gameId, player.id)?.let {
                 messageSender.sendGameStartedMsg(
                     it,

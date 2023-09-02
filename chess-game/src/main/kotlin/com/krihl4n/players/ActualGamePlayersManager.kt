@@ -16,11 +16,18 @@ internal class ActualGamePlayersManager : PlayersManager {
         if (player1 == null) {
             p1ColorPreference = colorPreference
             registerPlayerOne(colorPreference, playerId)
+            println("registered player one: $playerId")
+            return false
+        }
+
+        if (player1?.id == playerId) {
+            println("player $playerId already registered")
             return false
         }
 
         if (player2 == null) {
             registerPlayerTwo(playerId, colorPreference)
+            println("registered player two: $playerId")
             return true
         }
 

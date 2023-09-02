@@ -95,7 +95,7 @@ internal enum class GameState : State {
             colorPreference: String?,
             gameMode: GameMode?
         ) {
-            throw IllegalStateException("Cannot register another player, game is already in progress")
+           // throw IllegalStateException("Cannot register another player, game is already in progress")
         }
 
         override fun move(

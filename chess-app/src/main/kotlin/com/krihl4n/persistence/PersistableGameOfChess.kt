@@ -21,7 +21,9 @@ class PersistableGameOfChess(private val delegate: GameOfChess, private val repo
 
     override fun playerReady(playerId: String, colorPreference: String?) {
         save(PLAYER_READY, PlayerReadyData(playerId, colorPreference))
-        delegate.playerReady(playerId, colorPreference)
+        synchronized(this.delegate) {
+            delegate.playerReady(playerId, colorPreference)
+        }
     }
 
     override fun resign(playerId: String) {

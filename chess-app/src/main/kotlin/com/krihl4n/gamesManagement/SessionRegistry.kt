@@ -5,34 +5,51 @@ import org.springframework.stereotype.Service
 @Service
 class SessionRegistry {
 
-    private val entries = mutableListOf<RegisteredGameSessions>() // these are never cleaned
+    private val entries = mutableListOf<RegisteredGameSessions>()
 
     fun registerNewGame(gameId: String, sessionId: String) {
-        entries.add(RegisteredGameSessions(gameId, sessionId))
+        println("[REGISTRY] registerNewGame: gameId: $gameId sessionId: $sessionId")
+        synchronized(this) {
+            entries.add(RegisteredGameSessions(gameId, sessionId))
+        }
+        println(entries)
     }
 
     fun getRelatedSessionIds(gameId: String): Set<String> {
-       return this.entries.find { it.gameId() == gameId }?.sessionIds().orEmpty()
+        println("[REGISTRY] getRelatedSessionIds: gameId: $gameId")
+        return this.entries.find { it.gameId() == gameId }?.sessionIds().orEmpty()
     }
 
     fun getRelatedPlayerSessionId(gameId: String, playerId: String): String? { // todo just return string
-        return this.entries.filter { it.gameId == gameId }.find { it.playerParticipates(playerId) }?.playerSessionId(playerId)
+        println("[REGISTRY] getRelatedPlayerSessionId: gameId: $gameId playerId: $playerId")
+        return this.entries.filter { it.gameId == gameId }.find { it.playerParticipates(playerId) }
+            ?.playerSessionId(playerId)
     }
 
     fun deregisterGame(gameId: String) {
-        this.entries.removeIf { it.gameId() == gameId }
+        println("[REGISTRY] deregisterGame: gameId: $gameId")
+        synchronized(this) {
+            this.entries.removeIf { it.gameId() == gameId }
+        }
     }
 
     fun deregisterSession(sessionId: String) {
-        this.entries.forEach { it.deregisterSession(sessionId) }
-     //   this.entries.removeIf { it.sessionIds().isEmpty() } // todo rethink that
+        println("[REGISTRY] deregisterSession: sessionId: $sessionId")
+        synchronized(this) {
+            this.entries.forEach { it.deregisterSession(sessionId) }
+            this.entries.removeIf { it.sessionIds().isEmpty() } // todo rethink that
+        }
+        println(this.entries)
     }
 
     fun registerPlayer(sessionId: String, gameId: String, playerId: String) {
-        if(this.entries.find { it.gameId() == gameId } == null) {
-            entries.add(RegisteredGameSessions(gameId, sessionId))
+        println("[REGISTRY] registerPlayer: sessionId: $gameId gameId: $gameId playerId: $playerId")
+        synchronized(this) {
+            if (this.entries.find { it.gameId() == gameId } == null) {
+                entries.add(RegisteredGameSessions(gameId, sessionId))
+            }
+            this.entries.find { it.gameId() == gameId }?.registerPlayer(playerId, sessionId)
         }
-        this.entries.find { it.gameId() == gameId }?.registerPlayer(playerId, sessionId)
     }
 }
 
@@ -41,7 +58,7 @@ class RegisteredGameSessions(val gameId: String, private var initialSessionId: S
 
     fun gameId() = this.gameId
 
-    fun sessionIds() : Set<String> {
+    fun sessionIds(): Set<String> {
         val sessions = playerSessions.map { it.sessionId }.toMutableSet()
         this.initialSessionId?.let { sessions.add(it) }
         return sessions.toSet()
