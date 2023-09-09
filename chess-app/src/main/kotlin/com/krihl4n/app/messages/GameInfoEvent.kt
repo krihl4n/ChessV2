@@ -11,7 +11,8 @@ data class GameInfoEvent(
     val recordedMoves: List<String>,
     val captures: CapturesDto,
     val score: ScoreDto,
-    val result: GameResultDto?
+    val result: GameResultDto?,
+    val gameInProgress: Boolean
 ) {
 
     override fun toString(): String {

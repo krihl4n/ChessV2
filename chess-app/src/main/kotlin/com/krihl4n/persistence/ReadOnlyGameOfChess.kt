@@ -15,6 +15,7 @@ open class ReadOnlyGameOfChess(private val delegate: GameOfChess) : GameOfChessQ
     override fun getAllCaptures() = delegate.getAllCaptures()
     override fun getScore() = delegate.getScore()
     override fun getResult() = delegate.getResult()
+    override fun isInProgress() = delegate.isInProgress()
 
     fun gameId() = delegate.gameId
     fun gameMode() = delegate.gameMode

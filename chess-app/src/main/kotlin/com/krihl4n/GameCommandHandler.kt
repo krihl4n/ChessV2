@@ -3,10 +3,7 @@ package com.krihl4n
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.ConnectionListener
 import com.krihl4n.app.MessageSender
-import com.krihl4n.app.messages.GameInfoEvent
-import com.krihl4n.app.messages.JoinGameRequest
-import com.krihl4n.app.messages.RejoinGameRequest
-import com.krihl4n.app.messages.StartGameRequest
+import com.krihl4n.app.messages.*
 import com.krihl4n.gamesManagement.GameOfChessCreator
 import com.krihl4n.gamesManagement.RematchProposals
 import com.krihl4n.gamesManagement.SessionRegistry
@@ -75,6 +72,7 @@ class GameCommandHandler(
                 it.playerReady(playerId, colorPreference)
             }
         }
+        messageSender.sendJoinedNewGameMsg(sessionId, JoinedNewGameEvent(req.gameId, playerId))
         return playerId
     }
 
@@ -104,6 +102,7 @@ class GameCommandHandler(
         game.getPlayer(playerId)?.let {
             val gameInfo = GameInfoEvent(
                 gameId = gameId,
+                gameInProgress = game.isInProgress(),
                 mode = game.getMode(),
                 player = PlayerDto(playerId, it.color),
                 piecePositions = game.getFieldOccupationInfo(),

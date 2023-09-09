@@ -104,6 +104,8 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
         }
     }
 
+    override fun isInProgress() = this.game.isInProgress()
+
     fun registerGameEventListener(listener: GameEventListener) {
         commandCoordinator.registerPiecePositionUpdateListener(object : PiecePositionUpdateListener {
             override fun positionsUpdated(update: PiecePositionUpdate) {
@@ -121,6 +123,7 @@ class GameOfChess(val gameId: String, val gameMode: String, private val pieceSet
                         gameId,
                         GameInfoDto(
                             gameId = gameId,
+                            gameInProgress = game.isInProgress(),
                             mode = update.gameMode.toString(),
                             player1 = game.fetchPlayerOne().toDto(),
                             player2 = game.fetchPlayerTwo().toDto(),

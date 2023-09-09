@@ -14,4 +14,5 @@ interface GameOfChessQuery {
     fun getAllCaptures(): CapturesDto
     fun getScore(): ScoreDto
     fun getResult(): GameResultDto?
+    fun isInProgress(): Boolean
 }

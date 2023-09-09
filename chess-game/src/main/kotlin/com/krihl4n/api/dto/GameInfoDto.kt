@@ -10,6 +10,7 @@ data class GameInfoDto(
     val recordedMoves: List<String>,
     val captures: CapturesDto,
     val score: ScoreDto,
+    val gameInProgress: Boolean,
 )
 
 data class CapturesDto (

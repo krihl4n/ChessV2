@@ -2,6 +2,7 @@ package com.krihl4n.app
 
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.messages.GameInfoEvent
+import com.krihl4n.app.messages.JoinedNewGameEvent
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessageType
@@ -27,6 +28,10 @@ class MessageSender(
 
     fun sendWaitingForOtherPlayerMsg(sessionId: String, gameId:String) {
         sendMsg(sessionId, "/queue/waiting-for-other-player", gameId)
+    }
+
+    fun sendJoinedNewGameMsg(sessionId: String, event: JoinedNewGameEvent) {
+        sendMsg(sessionId, "/queue/joined-new-game", event)
     }
 
     fun sendJoinedExistingGameMsg(sessionId: String, gameInfo: GameInfoEvent) {

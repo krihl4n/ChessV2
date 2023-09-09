@@ -72,6 +72,8 @@ internal class Game(
 
     fun getMode() = this.gameMode
 
+    fun isInProgress() = gameState == GameState.IN_PROGRESS
+
     fun colorAllowedToMove(): Color = this.gameControl.fetchColorAllowedToMove()
 
     fun fetchPlayer(playerId: String) = gameControl.fetchPlayer(playerId)

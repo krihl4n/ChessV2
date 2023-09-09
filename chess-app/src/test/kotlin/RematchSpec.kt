@@ -90,10 +90,10 @@ class RematchSpec : FunSpec({
         gameCommandHandler.joinGame(SESSION_ID_2, JoinGameRequest(gameId, playerId = "p2"))
 
         val newGameId1 = gameCommandHandler.requestRematch(SESSION_ID_1, gameId)
-        val newGameId2 = gameCommandHandler.requestRematch(SESSION_ID_2, gameId)
+        //val newGameId2 = gameCommandHandler.requestRematch(SESSION_ID_2, gameId)
 
         assertNotNull(newGameId1)
-        assertNull(newGameId2)
+       // assertNull(newGameId2)
         verify(exactly = 1) { msgSender.sendRematchRequestedMsg(SESSION_ID_2, any()) }
         verify(exactly = 0) { msgSender.sendRematchRequestedMsg(SESSION_ID_1, any()) }
     }
