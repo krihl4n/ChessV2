@@ -2,7 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
 }
 
-version 'unspecified'
+version '1.0.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -32,4 +32,19 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    archiveBaseName = "Chess"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Implementation-Title': 'Chess',
+                'Implementation-Version': project.version,
+                'Created-By': 'krihl4n',
+                'Main-Class': 'com.krihl4n.AppKt'
+    }
+
+    from {
+        project.configurations.runtimeClasspath.collect { File file -> project.zipTree(file) }
+    }
 }
