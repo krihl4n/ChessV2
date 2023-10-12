@@ -1,5 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.8.22'
+    id "org.springframework.boot" version '3.1.4'
 }
 
 repositories {
@@ -21,6 +22,8 @@ subprojects {
 }
 
 project(":chess-app") {
+    apply plugin: 'org.springframework.boot'
+
     version '1.0.0-SNAPSHOT'
     dependencies {
         implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
@@ -28,6 +31,7 @@ project(":chess-app") {
         implementation('org.springframework:spring-websocket:6.0.9')
         implementation('com.fasterxml.jackson.core:jackson-databind:2.15.2')
         implementation('com.fasterxml.jackson.core:jackson-core:2.15.2')
+        implementation('org.springframework.boot:spring-boot-gradle-plugin:3.1.4')
         implementation('org.springframework.boot:spring-boot-starter-websocket:3.1.0')
         implementation("org.springframework.boot:spring-boot-starter-data-mongodb:3.1.0")
         runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.7.0") // fixes mongo bean issue
@@ -40,20 +44,20 @@ project(":chess-app") {
         testImplementation 'io.mockk:mockk:1.13.5'
     }
 
-    jar {
-        archiveBaseName = "Chess"
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        manifest {
-            attributes 'Implementation-Title': 'Chess',
-                    'Implementation-Version': project.version,
-                    'Created-By': 'krihl4n',
-                    'Main-Class': 'com.krihl4n.AppKt'
-        }
-
-        from {
-            project.configurations.runtimeClasspath.collect { File file -> project.zipTree(file) }
-        }
-    }
+//    jar { // doesn't work, needs the bootJar task
+//        archiveBaseName = "Chess"
+//        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//        manifest {
+//            attributes 'Implementation-Title': 'Chess',
+//                    'Implementation-Version': project.version,
+//                    'Created-By': 'krihl4n',
+//                    'Main-Class': 'com.krihl4n.AppKt'
+//        }
+//
+//        from {
+//            project.configurations.runtimeClasspath.collect { File file -> project.zipTree(file) }
+//        }
+//    }
 }
 
 project(":chess-game") {
