@@ -1,3 +1,3 @@
-to build use bootJar task in chess-app module
+### Chess
 
-dbuser and dbpassword must be provided
+A simple chess game implementation, designed to be used via web-socket API.
