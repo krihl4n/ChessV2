@@ -24,7 +24,6 @@ class ComputerOpponent(
     }
 
     override fun piecePositionUpdate(gameId: String, update: PiecePositionUpdateDto) {
-        println("CPU  $gameId --> piecePositionUpdate")
         if (isVsComputer(gameId) && isCpuTurn(gameId) && !update.reverted) {
             Timer("ScheduleMove", false).schedule(1000) {
                 val attacked = attackIfPossible(gameId, cpuColor(gameId))
@@ -36,7 +35,6 @@ class ComputerOpponent(
     }
 
     override fun gameStarted(gameId: String, gameInfo: GameInfoDto) {
-        println("CPU $gameId --> gameStarted")
         if (isVsComputer(gameId) && isCpuTurn(gameId)) {
             Timer("ScheduleMove", false).schedule(1000) {
                 performRandomMove(gameId, cpuColor(gameId))
@@ -45,11 +43,9 @@ class ComputerOpponent(
     }
 
     override fun gameFinished(gameId: String, result: GameResultDto) {
-        println("CPU $gameId  --> gameFinished")
     }
 
     override fun waitingForOtherPlayer(gameId: String) {
-        println("CPU $gameId  :: waitingForOtherPlayer")
         if (isVsComputer(gameId)) {
             gamesRepository.getGameForCommand(gameId).playerReady("cpu", null)
         }

@@ -3,6 +3,8 @@ package com.krihl4n.app
 import com.krihl4n.api.dto.*
 import com.krihl4n.app.messages.GameInfoEvent
 import com.krihl4n.app.messages.JoinedNewGameEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.messaging.simp.SimpMessageType
@@ -43,7 +45,7 @@ class MessageSender(
     }
 
     private fun sendMsg(sessionId: String, destination: String, result: Any) {
-        println("<-- $sessionId | $destination | $result")
+        logger.debug("<-- {} | {} | {}", sessionId, destination, result)
         simpMessagingTemplate.convertAndSendToUser(
             sessionId,
             destination,
@@ -57,5 +59,9 @@ class MessageSender(
             .create(SimpMessageType.MESSAGE)
         headerAccessor.sessionId = sessionId
         return headerAccessor.messageHeaders
+    }
+
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(MessageSender::class.java)
     }
 }

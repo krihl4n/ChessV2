@@ -82,7 +82,6 @@ internal class FinishedGameEvaluator(
     }
 
     private fun notifyGameFinished() {
-        println("Game finished: ${this.result}")
         this.result?.let { result -> resultObservers.forEach { it.gameFinished(result) } }
     }
 }

@@ -3,6 +3,8 @@ package com.krihl4n.app
 import com.krihl4n.GameCommandHandler
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.app.messages.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.messaging.MessageHeaders
 import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
@@ -24,7 +26,7 @@ class GameController(
     @MessageMapping("/move")
     @Throws(Exception::class)
     fun move(@Payload move: Move, @Header("simpSessionId") sessionId: String) {
-        println("--> /move | sessionId=$sessionId | $move")
+        logger.debug("--> /move | sessionId={} | {}", sessionId, move)
         gameCommandHandler.move(
             move.gameId, MoveDto(
                 playerId = move.playerId,
@@ -38,28 +40,31 @@ class GameController(
     @MessageMapping("/start-new-game") // request-new-game
     @Throws(Exception::class)
     fun startNewGame(@Payload request: StartGameRequest, @Header("simpSessionId") sessionId: String) {
-        println("--> /start-new-game | sessionId=$sessionId | $request")
+        logger.info("--> /start-new-game | sessionId={} | {}", sessionId, request)
         gameCommandHandler.requestNewGame(sessionId, request) // maybe return ack?
     }
 
     @MessageMapping("/join-game")
     @Throws(Exception::class)
     fun joinGame(@Payload request: JoinGameRequest, @Header("simpSessionId") sessionId: String) {
-        println("--> /join-game | sessionId=$sessionId | $request")
+        logger.info("--> /join-game | sessionId={} | {}", sessionId, request)
         gameCommandHandler.joinGame(sessionId, request)
     }
 
     @MessageMapping("/rejoin-game")
     @Throws(Exception::class)
     fun joinGame(@Payload request: RejoinGameRequest, @Header("simpSessionId") sessionId: String) {
-        println("--> /rejoin-game | sessionId=$sessionId | $request")
+        logger.info("--> /rejoin-game | sessionId={} | {}", sessionId, request)
         gameCommandHandler.rejoinGame(sessionId, request)
     }
 
     @MessageMapping("/rematch")
     @Throws(Exception::class)
-    fun rematch(@Payload gameId: String, @Header("simpSessionId") sessionId: String) { // todo object of some sort? with gameId maybe?
-        println("--> /rematch | sessionId=$sessionId | gameId=$gameId")
+    fun rematch(
+        @Payload gameId: String,
+        @Header("simpSessionId") sessionId: String
+    ) { // todo object of some sort? with gameId maybe?
+        logger.info("--> /rematch | sessionId=$sessionId | gameId=$gameId")
         gameCommandHandler.requestRematch(sessionId, gameId)
     }
 
@@ -79,14 +84,14 @@ class GameController(
     @MessageMapping("/resign")
     @Throws(Exception::class)
     fun resign(@Payload req: ResignRequest, @Header("simpSessionId") sessionId: String) {
-        println("--> /resign | sessionId=$sessionId | playerId=${req.playerId}")
+        logger.info("--> /resign | sessionId=$sessionId | playerId=${req.playerId}")
         gameCommandHandler.resign(req.gameId, req.playerId)
     }
 
     @MessageMapping("/undo-move")
     @Throws(Exception::class)
     fun undoMove(@Payload req: UndoMoveRequest, @Header("simpSessionId") sessionId: String) {
-        println("--> /undo-move | sessionId=$sessionId | playerId=${req.playerId}")
+        logger.debug("--> /undo-move | sessionId=$sessionId | playerId=${req.playerId}")
         gameCommandHandler.undoMove(req.gameId, req.playerId)
     }
 
@@ -95,5 +100,9 @@ class GameController(
             .create(SimpMessageType.MESSAGE)
         headerAccessor.sessionId = sessionId
         return headerAccessor.messageHeaders
+    }
+
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(GameController::class.java)
     }
 }

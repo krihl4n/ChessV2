@@ -1,5 +1,7 @@
 package com.krihl4n.app
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
 import org.springframework.context.annotation.Configuration
@@ -39,13 +41,13 @@ open class WebSocketConfig() : WebSocketMessageBrokerConfigurer {
             object : WebSocketHandlerDecorator(handler) {
                 @Throws(Exception::class)
                 override fun afterConnectionEstablished(session: WebSocketSession) {
-                    println("connection established: $session")
+                    logger.info("connection established: $session")
                     connectionListener?.connectionEstablished(session.id)
                     super.afterConnectionEstablished(session)
                 }
 
                 override fun afterConnectionClosed(session: WebSocketSession, closeStatus: CloseStatus) {
-                    println("connection closed: $session")
+                    logger.info("connection closed: $session")
                     connectionListener?.connectionClosed(session.id)
                     super.afterConnectionClosed(session, closeStatus)
                 }
@@ -53,5 +55,9 @@ open class WebSocketConfig() : WebSocketMessageBrokerConfigurer {
         }
 
         super.configureWebSocketTransport(registry)
+    }
+
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(WebSocketConfig::class.java)
     }
 }

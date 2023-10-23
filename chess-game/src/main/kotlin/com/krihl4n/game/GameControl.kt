@@ -3,6 +3,7 @@ package com.krihl4n.game
 import com.krihl4n.DebugLogger
 import com.krihl4n.MoveValidator
 import com.krihl4n.PositionTracker
+import com.krihl4n.api.GameOfChess
 import com.krihl4n.api.dto.FieldsOccupationMapper
 import com.krihl4n.api.dto.MoveDto
 import com.krihl4n.api.dto.PossibleMovesDto
@@ -70,7 +71,7 @@ internal class GameControl(
             return
         }
 
-        DebugLogger.printChessboard(positionTracker)
+      //  DebugLogger.printChessboard(positionTracker)
     }
 
     fun getFieldOccupationInfo() = FieldsOccupationMapper.from(positionTracker.getPositionsOfAllPieces())
@@ -94,7 +95,7 @@ internal class GameControl(
             this.commandCoordinator.registerObserver(policy)
         }
 
-        DebugLogger.printChessboard(positionTracker)
+        //DebugLogger.printChessboard(positionTracker)
     }
 
     override fun executePlayerReady(playerId: String, colorPreference: String?) =
@@ -122,6 +123,6 @@ internal class GameControl(
 
     override fun executeUndo(playerId: String) {
         commandCoordinator.undo(playersManager.getPlayer(playerId)!!)
-        DebugLogger.printChessboard(positionTracker)
+       // DebugLogger.printChessboard(positionTracker)
     }
 }

@@ -8,42 +8,34 @@ class SessionRegistry {
     private val entries = mutableListOf<RegisteredGameSessions>()
 
     fun registerNewGame(gameId: String, sessionId: String) {
-        println("[REGISTRY] registerNewGame: gameId: $gameId sessionId: $sessionId")
         synchronized(this) {
             entries.add(RegisteredGameSessions(gameId, sessionId))
         }
-        println(entries)
     }
 
     fun getRelatedSessionIds(gameId: String): Set<String> {
-        println("[REGISTRY] getRelatedSessionIds: gameId: $gameId")
         return this.entries.find { it.gameId() == gameId }?.sessionIds().orEmpty()
     }
 
     fun getRelatedPlayerSessionId(gameId: String, playerId: String): String? { // todo just return string
-        println("[REGISTRY] getRelatedPlayerSessionId: gameId: $gameId playerId: $playerId")
         return this.entries.filter { it.gameId == gameId }.find { it.playerParticipates(playerId) }
             ?.playerSessionId(playerId)
     }
 
     fun deregisterGame(gameId: String) {
-        println("[REGISTRY] deregisterGame: gameId: $gameId")
         synchronized(this) {
             this.entries.removeIf { it.gameId() == gameId }
         }
     }
 
     fun deregisterSession(sessionId: String) {
-        println("[REGISTRY] deregisterSession: sessionId: $sessionId")
         synchronized(this) {
             this.entries.forEach { it.deregisterSession(sessionId) }
             this.entries.removeIf { it.sessionIds().isEmpty() } // todo rethink that
         }
-        println(this.entries)
     }
 
     fun registerPlayer(sessionId: String, gameId: String, playerId: String) {
-        println("[REGISTRY] registerPlayer: sessionId: $gameId gameId: $gameId playerId: $playerId")
         synchronized(this) {
             if (this.entries.find { it.gameId() == gameId } == null) {
                 entries.add(RegisteredGameSessions(gameId, sessionId))
